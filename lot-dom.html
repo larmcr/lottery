@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/2.3.0/mini-nord.min.css">
+<script src="http://minifiedjs.com/download/minified.js"></script>
+<script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+
+<body>
+  <div class="container">
+    <div class="row">
+      <div class="col-sm-12 col-md-3 col-lg-2">
+        <button id="query-all" class="inverse rounded">
+          Consultar todo
+        </button>
+        <nav id="buttons"></nav>
+      </div>
+      <div class="col-sm-12 col-md-8 col-lg-9">
+        <div class="card fluid">
+          <div id="header" class="section">
+          </div>
+          <div class="section body">
+            <ol id="list">
+            </ol>
+          </div>  
+        </div>
+      </div>
+    </div>
+    <script>
+      const MINI = require('minified');
+      const {
+        $,
+        EE,
+        HTML,
+      } = MINI;
+
+      const PREFIX = 'https://cors-anywhere.herokuapp.com/';
+
+      const round = (val, dec) => (
+        Number(Math.round(val + 'e' + dec) + 'e-' + dec)
+      );
+
+      const showResult = (numbers) => {
+        const values = _.countBy(numbers);
+        _.forEach(_.range(100), (n) => {
+          if (!values[n]) values[n] = 0;
+        });
+        const rank = _.reverse(_.map(_.orderBy(_.toPairs(values), 1), 0));
+        const sum = _.sum(_.values(values));
+        const ideal = Math.round(sum / rank.length);
+        const list = [];
+        let sig = 1;
+        let cur;
+        _.forEach(rank, (val) => {
+          const times = values[val];
+          const diff = times - ideal;
+          let markClass;
+          if (diff < 0) {
+            markClass = 'secondary';
+          } else {
+            markClass = sig > 0 || cur === times ? '' : 'tertiary';
+          }
+          const li = EE('li', [EE('mark', {
+              '$': markClass
+            }, `${val}`),
+            ` -> ${times} veces (${round(times / sum * 100, 2)} % : ${diff > 0 ? '+' + diff : diff} del ideal)`
+          ]);
+          list.push(li);
+          if (sig === 1) {
+            cur = times;
+          }
+          sig--;
+        });
+        const header = EE('div', [
+          EE('strong', `${sum} oportunidades`),
+          EE('span', ` (ideal: ${ideal} veces aprox.)`),
+        ]);
+        $('#header').add(header);
+        $('#list').add(list);
+      };
+
+      const isValidDate = (date) => !date.includes('-');
+
+      const parseResponse = (response, numbers, page) => {
+        console.info(page);
+        const html = HTML(response);
+        const tds = html.select('td');
+        const max = tds.length - 4;
+        let date;
+        let first;
+        let second;
+        let third;
+        for (let index = 0; index < max; index += 4) {
+          date = tds[index].innerText.trim();
+          if (isValidDate(date)) {
+            first = parseInt(tds[index + 1].innerText.trim());
+            second = parseInt(tds[index + 2].innerText.trim());
+            third = parseInt(tds[index + 3].innerText.trim());
+            numbers = _.concat(numbers, [first, second, third]);
+          }
+        }
+        const last = _.last(tds);
+        if (last && last.innerText === '') {
+          showResult(numbers);
+        } else {
+          getData(numbers, page + 1);
+        }
+      }
+
+      const getData = (numbers, page) => {
+        $.request('get',
+            `${PREFIX}http://loterianacional.gob.do/app-loteria/resultados_sorteo_tarde.php?pageNum_sorteo_tarde=${page}`
+          )
+          .then((response) => parseResponse(response, numbers, page))
+          .error(showError);
+      };
+
+      const showError = (status, statusText, responseText) => {
+        console.error(status, statusText, responseText);
+      };
+
+      $(() => {
+        getData([], 0);
+      });
+    </script>
+</body>
+
+</html>
