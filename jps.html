@@ -36,7 +36,7 @@
 
     const API = 'http://static.app.jps.go.cr/api/';
 
-    const TRANS = {
+    const trans = {
       numeros: 'Números',
       series: 'Series'
     };
@@ -200,7 +200,7 @@
         }),
       ]);
       _.forEach(data, (values, key) => {
-        thead.add(EE('th', TRANS[key]));
+        thead.add(EE('th', trans[key]));
         showRank(id, key, values, game.sig);
       });
       removeSpinner(id);
