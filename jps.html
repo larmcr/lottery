@@ -2,7 +2,7 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/2.3.3/mini-nord.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/2.3.7/mini-nord.min.css">
 <script src="http://minifiedjs.com/download/minified-web.js"></script>
 <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
 
@@ -121,6 +121,38 @@
             to: new Date(first.fecha).toLocaleDateString()
           };
         },
+        result: (json, id, sig) => {
+          let min = _.min(_.map(json, 'sorteo_Id'));
+          let dates = _.map(json, 'fecha');
+          let data = _.flatten(_.map(json, 'numeros'));
+          const show = () => {
+            const result = {
+              dates: {
+                from: new Date(_.last(dates)).toLocaleDateString(),
+                to: new Date(_.first(dates)).toLocaleDateString(),
+              },
+              data: {
+                numeros: getRange(data, '', 37),
+              }
+            }
+            showDatesAndData(id, sig, result.dates, result.data);
+          }
+          const getInfo = (sorteo) => {
+            $.request('get', `http://static.app.jps.go.cr/api/lotto/${sorteo}.json`)
+              .then((result) => {
+                if (result !== 'null') {
+                  const json = JSON.parse(result);
+                  dates.push(json.fecha);
+                  data = _.concat(data, json.numeros);
+                  getInfo(--min);
+                } else {
+                  show();
+                }
+              })
+              .error((status, statusText, responseText) => show());
+          };
+          getInfo(--min);
+        }
       },
     };
 
@@ -137,7 +169,6 @@
       _.forEach(rank, (val) => {
         const times = values[val];
         const diff = times - ideal;
-
         let markClass;
         if (diff < 0) {
           markClass = 'secondary';
@@ -164,7 +195,8 @@
         EE('span', ` (ideal: ${ideal} veces aprox.)`),
       ]);
       const tdList = EE('td', {
-        '@data-label': `${id}-${key}-list`
+        '@data-label': `${id}-${key}-list`,
+        '@style': 'padding-left: 25px;'
       }, EE('ol', list));
       headers.add(tdHeader);
       lists.add(tdList);
@@ -183,10 +215,7 @@
       $(`#${id}`).set('-spinner-donut');
     };
 
-    const showResult = (id, game, result) => {
-      const json = $.parseJSON(result);
-      const dates = game.dates(json);
-      const data = game.parse(json);
+    const showDatesAndData = (id, sig, dates, data) => {
       const card = $(`#${id}-card`);
       const thead = $(`#${id}-thead`);
       const tbody = $(`#${id}-tbody`);
@@ -201,9 +230,22 @@
       ]);
       _.forEach(data, (values, key) => {
         thead.add(EE('th', trans[key]));
-        showRank(id, key, values, game.sig);
+        showRank(id, key, values, sig);
       });
       removeSpinner(id);
+    }
+
+    const showResult = (id, game, result) => {
+      const json = $.parseJSON(result);
+      let dates;
+      let data;
+      if (game.result) {
+        game.result(json, id, game.sig);
+      } else {
+        dates = game.dates(json);
+        data = game.parse(json);
+        showDatesAndData(id, game.sig, dates, data);
+      }
     };
 
     const showError = (id, status, statusText, responseText) => {
