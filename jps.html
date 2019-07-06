@@ -3,8 +3,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/2.3.7/mini-nord.min.css">
-<script src="http://minifiedjs.com/download/minified-web.js"></script>
 <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
+<script src="minified-web.js"></script>
 
 <body>
   <div class="container">
@@ -110,7 +110,7 @@
         parse: (json) => {
           const data = _.flatten(_.map(json, 'numeros'));
           return {
-            numeros: getRange(data, '', 37),
+            numeros: getRange(data, '', 41),
           }
         },
         dates: (data) => {
@@ -132,7 +132,7 @@
                 to: new Date(_.first(dates)).toLocaleDateString(),
               },
               data: {
-                numeros: getRange(data, '', 37),
+                numeros: getRange(data, '', 41),
               }
             }
             showDatesAndData(id, sig, result.dates, result.data);
