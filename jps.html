@@ -107,12 +107,6 @@
         name: 'Lotto',
         path: 'lotto/page.json',
         sig: 5,
-        parse: (json) => {
-          const data = _.flatten(_.map(json, 'numeros'));
-          return {
-            numeros: getRange(data, '', 41),
-          }
-        },
         dates: (data) => {
           const first = _.first(data);
           const last = _.last(data);
@@ -124,7 +118,7 @@
         result: (json, id, sig) => {
           let min = _.min(_.map(json, 'sorteo_Id'));
           let dates = _.map(json, 'fecha');
-          let data = _.flatten(_.map(json, 'numeros'));
+          let data = _.flatten(_.concat(_.map(json, 'numeros'), _.map(json, 'numerosRevancha')));
           const show = () => {
             const result = {
               dates: {
@@ -143,7 +137,7 @@
                 if (result !== 'null') {
                   const json = JSON.parse(result);
                   dates.push(json.fecha);
-                  data = _.concat(data, json.numeros);
+                  data = _.concat(data, _.concat(json.numeros, json.numerosRevancha));
                   getInfo(--min);
                 } else {
                   show();
