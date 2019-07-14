@@ -2,9 +2,9 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/2.3.7/mini-nord.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/mini.css/2.3.7/mini-dark.min.css">
+<script src="http://minifiedjs.com/download/minified.js"></script>
 <script src="https://cdn.jsdelivr.net/lodash/4.17.4/lodash.min.js"></script>
-<script src="minified.js"></script>
 
 <body>
   <div class="container">
@@ -30,6 +30,7 @@
       const MINI = require('minified');
       const {
         $,
+        $$,
         EE,
         HTML,
       } = MINI;
@@ -79,48 +80,38 @@
         $('#list').add(list);
       };
 
-      const isValidDate = (date) => !date.includes('-');
+      let info;
 
-      const parseResponse = (response, numbers, page) => {
-        console.info(page);
+      const parseInfo = (response) => {
+        info = {};
         const html = HTML(response);
-        const tds = html.select('td');
-        const max = tds.length - 4;
-        let date;
-        let first;
-        let second;
-        let third;
-        for (let index = 0; index < max; index += 4) {
-          date = tds[index].innerText.trim();
-          if (isValidDate(date)) {
-            first = parseInt(tds[index + 1].innerText.trim());
-            second = parseInt(tds[index + 2].innerText.trim());
-            third = parseInt(tds[index + 3].innerText.trim());
-            numbers = _.concat(numbers, [first, second, third]);
-          }
+        const rows = html.select('tr');
+        // console.info(rows);
+        for (let r = 1; r < rows.length; r++) {
+          const cells = $(rows[r]).select('td');
+          // console.info(cells);
+          const key = cells[3].innerText.toLowerCase();
+          if (!info[key]) info[key] = [];
+          // console.info(name);
+          const nums = cells[5].innerText.split(/\s/gim);
+          // console.info(nums);
+          for (let n = 0; n < nums.length; n++) info[key].push(nums[n]);
         }
-        const last = _.last(tds);
-        if (last && last.innerText === '') {
-          showResult(numbers);
-        } else {
-          getData(numbers, page + 1);
-        }
+        console.info(info);
       }
-
-      const getData = (numbers, page) => {
-        $.request('get',
-            `${PREFIX}http://loterianacional.gob.do/app-loteria/resultados_sorteo_tarde.php?pageNum_sorteo_tarde=${page}`
-          )
-          .then((response) => parseResponse(response, numbers, page))
-          .error(showError);
-      };
 
       const showError = (status, statusText, responseText) => {
         console.error(status, statusText, responseText);
       };
 
+      const getInfo = () => {
+        $.request('get', `${PREFIX}https://www.leidsa.com/sorteos-anteriores`)
+          .then(parseInfo)
+          .error(showError);
+      };
+
       $(() => {
-        getData([], 0);
+        getInfo();
       });
     </script>
 </body>
