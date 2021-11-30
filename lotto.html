@@ -11,6 +11,7 @@
 
   <!-- Pico.css (Classless version) -->
   <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.classless.min.css">
+  <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
 </head>
 
 <body>
@@ -121,6 +122,10 @@
       <button aria-busy="true">Please wait…</button>
     </section><!-- ./ Loading -->
 
+    <section>
+      <div id="plot"></div>
+    </section>
+
   </main><!-- ./ Main -->
 
   <!-- Minimal theme switcher -->
@@ -158,24 +163,27 @@
 
   <script>
     (async () => {
-      const API = 'https://integration.jps.go.cr/api/app/lotto/';
-      let flag = true;
-      const getJson = async (id) => {
-        console.info(`Fetching '${id}'`);
-        try {
-          const response = await fetch(`https://integration.jps.go.cr/api/app/lotto/${id}`);
-          const json = await response.json();
-          return json;
-        }
-        catch(err) {
-          flag = false;
-          console.info('ERROR ->', err);
-        }
-      }
-      const last = await getJson('last');
-      for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
-        const json = await getJson(sorteo);
-        console.info(json);
+      try {
+        const response = await fetch('./lottos.json');
+        const json = await response.json();
+        let all = [];
+        let obj = {};
+        Object.keys(json).forEach((id) => {
+          all = all.concat(json[id].n, json[id].r);
+        });
+        all.forEach((key) => {
+          if (!obj[key]) obj[key] = 0;
+          obj[key]++;
+        });
+        // console.info(obj);
+        const entries = Object.entries(obj);
+        const sorted = entries.sort((a, b) => b[1] - a[1]);
+        console.info(sorted);
+        // let x = sorted.map((item) => item[1]);
+        // const data = [{ x, type: 'histogram', histnorm: 'probability' }];
+        // Plotly.newPlot(document.getElementById('plot'), data);
+      } catch (err) {
+        console.info('ERROR ->', err);
       }
     })();
   </script>

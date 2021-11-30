@@ -26,15 +26,15 @@ const getData = async () => {
 
 const processData = () => {
   const files = fs.readdirSync('./data').filter((file) => !file.includes('all'));
-  let all = {};
+  let lottos = {};
   files.forEach((file) => {
     const { numeroSorteo, numeros, numerosRevancha} = JSON.parse(fs.readFileSync(`./data/${file}`));
-    all[numeroSorteo] = { n: numeros, r: numerosRevancha };
+    lottos[numeroSorteo] = { n: numeros, r: numerosRevancha };
   });
-  fs.writeFileSync('./all.json', JSON.stringify(all));
+  fs.writeFileSync('./lottos.json', JSON.stringify(lottos));
 }
 
 (() => {
-  getData();
+  // getData();
   processData();
 })();
