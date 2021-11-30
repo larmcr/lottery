@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    26,
+    24,
+    38,
+    18,
+    33
+  ],
+  "numerosRevancha": [
+    33,
+    0,
+    7,
+    1,
+    5
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 152400000,
+    "acumulado": 186500000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 71100000,
+    "acumuladoRevancha": 82200000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1925,
+  "fecha": "2019-05-04T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-07-04T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

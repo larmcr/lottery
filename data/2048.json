@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    38,
+    26,
+    28,
+    17,
+    33
+  ],
+  "numerosRevancha": [
+    33,
+    10,
+    25,
+    28,
+    11
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 103600000,
+    "acumulado": 118500000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 57300000,
+    "acumuladoRevancha": 63600000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2048,
+  "fecha": "2020-07-18T19:30:00",
+  "estado": 3,
+  "vigencia": "2020-09-17T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

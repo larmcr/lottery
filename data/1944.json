@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    25,
+    8,
+    12,
+    6,
+    17
+  ],
+  "numerosRevancha": [
+    34,
+    23,
+    32,
+    35,
+    12
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 71400000,
+    "acumulado": 92500000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 21000000,
+    "acumuladoRevancha": 29100000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1944,
+  "fecha": "2019-07-10T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-09-09T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

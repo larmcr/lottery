@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    0,
+    34,
+    26,
+    20,
+    35
+  ],
+  "numerosRevancha": [
+    16,
+    3,
+    0,
+    4,
+    10
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 82100000,
+    "acumulado": 99700000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 47000000,
+    "acumuladoRevancha": 54400000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2063,
+  "fecha": "2020-09-12T19:30:00",
+  "estado": 3,
+  "vigencia": "2020-11-12T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

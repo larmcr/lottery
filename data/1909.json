@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    33,
+    10,
+    8,
+    35,
+    21
+  ],
+  "numerosRevancha": [
+    26,
+    33,
+    18,
+    30,
+    19
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 313100000,
+    "acumulado": 364900000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 53300000,
+    "acumuladoRevancha": 66600000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1909,
+  "fecha": "2019-03-06T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-05-06T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    8,
+    36,
+    15,
+    10,
+    3
+  ],
+  "numerosRevancha": [
+    28,
+    1,
+    4,
+    7,
+    24
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 68500000,
+    "acumulado": 88900000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 21000000,
+    "acumuladoRevancha": 22000000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1957,
+  "fecha": "2019-08-24T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-10-24T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

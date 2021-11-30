@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    31,
+    22,
+    39,
+    25,
+    14
+  ],
+  "numerosRevancha": [
+    27,
+    36,
+    26,
+    4,
+    1
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 263600000,
+    "acumulado": 313100000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 40400000,
+    "acumuladoRevancha": 53300000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1908,
+  "fecha": "2019-03-02T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-05-02T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    34,
+    10,
+    39,
+    24,
+    23
+  ],
+  "numerosRevancha": [
+    5,
+    35,
+    21,
+    14,
+    25
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 176100000,
+    "acumulado": 197700000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 20000000,
+    "acumuladoRevancha": 21000000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1981,
+  "fecha": "2019-11-16T19:30:00",
+  "estado": 3,
+  "vigencia": "2020-01-16T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

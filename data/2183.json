@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    35,
+    17,
+    28,
+    31,
+    9
+  ],
+  "numerosRevancha": [
+    10,
+    27,
+    14,
+    33,
+    32
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 125200000,
+    "acumulado": 143800000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 30500000,
+    "acumuladoRevancha": 39000000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2183,
+  "fecha": "2021-11-10T19:30:00",
+  "estado": 3,
+  "vigencia": "2022-01-10T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

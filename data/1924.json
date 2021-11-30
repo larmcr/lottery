@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    7,
+    11,
+    37,
+    28,
+    39
+  ],
+  "numerosRevancha": [
+    8,
+    2,
+    17,
+    35,
+    15
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 126800000,
+    "acumulado": 152400000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 62900000,
+    "acumuladoRevancha": 71100000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1924,
+  "fecha": "2019-05-01T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-07-01T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

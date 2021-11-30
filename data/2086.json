@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    18,
+    5,
+    14,
+    22,
+    21
+  ],
+  "numerosRevancha": [
+    20,
+    35,
+    24,
+    26,
+    30
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 66200000,
+    "acumulado": 81400000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 96200000,
+    "acumuladoRevancha": 103200000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2086,
+  "fecha": "2020-12-02T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-02-01T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

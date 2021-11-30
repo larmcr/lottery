@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    10,
+    5,
+    35,
+    38,
+    24
+  ],
+  "numerosRevancha": [
+    33,
+    7,
+    29,
+    36,
+    5
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 337000000,
+    "acumulado": 372200000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 32500000,
+    "acumuladoRevancha": 45200000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2106,
+  "fecha": "2021-02-10T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-04-12T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

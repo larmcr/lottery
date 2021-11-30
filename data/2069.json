@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    0,
+    39,
+    2,
+    15,
+    7
+  ],
+  "numerosRevancha": [
+    36,
+    12,
+    21,
+    1,
+    32
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 197700000,
+    "acumulado": 50000000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 95500000,
+    "acumuladoRevancha": 105500000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2069,
+  "fecha": "2020-10-03T19:30:00",
+  "estado": 3,
+  "vigencia": "2020-12-03T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    30,
+    27,
+    12,
+    10,
+    38
+  ],
+  "numerosRevancha": [
+    22,
+    27,
+    24,
+    16,
+    37
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 83700000,
+    "acumulado": 119500000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 21000000,
+    "acumuladoRevancha": 22000000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1898,
+  "fecha": "2019-01-26T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-03-28T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

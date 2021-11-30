@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    17,
+    33,
+    6,
+    10,
+    12
+  ],
+  "numerosRevancha": [
+    0,
+    5,
+    36,
+    37,
+    17
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 111200000,
+    "acumulado": 50000000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 50100000,
+    "acumuladoRevancha": 60900000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2166,
+  "fecha": "2021-09-11T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-11-11T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

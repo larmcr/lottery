@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    0,
+    6,
+    23,
+    24,
+    9
+  ],
+  "numerosRevancha": [
+    39,
+    37,
+    27,
+    30,
+    34
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 154300000,
+    "acumulado": 183700000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 281000000,
+    "acumuladoRevancha": 297000000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2159,
+  "fecha": "2021-08-18T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-10-18T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    38,
+    40,
+    39,
+    19,
+    34
+  ],
+  "numerosRevancha": [
+    3,
+    40,
+    11,
+    38,
+    16
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 219400000,
+    "acumulado": 247800000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 123800000,
+    "acumuladoRevancha": 136900000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2147,
+  "fecha": "2021-07-07T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-09-06T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

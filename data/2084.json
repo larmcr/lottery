@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    6,
+    40,
+    8,
+    33,
+    11
+  ],
+  "numerosRevancha": [
+    0,
+    11,
+    40,
+    34,
+    12
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 50000000,
+    "acumulado": 50000000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 82300000,
+    "acumuladoRevancha": 88700000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2084,
+  "fecha": "2020-11-25T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-01-25T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

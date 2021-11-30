@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    18,
+    3,
+    29,
+    10,
+    8
+  ],
+  "numerosRevancha": [
+    17,
+    5,
+    4,
+    28,
+    16
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 83500000,
+    "acumulado": 50000000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 97700000,
+    "acumuladoRevancha": 104600000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2006,
+  "fecha": "2020-02-19T19:30:00",
+  "estado": 3,
+  "vigencia": "2020-04-20T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

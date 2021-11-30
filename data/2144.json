@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    22,
+    15,
+    36,
+    14,
+    9
+  ],
+  "numerosRevancha": [
+    24,
+    8,
+    35,
+    36,
+    27
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 146900000,
+    "acumulado": 168800000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 90800000,
+    "acumuladoRevancha": 100600000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2144,
+  "fecha": "2021-06-26T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-08-26T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

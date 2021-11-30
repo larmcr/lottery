@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    27,
+    14,
+    26,
+    31,
+    3
+  ],
+  "numerosRevancha": [
+    1,
+    9,
+    2,
+    35,
+    13
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 93200000,
+    "acumulado": 116700000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 107300000,
+    "acumuladoRevancha": 118100000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2125,
+  "fecha": "2021-04-21T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-06-21T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

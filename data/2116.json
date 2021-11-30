@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    31,
+    7,
+    29,
+    6,
+    35
+  ],
+  "numerosRevancha": [
+    17,
+    30,
+    16,
+    38,
+    9
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 73000000,
+    "acumulado": 95300000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 21000000,
+    "acumuladoRevancha": 30000000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2116,
+  "fecha": "2021-03-17T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-05-17T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

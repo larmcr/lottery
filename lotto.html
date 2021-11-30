@@ -1,0 +1,184 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Lotto</title>
+  <meta name="description" content="JPS lotto">
+  <link rel="shortcut icon" href="https://picocss.com/favicon.ico">
+  <!-- <link rel="canonical" href="https://picocss.com/examples/classless/"> -->
+
+  <!-- Pico.css (Classless version) -->
+  <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.classless.min.css">
+</head>
+
+<body>
+  <header>
+    <hgroup>
+      <h1>JPS Lotto</h1>
+      <h2>Get all Lotto info</h2>
+    </hgroup>
+    <nav>
+      <ul>
+        <li>Theme:</li>
+        <li><a href="#" data-theme-switcher="auto">Auto</a></li>
+        <li><a href="#" data-theme-switcher="light">Light</a></li>
+        <li><a href="#" data-theme-switcher="dark">Dark</a></li>
+      </ul>
+    </nav>
+  </header><!-- ./ Header -->
+
+  <main>
+    <!-- Tables -->
+    <section id="tables">
+      <h2>Tables</h2>
+      <figure>
+        <table role="grid">
+          <thead>
+            <tr>
+              <th scope="col">#</th>
+              <th scope="col">Heading</th>
+              <th scope="col">Heading</th>
+              <th scope="col">Heading</th>
+              <th scope="col">Heading</th>
+              <th scope="col">Heading</th>
+              <th scope="col">Heading</th>
+              <th scope="col">Heading</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <th scope="row">1</th>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+            </tr>
+            <tr>
+              <th scope="row">2</th>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+            </tr>
+            <tr>
+              <th scope="row">3</th>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+              <td>Cell</td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    </section><!-- ./ Tables -->
+
+    <!-- Accordions -->
+    <section id="accordions">
+      <h2>Accordions</h2>
+      <details>
+        <summary>Collapsible elements 1</summary>
+        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque urna diam, tincidunt nec porta sed,
+          auctor id velit. Etiam venenatis nisl ut orci consequat, vitae tempus quam commodo. Nulla non mauris ipsum.
+          Aliquam eu posuere orci. Nulla convallis lectus rutrum quam hendrerit, in facilisis elit sollicitudin. Mauris
+          pulvinar pulvinar mi, dictum tristique elit auctor quis. Maecenas ac ipsum ultrices, porta turpis sit amet,
+          congue turpis.</p>
+      </details>
+      <details open>
+        <summary>Collapsible elements 2</summary>
+        <ul>
+          <li>Vestibulum id elit quis massa interdum sodales.</li>
+          <li>Nunc quis eros vel odio pretium tincidunt nec quis neque.</li>
+          <li>Quisque sed eros non eros ornare elementum.</li>
+          <li>Cras sed libero aliquet, porta dolor quis, dapibus ipsum.</li>
+        </ul>
+      </details>
+    </section><!-- ./ Accordions -->
+
+    <!-- Article-->
+    <article id="article">
+      <h2>Article</h2>
+      <p>Nullam dui arcu, malesuada et sodales eu, efficitur vitae dolor. Sed ultricies dolor non ante vulputate
+        hendrerit. Vivamus sit amet suscipit sapien. Nulla iaculis eros a elit pharetra egestas. Nunc placerat facilisis
+        cursus. Sed vestibulum metus eget dolor pharetra rutrum.</p>
+      <footer><small>Duis nec elit placerat, suscipit nibh quis, finibus neque.</small></footer>
+    </article><!-- ./ Article-->
+
+    <!-- Loading -->
+    <section id="loading">
+      <h2>Loading</h2>
+      <article aria-busy="true"></article>
+      <button aria-busy="true">Please wait…</button>
+    </section><!-- ./ Loading -->
+
+  </main><!-- ./ Main -->
+
+  <!-- Minimal theme switcher -->
+  <script>
+    const themeSwitcher = {
+      // Config
+      buttonsTarget: "a[data-theme-switcher]",
+      buttonAttribute: "data-theme-switcher",
+      rootAttribute: "data-theme",
+
+      // Init
+      init() {
+        document.querySelectorAll(this.buttonsTarget).forEach(
+          function (button) {
+            button.addEventListener(
+              "click",
+              function (event) {
+                event.preventDefault();
+                document
+                  .querySelector("html")
+                  .setAttribute(
+                    this.rootAttribute,
+                    event.target.getAttribute(this.buttonAttribute)
+                  );
+              }.bind(this),
+              false
+            );
+          }.bind(this)
+        );
+      },
+    };
+    // Init
+    themeSwitcher.init();
+  </script>
+
+  <script>
+    (async () => {
+      const API = 'https://integration.jps.go.cr/api/app/lotto/';
+      let flag = true;
+      const getJson = async (id) => {
+        console.info(`Fetching '${id}'`);
+        try {
+          const response = await fetch(`https://integration.jps.go.cr/api/app/lotto/${id}`);
+          const json = await response.json();
+          return json;
+        }
+        catch(err) {
+          flag = false;
+          console.info('ERROR ->', err);
+        }
+      }
+      const last = await getJson('last');
+      for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
+        const json = await getJson(sorteo);
+        console.info(json);
+      }
+    })();
+  </script>
+</body>
+
+</html>

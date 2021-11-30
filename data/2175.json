@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    8,
+    2,
+    27,
+    11,
+    12
+  ],
+  "numerosRevancha": [
+    19,
+    35,
+    32,
+    28,
+    39
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 213800000,
+    "acumulado": 237600000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 142700000,
+    "acumuladoRevancha": 154800000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2175,
+  "fecha": "2021-10-13T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-12-13T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

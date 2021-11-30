@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    13,
+    9,
+    14,
+    33,
+    0
+  ],
+  "numerosRevancha": [
+    14,
+    34,
+    2,
+    16,
+    30
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 97900000,
+    "acumulado": 126800000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 53800000,
+    "acumuladoRevancha": 62900000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1923,
+  "fecha": "2019-04-27T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-06-27T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    33,
+    19,
+    31,
+    30,
+    28
+  ],
+  "numerosRevancha": [
+    19,
+    37,
+    0,
+    26,
+    25
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 67000000,
+    "acumulado": 88000000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 21000000,
+    "acumuladoRevancha": 30100000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2136,
+  "fecha": "2021-05-29T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-07-29T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

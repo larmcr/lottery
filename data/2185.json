@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    22,
+    40,
+    10,
+    34,
+    6
+  ],
+  "numerosRevancha": [
+    27,
+    22,
+    4,
+    5,
+    19
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 164900000,
+    "acumulado": 184900000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 48800000,
+    "acumuladoRevancha": 58100000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2185,
+  "fecha": "2021-11-17T19:30:00",
+  "estado": 3,
+  "vigencia": "2022-01-17T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

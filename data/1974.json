@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    28,
+    25,
+    21,
+    1,
+    20
+  ],
+  "numerosRevancha": [
+    17,
+    21,
+    6,
+    27,
+    11
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 50000000,
+    "acumulado": 65600000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 43700000,
+    "acumuladoRevancha": 49500000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1974,
+  "fecha": "2019-10-23T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-12-23T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

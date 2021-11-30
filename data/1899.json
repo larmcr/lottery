@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    1,
+    23,
+    6,
+    28,
+    13
+  ],
+  "numerosRevancha": [
+    25,
+    26,
+    40,
+    24,
+    6
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 119500000,
+    "acumulado": 155900000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 22000000,
+    "acumuladoRevancha": 23000000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1899,
+  "fecha": "2019-01-30T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-04-01T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

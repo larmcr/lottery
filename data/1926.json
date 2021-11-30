@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    10,
+    23,
+    4,
+    30,
+    29
+  ],
+  "numerosRevancha": [
+    36,
+    28,
+    0,
+    34,
+    38
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 186500000,
+    "acumulado": 218400000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 82200000,
+    "acumuladoRevancha": 92600000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1926,
+  "fecha": "2019-05-08T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-07-08T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    5,
+    6,
+    28,
+    1,
+    20
+  ],
+  "numerosRevancha": [
+    12,
+    11,
+    25,
+    30,
+    23
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 71300000,
+    "acumulado": 93400000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 74100000,
+    "acumuladoRevancha": 20000000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1950,
+  "fecha": "2019-07-31T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-09-30T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

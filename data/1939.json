@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    25,
+    24,
+    37,
+    15,
+    12
+  ],
+  "numerosRevancha": [
+    28,
+    25,
+    11,
+    22,
+    32
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 130600000,
+    "acumulado": 160500000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 230600000,
+    "acumuladoRevancha": 244000000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1939,
+  "fecha": "2019-06-22T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-08-22T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

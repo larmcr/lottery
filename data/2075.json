@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    28,
+    36,
+    38,
+    21,
+    39
+  ],
+  "numerosRevancha": [
+    12,
+    28,
+    27,
+    13,
+    38
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 142900000,
+    "acumulado": 162800000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 20000000,
+    "acumuladoRevancha": 21000000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2075,
+  "fecha": "2020-10-24T19:30:00",
+  "estado": 3,
+  "vigencia": "2020-12-24T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

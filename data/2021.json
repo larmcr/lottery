@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    2,
+    30,
+    12,
+    29,
+    34
+  ],
+  "numerosRevancha": [
+    19,
+    12,
+    15,
+    18,
+    33
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 97000000,
+    "acumulado": 109700000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 46600000,
+    "acumuladoRevancha": 51800000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2021,
+  "fecha": "2020-04-15T19:30:00",
+  "estado": 3,
+  "vigencia": "2020-06-15T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

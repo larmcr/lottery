@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    22,
+    3,
+    36,
+    20,
+    27
+  ],
+  "numerosRevancha": [
+    17,
+    16,
+    23,
+    5,
+    19
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 118000000,
+    "acumulado": 135600000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 22000000,
+    "acumuladoRevancha": 29200000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2036,
+  "fecha": "2020-06-06T19:30:00",
+  "estado": 3,
+  "vigencia": "2020-08-06T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

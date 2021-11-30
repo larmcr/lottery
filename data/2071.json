@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    16,
+    36,
+    12,
+    30,
+    17
+  ],
+  "numerosRevancha": [
+    2,
+    1,
+    9,
+    15,
+    29
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 65900000,
+    "acumulado": 84500000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 112800000,
+    "acumuladoRevancha": 121500000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2071,
+  "fecha": "2020-10-10T19:30:00",
+  "estado": 3,
+  "vigencia": "2020-12-10T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

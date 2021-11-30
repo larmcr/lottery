@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    15,
+    11,
+    26,
+    35,
+    21
+  ],
+  "numerosRevancha": [
+    25,
+    11,
+    35,
+    29,
+    24
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 79900000,
+    "acumulado": 50000000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 331500000,
+    "acumuladoRevancha": 20000000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2162,
+  "fecha": "2021-08-28T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-10-28T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

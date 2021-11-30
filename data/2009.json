@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    2,
+    15,
+    0,
+    17,
+    35
+  ],
+  "numerosRevancha": [
+    23,
+    21,
+    33,
+    35,
+    24
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 82600000,
+    "acumulado": 101600000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 118700000,
+    "acumuladoRevancha": 127100000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2009,
+  "fecha": "2020-02-29T19:30:00",
+  "estado": 3,
+  "vigencia": "2020-04-30T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

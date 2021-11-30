@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    29,
+    13,
+    18,
+    34,
+    6
+  ],
+  "numerosRevancha": [
+    16,
+    27,
+    22,
+    40,
+    6
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 244100000,
+    "acumulado": 272700000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 30200000,
+    "acumuladoRevancha": 41200000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2103,
+  "fecha": "2021-01-30T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-04-01T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    40,
+    23,
+    14,
+    6,
+    21
+  ],
+  "numerosRevancha": [
+    4,
+    27,
+    24,
+    37,
+    26
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 112800000,
+    "acumulado": 135700000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 21000000,
+    "acumuladoRevancha": 30600000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2130,
+  "fecha": "2021-05-08T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-07-08T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

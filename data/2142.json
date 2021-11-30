@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    15,
+    2,
+    29,
+    37,
+    31
+  ],
+  "numerosRevancha": [
+    40,
+    2,
+    21,
+    32,
+    14
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 105100000,
+    "acumulado": 126600000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 72100000,
+    "acumuladoRevancha": 81700000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2142,
+  "fecha": "2021-06-19T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-08-19T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

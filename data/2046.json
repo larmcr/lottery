@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    6,
+    21,
+    40,
+    33,
+    16
+  ],
+  "numerosRevancha": [
+    19,
+    25,
+    13,
+    34,
+    35
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 78400000,
+    "acumulado": 91900000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 46800000,
+    "acumuladoRevancha": 52400000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2046,
+  "fecha": "2020-07-11T19:30:00",
+  "estado": 3,
+  "vigencia": "2020-09-10T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

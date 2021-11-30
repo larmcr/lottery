@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    4,
+    38,
+    14,
+    37,
+    15
+  ],
+  "numerosRevancha": [
+    37,
+    18,
+    4,
+    34,
+    15
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 104500000,
+    "acumulado": 125200000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 21000000,
+    "acumuladoRevancha": 30500000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2182,
+  "fecha": "2021-11-06T19:30:00",
+  "estado": 3,
+  "vigencia": "2022-01-06T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

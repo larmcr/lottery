@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    3,
+    11,
+    12,
+    26,
+    24
+  ],
+  "numerosRevancha": [
+    17,
+    27,
+    9,
+    16,
+    21
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 372200000,
+    "acumulado": 412300000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 45200000,
+    "acumuladoRevancha": 60200000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 2107,
+  "fecha": "2021-02-13T19:30:00",
+  "estado": 3,
+  "vigencia": "2021-04-15T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

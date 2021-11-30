@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    38,
+    10,
+    1,
+    40,
+    27
+  ],
+  "numerosRevancha": [
+    7,
+    29,
+    20,
+    31,
+    5
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 103100000,
+    "acumulado": 130000000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 150200000,
+    "acumuladoRevancha": 160500000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1932,
+  "fecha": "2019-05-29T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-07-29T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    14,
+    24,
+    17,
+    10,
+    0
+  ],
+  "numerosRevancha": [
+    0,
+    40,
+    13,
+    4,
+    3
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 123900000,
+    "acumulado": 143300000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 28900000,
+    "acumuladoRevancha": 36000000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1972,
+  "fecha": "2019-10-16T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-12-16T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}

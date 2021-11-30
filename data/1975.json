@@ -1,0 +1,35 @@
+{
+  "numeros": [
+    7,
+    15,
+    33,
+    28,
+    9
+  ],
+  "numerosRevancha": [
+    8,
+    33,
+    37,
+    26,
+    39
+  ],
+  "premiosLotto": {
+    "dosAciertos": 600,
+    "tresAciertos": 9500,
+    "cuatroAciertos": 100000,
+    "cincoAciertos": 65600000,
+    "acumulado": 82300000,
+    "dosAciertosRevancha": 600,
+    "tresAciertosRevancha": 5000,
+    "cuatroAciertosRevancha": 50000,
+    "cincoAciertosRevancha": 49500000,
+    "acumuladoRevancha": 55800000
+  },
+  "sorteo_Id": -1,
+  "numeroSorteo": 1975,
+  "fecha": "2019-10-26T19:30:00",
+  "estado": 3,
+  "vigencia": "2019-12-26T00:00:00",
+  "tipoSorteoCode": "lotto",
+  "tipoSorteoName": "Lotto"
+}
