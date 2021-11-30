@@ -1,7 +1,7 @@
 const fs = require('fs');
 const fetch = require('node-fetch');
 
-const getAll = async () => {
+const getData = async () => {
   const API = 'https://integration.jps.go.cr/api/app/lotto';
   let flag = true;
   const getJson = async (id) => {
@@ -17,11 +17,11 @@ const getAll = async () => {
     }
   }
   const last = await getJson('last');
-  fs.writeFileSync(`./data/${last.numeroSorteo}.json`, JSON.stringify(last, null, 2));
-  // for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
-  //   const json = await getJson(sorteo);
-  //   fs.writeFileSync(`./data/${json.numeroSorteo}.json`, JSON.stringify(json, null, 2));
-  // }
+  fs.writeFileSync(`./data/${last.numeroSorteo}.json`, JSON.stringify(last));
+  for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
+    const json = await getJson(sorteo);
+    fs.writeFileSync(`./data/${json.numeroSorteo}.json`, JSON.stringify(json));
+  }
 }
 
 const processData = () => {
@@ -31,10 +31,10 @@ const processData = () => {
     const { numeroSorteo, numeros, numerosRevancha} = JSON.parse(fs.readFileSync(`./data/${file}`));
     all[numeroSorteo] = { n: numeros, r: numerosRevancha };
   });
-  fs.writeFileSync('./data/all.json', JSON.stringify(all, null, 0));
+  fs.writeFileSync('./all.json', JSON.stringify(all));
 }
 
 (() => {
-  // getAll();
+  getData();
   processData();
 })();
