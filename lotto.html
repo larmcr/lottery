@@ -12,6 +12,10 @@
   <!-- Pico.css (Classless version) -->
   <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.classless.min.css">
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
+  <script>
+    function normalQuantile(r,t,o){var n,e,a;return o<0?-1:0==o?t:(n=r-.5,.075<=r&&r<=.925?(e=.180625-n*n,a=n*(((((((2509.0809287301227*e+33430.57558358813)*e+67265.7709270087)*e+45921.95393154987)*e+13731.69376550946)*e+1971.5909503065513)*e+133.14166789178438)*e+3.3871328727963665)/(((((((5226.495278852854*e+28729.085735721943)*e+39307.89580009271)*e+21213.794301586597)*e+5394.196021424751)*e+687.1870074920579)*e+42.31333070160091)*e+1)):(e=n>0?1-r:r,e=Math.sqrt(-Math.log(e)),e<=5?(e+=-1.6,a=(((((((.0007745450142783414*e+.022723844989269184)*e+.2417807251774506)*e+1.2704582524523684)*e+3.6478483247632045)*e+5.769497221460691)*e+4.630337846156546)*e+1.4234371107496835)/(((((((1.0507500716444169e-9*e+.0005475938084995345)*e+.015198666563616457)*e+.14810397642748008)*e+.6897673349851)*e+1.6763848301838038)*e+2.053191626637759)*e+1)):(e+=-5,a=(((((((2.0103343992922881e-7*e+27115555687434876e-21)*e+.0012426609473880784)*e+.026532189526576124)*e+.29656057182850487)*e+1.7848265399172913)*e+5.463784911164114)*e+6.657904643501103)/(((((((2.0442631033899397e-15*e+1.421511758316446e-7)*e+18463183175100548e-21)*e+.0007868691311456133)*e+.014875361290850615)*e+.1369298809227358)*e+.599832206555888)*e+1)),n<0&&(a=-a)),t+o*a)}function sign(r){return 0==r?0:r>0?1:-1}function ShapiroWilkW(r){function t(r,t,o){var n,a;if(a=r[0],t>1){for(n=o*r[t-1],e=t-2;e>0;e--)n=(n+r[e])*o;a+=n}return a}r=r.sort(function(r,t){return r-t});var o=r.length;if(!(o<3)){var n,e,a,i,l,s,f,h,M,u,g,c,v,q,m,x,p,b,Q,W,d,k,w,y,A,S=Math.floor(o/2),j=new Array(Math.floor(S)+1),z=1e-19,B=[-2.273,.459],C=[0,.221157,-.147981,-2.07119,4.434685,-2.706056],D=[0,.042981,-.293762,-1.752461,5.682633,-3.582633],E=[.544,-.39978,.025054,-6714e-7],F=[1.3822,-.77857,.062767,-.0020322],G=[-1.5861,-.31082,-.083751,.0038915],H=[-.4803,-.082676,.0030302],I=1;if(g=o,3==o)j[1]=.70710678;else{for(W=g+.25,l=0,n=1;n<=S;n++){j[n]=normalQuantile((n-.375)/W,0,1);var J=j[n];l+=J*J}for(l*=2,s=Math.sqrt(l),w=1/Math.sqrt(g),M=t(C,6,w)-j[1]/s,o>5?(a=3,u=-j[2]/s+t(D,6,w),b=Math.sqrt((l-j[1]*j[1]*2-j[2]*j[2]*2)/(1-M*M*2-u*u*2)),j[2]=u):(a=2,b=Math.sqrt((l-j[1]*j[1]*2)/(1-M*M*2))),j[1]=M,n=a;n<=S;n++)j[n]/=-b}if(h=r[o-1]-r[0],h<z)console.log("range is too small!");else{for(m=r[0]/h,q=m,c=-j[1],n=1,e=o-1;n<o;e--){if(v=r[n]/h,m-v>z)return void console.log("xx - xi is too big.",m-v);q+=v,n++,n!=e&&(c+=sign(n-e)*j[Math.min(n,e)]),m=v}if(!(o>5e3)){for(c/=o,q/=o,d=y=k=0,n=0,e=o-1;n<o;n++,e--)Q=n!=e?sign(n-e)*j[1+Math.min(n,e)]-c:-c,A=r[n]/h-q,d+=Q*Q,y+=A*A,k+=Q*A;i=Math.sqrt(d*y),p=(i-k)*(i+k)/(d*y);var K=1-p;if(3==o){var L=1.90985931710274,N=1.0471975511966;return I=L*(asin(sqrt(K))-N),I<0&&(I=0),K}if(x=Math.log(p),m=Math.log(g),o<=11){if(f=t(B,2,g),x>=f)return I=1e-99,K;x=-Math.log(f-x),t(E,4,g),Math.exp(t(F,4,g))}else t(G,4,m),Math.exp(t(H,3,m));return K}console.log("n is too big!")}}}
+  </script>
 </head>
 
 <body>
@@ -82,29 +86,22 @@
           </tbody>
         </table>
       </figure>
-    </section><!-- ./ Tables -->
+    </section>
+    <!-- ./ Tables -->
 
     <!-- Accordions -->
     <section id="accordions">
-      <h2>Accordions</h2>
-      <details>
-        <summary>Collapsible elements 1</summary>
-        <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Pellentesque urna diam, tincidunt nec porta sed,
-          auctor id velit. Etiam venenatis nisl ut orci consequat, vitae tempus quam commodo. Nulla non mauris ipsum.
-          Aliquam eu posuere orci. Nulla convallis lectus rutrum quam hendrerit, in facilisis elit sollicitudin. Mauris
-          pulvinar pulvinar mi, dictum tristique elit auctor quis. Maecenas ac ipsum ultrices, porta turpis sit amet,
-          congue turpis.</p>
+      <h2>Plots</h2>
+      <details open>
+        <summary>Box</summary>
+        <div id="box"></div>
       </details>
       <details open>
-        <summary>Collapsible elements 2</summary>
-        <ul>
-          <li>Vestibulum id elit quis massa interdum sodales.</li>
-          <li>Nunc quis eros vel odio pretium tincidunt nec quis neque.</li>
-          <li>Quisque sed eros non eros ornare elementum.</li>
-          <li>Cras sed libero aliquet, porta dolor quis, dapibus ipsum.</li>
-        </ul>
+        <summary>Histogram</summary>
+        <div id="histogram"></div>
       </details>
-    </section><!-- ./ Accordions -->
+    </section>
+    <!-- ./ Accordions -->
 
     <!-- Article-->
     <article id="article">
@@ -123,7 +120,7 @@
     </section><!-- ./ Loading -->
 
     <section>
-      <div id="plot"></div>
+      
       <textarea id="area"></textarea>
     </section>
 
@@ -169,14 +166,19 @@
         const json = await response.json();
         let all = [];
         let obj = {};
+        let games = {};
         Object.keys(json).forEach((id) => {
           all = all.concat(json[id].n, json[id].r);
+          games[id] = {
+            n: json[id].n.reduce((a, b) => a + b),
+            r: json[id].r.reduce((a, b) => a + b),
+          };
         });
         all.forEach((key) => {
           if (!obj[key]) obj[key] = 0;
           obj[key]++;
         });
-        // console.info(obj);
+        console.info(games);
         const entries = Object.entries(obj);
         const length = all.length;
         const sorted = entries.sort((a, b) => b[1] - a[1]).map((ent) => [Number(ent[0]), ent[1], ent[1] / length]);
@@ -244,9 +246,12 @@
         }
         console.info(info);
         console.info(Object.entries(cands).sort((a, b) => b[1] - a[1]).map((ent) => [Number(ent[0]), ent[1]]));
-        // let x = sorted.map((item) => item[1]);
-        // const data = [{ x, type: 'histogram', histnorm: 'probability' }];
-        // Plotly.newPlot(document.getElementById('plot'), data);
+        let x = Object.keys(games).map((game) => [games[game].n, games[game].r]).flat();
+        console.info(x.join(','));
+        Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
+        Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram' }]);
+        console.info('ShapiroWilkW ->', ShapiroWilkW(x));
+        console.info('quartiles ->', jStat.quartiles(x));
       } catch (err) {
         console.info('ERROR ->', err);
       }
