@@ -149,6 +149,7 @@
           allSums: [],
           games: {},
           numbers: {},
+          tops: {},
         };
         Object.keys(json).forEach((game, index) => {
           obj.allNumbers = obj.allNumbers.concat(json[game].n, json[game].r);
@@ -176,6 +177,8 @@
         obj.count = obj.allNumbers.length;
         obj.q = jStat.quartiles(obj.allSums);
         obj.sw = ShapiroWilkW(obj.allSums);
+        obj.min = jStat.min(obj.allSums);
+        obj.max = jStat.min(obj.allSums);
         let toOrder = {};
         Object.keys(obj.numbers).forEach((num) => {
           obj.numbers[num].p = Math.round(obj.numbers[num].count / obj.count * 10000) / 100;
