@@ -153,7 +153,7 @@
         Object.keys(json).forEach((game, index) => {
           obj.allNumbers = obj.allNumbers.concat(json[game].n, json[game].r);
           obj.games[index] = {
-            id: game,
+            id: Number(game),
             n: json[game].n,
             r: json[game].r,
             sn: json[game].n.reduce((a, b) => a + b),
@@ -176,9 +176,12 @@
         obj.count = obj.allNumbers.length;
         obj.q = jStat.quartiles(obj.allSums);
         obj.sw = ShapiroWilkW(obj.allSums);
+        let toOrder = {};
         Object.keys(obj.numbers).forEach((num) => {
           obj.numbers[num].p = Math.round(obj.numbers[num].count / obj.count * 10000) / 100;
+          toOrder[num] = obj.numbers[num].count;
         });
+        obj.order = Object.entries(toOrder).sort((a, b) => b[1] - a[1]).map((ent) => Number(ent[0]));
         // const p = Object.keys(obj.numbers).map((num) => obj.numbers[num].p).reduce((a, b) => a + b);
         // console.info(p);
         // const entries = Object.entries(obj);
