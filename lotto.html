@@ -118,7 +118,7 @@
   <!-- ./ Main -->
 
   <!-- Minimal theme switcher -->
-  <script>
+  <script async>
     const themeSwitcher = {
       // Config
       buttonsTarget: 'a[data-theme-switcher]',
@@ -138,98 +138,118 @@
     themeSwitcher.init();
   </script>
 
-  <script>
+  <script defer>
     (async () => {
       try {
         const response = await fetch('./lottos.json');
         const json = await response.json();
-        let all = [];
-        let obj = {};
-        let games = {};
-        Object.keys(json).forEach((id) => {
-          all = all.concat(json[id].n, json[id].r);
-          games[id] = {
-            n: json[id].n.reduce((a, b) => a + b),
-            r: json[id].r.reduce((a, b) => a + b),
-          };
+        let allNums = [];
+        let obj = {
+          allNumbers: [],
+          allSums: [],
+          games: {},
+          numbers: {},
+        };
+        Object.keys(json).forEach((game, index) => {
+          obj.allNumbers = obj.allNumbers.concat(json[game].n, json[game].r);
+          obj.games[index] = {
+            id: game,
+            n: json[game].n,
+            r: json[game].r,
+            sn: json[game].n.reduce((a, b) => a + b),
+            sr: json[game].r.reduce((a, b) => a + b),
+          }
+          obj.allSums.push(obj.games[index].sn, obj.games[index].sr);
+          json[game].n.forEach((num) => {
+            if (!obj.numbers[num]) {
+              obj.numbers[num] = { count: 0 };
+            }
+            obj.numbers[num].count++;
+          });
+          json[game].r.forEach((num) => {
+            if (!obj.numbers[num]) {
+              obj.numbers[num] = { count: 0 };
+            }
+            obj.numbers[num].count++;
+          });
         });
-        all.forEach((key) => {
-          if (!obj[key]) obj[key] = 0;
-          obj[key]++;
+        obj.count = obj.allNumbers.length;
+        obj.q = jStat.quartiles(obj.allSums);
+        obj.sw = ShapiroWilkW(obj.allSums);
+        Object.keys(obj.numbers).forEach((num) => {
+          obj.numbers[num].p = Math.round(obj.numbers[num].count / obj.count * 10000) / 100;
         });
-        console.info(games);
-        const entries = Object.entries(obj);
-        const length = all.length;
-        const sorted = entries.sort((a, b) => b[1] - a[1]).map((ent) => [Number(ent[0]), ent[1], ent[1] / length]);
-        const PIVOT = 20;
-        const MAX = 5;
-        let info = '';
-        let prev = 0;
-        let max = MAX;
-        let cands = {};
-        for (let index = 0; index < max; ++index) {
-          const [a, b, c] = sorted[index];
-          info = `${info}\n\t${a < 10 ? '0' + a : a} -> ${Math.round(c * 10000) / 100}%`;
-          if (!cands[a]) cands[a] = 0;
-          cands[a]++;
-        }
-        info = `Top numbers:${info}\n\nTop even numbers:`;
-        prev = 0;
-        max = MAX;
-        for (let index = 0; index < max; ++index) {
-          const [a, b, c] = sorted[index];
-          if (a % 2 === 0) {
-            info = `${info}\n\t${a < 10 ? '0' + a : a} -> ${Math.round(c * 10000) / 100}%`;
-            if (!cands[a]) cands[a] = 0;
-            cands[a]++;
-          } else {
-            ++max;
-          }
-        }
-        info = `${info}\n\nTop odd numbers:`;
-        max = MAX;
-        for (let index = 0; index < max; ++index) {
-          const [a, b, c] = sorted[index];
-          if (a % 2 !== 0) {
-            info = `${info}\n\t${a < 10 ? '0' + a : a} -> ${Math.round(c * 10000) / 100}%`;
-            if (!cands[a]) cands[a] = 0;
-            cands[a]++;
-          } else {
-            ++max;
-          }
-        }
-        info = `${info}\n\nTop numbers < ${PIVOT}:`;
-        max = MAX;
-        for (let index = 0; index < max; ++index) {
-          const [a, b, c] = sorted[index];
-          if (a < PIVOT) {
-            info = `${info}\n\t${a < 10 ? '0' + a : a} -> ${Math.round(c * 10000) / 100}%`;
-            if (!cands[a]) cands[a] = 0;
-            cands[a]++;
-          } else {
-            ++max;
-          }
-        }
-        info = `${info}\n\nTop numbers >= ${PIVOT}:`;
-        max = MAX;
-        for (let index = 0; index < max; ++index) {
-          const [a, b, c] = sorted[index];
-          if (a >= PIVOT) {
-            info = `${info}\n\t${a < 10 ? '0' + a : a} -> ${Math.round(c * 10000) / 100}%`;
-            if (!cands[a]) cands[a] = 0;
-            cands[a]++;
-          } else {
-            ++max;
-          }
-        }
-        console.info(info);
-        console.info(Object.entries(cands).sort((a, b) => b[1] - a[1]).map((ent) => [Number(ent[0]), ent[1]]));
-        let x = Object.keys(games).map((game) => [games[game].n, games[game].r]).flat();
-        console.info(x.join(','));
+        // const p = Object.keys(obj.numbers).map((num) => obj.numbers[num].p).reduce((a, b) => a + b);
+        // console.info(p);
+        // const entries = Object.entries(obj);
+        // const length = all.length;
+        // const sorted = entries.sort((a, b) => b[1] - a[1]).map((ent) => [Number(ent[0]), ent[1], ent[1] / length]);
+        // const PIVOT = 20;
+        // const MAX = 5;
+        // let info = '';
+        // let prev = 0;
+        // let max = MAX;
+        // let cands = {};
+        // for (let index = 0; index < max; ++index) {
+        //   const [a, b, c] = sorted[index];
+        //   info = `${info}\n\t${a < 10 ? '0' + a : a} -> ${Math.round(c * 10000) / 100}%`;
+        //   if (!cands[a]) cands[a] = 0;
+        //   cands[a]++;
+        // }
+        // info = `Top numbers:${info}\n\nTop even numbers:`;
+        // prev = 0;
+        // max = MAX;
+        // for (let index = 0; index < max; ++index) {
+        //   const [a, b, c] = sorted[index];
+        //   if (a % 2 === 0) {
+        //     info = `${info}\n\t${a < 10 ? '0' + a : a} -> ${Math.round(c * 10000) / 100}%`;
+        //     if (!cands[a]) cands[a] = 0;
+        //     cands[a]++;
+        //   } else {
+        //     ++max;
+        //   }
+        // }
+        // info = `${info}\n\nTop odd numbers:`;
+        // max = MAX;
+        // for (let index = 0; index < max; ++index) {
+        //   const [a, b, c] = sorted[index];
+        //   if (a % 2 !== 0) {
+        //     info = `${info}\n\t${a < 10 ? '0' + a : a} -> ${Math.round(c * 10000) / 100}%`;
+        //     if (!cands[a]) cands[a] = 0;
+        //     cands[a]++;
+        //   } else {
+        //     ++max;
+        //   }
+        // }
+        // info = `${info}\n\nTop numbers < ${PIVOT}:`;
+        // max = MAX;
+        // for (let index = 0; index < max; ++index) {
+        //   const [a, b, c] = sorted[index];
+        //   if (a < PIVOT) {
+        //     info = `${info}\n\t${a < 10 ? '0' + a : a} -> ${Math.round(c * 10000) / 100}%`;
+        //     if (!cands[a]) cands[a] = 0;
+        //     cands[a]++;
+        //   } else {
+        //     ++max;
+        //   }
+        // }
+        // info = `${info}\n\nTop numbers >= ${PIVOT}:`;
+        // max = MAX;
+        // for (let index = 0; index < max; ++index) {
+        //   const [a, b, c] = sorted[index];
+        //   if (a >= PIVOT) {
+        //     info = `${info}\n\t${a < 10 ? '0' + a : a} -> ${Math.round(c * 10000) / 100}%`;
+        //     if (!cands[a]) cands[a] = 0;
+        //     cands[a]++;
+        //   } else {
+        //     ++max;
+        //   }
+        // }
+        console.info(obj);
+        const x = obj.allSums;
+        // console.info(x.join(','));
         Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
-        Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram' }]);
-        console.info('ShapiroWilkW ->', ShapiroWilkW(x));
-        console.info('quartiles ->', jStat.quartiles(x));
+        Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
       } catch (err) {
         console.info('ERROR ->', err);
       }

@@ -18,14 +18,14 @@ const getData = async () => {
   }
   const last = await getJson('last');
   fs.writeFileSync(`./data/${last.numeroSorteo}.json`, JSON.stringify(last));
-  for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
-    const json = await getJson(sorteo);
-    fs.writeFileSync(`./data/${json.numeroSorteo}.json`, JSON.stringify(json));
-  }
+  // for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
+  //   const json = await getJson(sorteo);
+  //   fs.writeFileSync(`./data/${json.numeroSorteo}.json`, JSON.stringify(json));
+  // }
 }
 
 const processData = () => {
-  const files = fs.readdirSync('./data').filter((file) => !file.includes('all'));
+  const files = fs.readdirSync('./data');
   let lottos = {};
   files.forEach((file) => {
     const { numeroSorteo, numeros, numerosRevancha} = JSON.parse(fs.readFileSync(`./data/${file}`));
