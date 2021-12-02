@@ -145,25 +145,24 @@
         const json = await response.json();
         let obj = {
           lists: { numbers: [], sums: [] },
-          games: {},
+          games: [],
           numbers: {},
           sums: {},
           tops: {},
         };
         Object.keys(json).forEach((game, index) => {
           obj.lists.numbers = obj.lists.numbers.concat(json[game].n, json[game].r);
-          obj.games[index * 2] = {
+          obj.games.push({
             game: Number(game),
-            nums: json[game].n,
+            nums: json[game].n.sort((a, b) => a - b),
             sum: json[game].n.reduce((a, b) => a + b),
             type: 'n',
-          }
-          obj.games[index * 2 + 1] = {
+          }, {
             game: Number(game),
-            nums: json[game].r,
+            nums: json[game].r.sort((a, b) => a - b),
             sum: json[game].r.reduce((a, b) => a + b),
             type: 'r',
-          }
+          });
           obj.lists.sums.push(obj.games[index * 2].sum, obj.games[index * 2 + 1].sum);
           json[game].n.forEach((num) => {
             if (!obj.numbers[num]) {
@@ -178,12 +177,13 @@
             obj.numbers[num].count++;
           });
         });
+        obj.lists.numbers = obj.lists.numbers.sort((a, b) => a - b);
         const sums = obj.lists.sums;
         const [q1, median, q3] = jStat.quartiles(sums);
         obj.sums.q1 = q1;
         obj.sums.median = median;
         obj.sums.q3 = q3;
-        obj.sums.sw = ShapiroWilkW([...sums]);
+        obj.sums.sw = ShapiroWilkW(sums);
         obj.sums.min = jStat.min(sums);
         obj.sums.max = jStat.max(sums);
         const count = obj.lists.numbers.length;
@@ -193,8 +193,8 @@
           toOrder[num] = obj.numbers[num].count;
         });
         obj.lists.order = Object.entries(toOrder).sort((a, b) => b[1] - a[1]).map((ent) => Number(ent[0]));
-        const pivot = Math.floor(obj.lists.order.length / 2);
         const max = obj.games[0].nums.length;
+        const pivot = Math.floor(obj.lists.order.length / 2);
         obj.tops.all = obj.lists.order.slice(0, max);
         obj.tops.even = obj.lists.order.filter((num) => num % 2 === 0).slice(0, max);
         obj.tops.odd = obj.lists.order.filter((num) => num % 2 !== 0).slice(0, max);
@@ -203,8 +203,8 @@
         console.info(obj);
         const x = obj.lists.sums;
         // console.info(x.join(','));
-        Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
-        Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
+        // Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
+        // Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
       } catch (err) {
         console.info('ERROR ->', err);
       }
