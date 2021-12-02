@@ -152,14 +152,19 @@
         };
         Object.keys(json).forEach((game, index) => {
           obj.lists.numbers = obj.lists.numbers.concat(json[game].n, json[game].r);
-          obj.games[index] = {
-            id: Number(game),
-            n: json[game].n,
-            r: json[game].r,
-            sn: json[game].n.reduce((a, b) => a + b),
-            sr: json[game].r.reduce((a, b) => a + b),
+          obj.games[index * 2] = {
+            game: Number(game),
+            nums: json[game].n,
+            sum: json[game].n.reduce((a, b) => a + b),
+            type: 'n',
           }
-          obj.lists.sums.push(obj.games[index].sn, obj.games[index].sr);
+          obj.games[index * 2 + 1] = {
+            game: Number(game),
+            nums: json[game].r,
+            sum: json[game].r.reduce((a, b) => a + b),
+            type: 'r',
+          }
+          obj.lists.sums.push(obj.games[index * 2].sum, obj.games[index * 2 + 1].sum);
           json[game].n.forEach((num) => {
             if (!obj.numbers[num]) {
               obj.numbers[num] = { count: 0 };
@@ -188,13 +193,13 @@
           toOrder[num] = obj.numbers[num].count;
         });
         obj.lists.order = Object.entries(toOrder).sort((a, b) => b[1] - a[1]).map((ent) => Number(ent[0]));
-        const PIVOT = 20;
-        const MAX = 5;
-        obj.tops.all = obj.lists.order.slice(0, MAX * 2);
-        obj.tops.even = obj.lists.order.filter((num) => num % 2 === 0).slice(0, MAX);
-        obj.tops.odd = obj.lists.order.filter((num) => num % 2 !== 0).slice(0, MAX);
-        obj.tops.low = obj.lists.order.filter((num) => num < PIVOT).slice(0, MAX);
-        obj.tops.high = obj.lists.order.filter((num) => num >= PIVOT).slice(0, MAX);
+        const pivot = Math.floor(obj.lists.order.length / 2);
+        const max = obj.games[0].nums.length;
+        obj.tops.all = obj.lists.order.slice(0, max);
+        obj.tops.even = obj.lists.order.filter((num) => num % 2 === 0).slice(0, max);
+        obj.tops.odd = obj.lists.order.filter((num) => num % 2 !== 0).slice(0, max);
+        obj.tops.low = obj.lists.order.filter((num) => num < pivot).slice(0, max);
+        obj.tops.high = obj.lists.order.filter((num) => num >= pivot).slice(0, max);
         console.info(obj);
         const x = obj.lists.sums;
         // console.info(x.join(','));
