@@ -144,14 +144,14 @@
         const response = await fetch('./lottos.json');
         const json = await response.json();
         let obj = {
-          all: { numbers: [], sums: [] },
+          lists: { numbers: [], sums: [] },
           games: {},
           numbers: {},
           sums: {},
           tops: {},
         };
         Object.keys(json).forEach((game, index) => {
-          obj.all.numbers = obj.all.numbers.concat(json[game].n, json[game].r);
+          obj.lists.numbers = obj.lists.numbers.concat(json[game].n, json[game].r);
           obj.games[index] = {
             id: Number(game),
             n: json[game].n,
@@ -159,7 +159,7 @@
             sn: json[game].n.reduce((a, b) => a + b),
             sr: json[game].r.reduce((a, b) => a + b),
           }
-          obj.all.sums.push(obj.games[index].sn, obj.games[index].sr);
+          obj.lists.sums.push(obj.games[index].sn, obj.games[index].sr);
           json[game].n.forEach((num) => {
             if (!obj.numbers[num]) {
               obj.numbers[num] = { count: 0 };
@@ -173,17 +173,20 @@
             obj.numbers[num].count++;
           });
         });
-        obj.sums.q = jStat.quartiles(obj.all.sums);
-        obj.sums.sw = ShapiroWilkW([...obj.all.sums]);
-        obj.sums.min = jStat.min(obj.all.sums);
-        obj.sums.max = jStat.max(obj.all.sums);
-        const count = obj.all.numbers.length;
+        const [q1, median, q3] = jStat.quartiles(obj.lists.sums);
+        obj.sums.q1 = q1;
+        obj.sums.median = median;
+        obj.sums.q3 = q3;
+        obj.sums.sw = ShapiroWilkW([...obj.lists.sums]);
+        obj.sums.min = jStat.min(obj.lists.sums);
+        obj.sums.max = jStat.max(obj.lists.sums);
+        const count = obj.lists.numbers.length;
         let toOrder = {};
         Object.keys(obj.numbers).forEach((num) => {
           obj.numbers[num].p = Math.round(obj.numbers[num].count / count * 10000) / 100;
           toOrder[num] = obj.numbers[num].count;
         });
-        obj.all.order = Object.entries(toOrder).sort((a, b) => b[1] - a[1]).map((ent) => Number(ent[0]));
+        obj.lists.order = Object.entries(toOrder).sort((a, b) => b[1] - a[1]).map((ent) => Number(ent[0]));
         // const p = Object.keys(obj.numbers).map((num) => obj.numbers[num].p).reduce((a, b) => a + b);
         // console.info(p);
         // const entries = Object.entries(obj);
@@ -251,7 +254,7 @@
         //   }
         // }
         console.info(obj);
-        const x = obj.allSums;
+        const x = obj.lists.sums;
         // console.info(x.join(','));
         Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
         Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
