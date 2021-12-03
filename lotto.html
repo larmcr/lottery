@@ -200,6 +200,22 @@
         obj.tops.odd = obj.lists.order.filter((num) => num % 2 !== 0).slice(0, max);
         obj.tops.low = obj.lists.order.filter((num) => num < pivot).slice(0, max);
         obj.tops.high = obj.lists.order.filter((num) => num >= pivot).slice(0, max);
+
+        for (let count = 0; count < max; ++count) {
+          const index = (count + 1) * -1;
+          obj.games.at(index).outs = [-1, -1, -1, -1, -1];
+          obj.games.at(index).nums.forEach((num, ind) => {
+            let found = false;
+            let i = index - 1;
+            for (; !found; --i) {
+              for (let j = 0; !found && j < 5; ++j) {
+                found = obj.games.at(i).nums[j] === num;
+              }
+            }
+            obj.games.at(index).outs[ind] = i * -1 + index - 2;
+          });
+        }
+
         console.info(obj);
         const x = obj.lists.sums;
         // console.info(x.join(','));
