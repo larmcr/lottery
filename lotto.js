@@ -34,7 +34,7 @@ const processData = () => {
   fs.writeFileSync('./lottos.json', JSON.stringify(lottos));
 }
 
-(() => {
-  // getData();
+(async () => {
+  await getData();
   processData();
 })();
