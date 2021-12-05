@@ -31,7 +31,7 @@ const processData = () => {
     const { numeroSorteo, numeros, numerosRevancha} = JSON.parse(fs.readFileSync(`./data/${file}`));
     lottos[numeroSorteo] = { n: numeros, r: numerosRevancha };
   });
-  fs.writeFileSync('./lottos.json', JSON.stringify(lottos));
+  fs.writeFileSync('./lotto.json', JSON.stringify(lottos));
 }
 
 (async () => {
