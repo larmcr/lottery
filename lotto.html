@@ -140,6 +140,8 @@
 
   <script defer>
     (async () => {
+      const MINUS = (a, b) => (a - b);
+      const PLUS = (a, b) => (a + b);
       try {
         const response = await fetch('./lotto.json');
         const json = await response.json();
@@ -154,13 +156,13 @@
           obj.lists.numbers = obj.lists.numbers.concat(json[game].n, json[game].r);
           obj.games.push({
             game: Number(game),
-            nums: json[game].n.sort((a, b) => a - b),
-            sum: json[game].n.reduce((a, b) => a + b),
+            nums: json[game].n.sort(MINUS),
+            sum: json[game].n.reduce(PLUS),
             type: 'n',
           }, {
             game: Number(game),
-            nums: json[game].r.sort((a, b) => a - b),
-            sum: json[game].r.reduce((a, b) => a + b),
+            nums: json[game].r.sort(MINUS),
+            sum: json[game].r.reduce(PLUS),
             type: 'r',
           });
           obj.lists.sums.push(obj.games[index * 2].sum, obj.games[index * 2 + 1].sum);
@@ -177,7 +179,8 @@
             obj.numbers[num].count++;
           });
         });
-        obj.lists.numbers = obj.lists.numbers.sort((a, b) => a - b);
+        obj.lists.numbers = obj.lists.numbers.sort(MINUS);
+        obj.lists.sums = obj.lists.sums.sort(MINUS);
         const sums = obj.lists.sums;
         const [q1, median, q3] = jStat.quartiles(sums);
         obj.sums.q1 = q1;
