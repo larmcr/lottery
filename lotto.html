@@ -142,6 +142,9 @@
     (async () => {
       const MINUS = (a, b) => (a - b);
       const PLUS = (a, b) => (a + b);
+
+      const combinations = (arr) => [...Array(2 ** arr.length - 1).keys()].map((n) => ((n + 1) >>> 0).toString(2).split("").reverse().map((n, i) => (+n ? arr[i] : false)).filter(Number.isInteger)).sort((a, b) => (a.length > b.length ? 1 : -1));
+
       try {
         const response = await fetch('./lotto.json');
         const json = await response.json();
@@ -234,10 +237,11 @@
         }
 
         console.info(obj);
+        console.info(combinations([0,1,2,3,4,5]));
         const x = obj.lists.sums;
         // console.info(x.join(','));
-        // Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
-        // Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
+        Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
+        Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
       } catch (err) {
         console.info('ERROR ->', err);
       }
