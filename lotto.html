@@ -22,7 +22,7 @@
   <header>
     <hgroup>
       <h1>JPS Lotto</h1>
-      <h2>Get all Lotto info</h2>
+      <h2>Analyze all Lotto info</h2>
     </hgroup>
     <nav>
       <ul>
@@ -37,57 +37,40 @@
 
   <main>
     <!-- Tables -->
-    <!-- <section id="tables">
-      <h2>Tables</h2>
+    <section id="tables">
+      <h2>Tops</h2>
       <figure>
         <table role="grid">
           <thead>
             <tr>
-              <th scope="col">#</th>
-              <th scope="col">Heading</th>
-              <th scope="col">Heading</th>
-              <th scope="col">Heading</th>
-              <th scope="col">Heading</th>
-              <th scope="col">Heading</th>
-              <th scope="col">Heading</th>
-              <th scope="col">Heading</th>
+              <th scope="col">Top</th>
+              <th scope="col">First</th>
+              <th scope="col">Second</th>
+              <th scope="col">Third</th>
+              <th scope="col">Fourth</th>
+              <th scope="col">Fifth</th>
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <th scope="row">1</th>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
+            <tr id="all">
+              <th scope="row">All numbers</th>
             </tr>
-            <tr>
-              <th scope="row">2</th>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
+            <tr id="even">
+              <th scope="row">Even numbers</th>
             </tr>
-            <tr>
-              <th scope="row">3</th>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
-              <td>Cell</td>
+            <tr id="odd">
+              <th scope="row">Odd numbers</th>
+            </tr>
+            <tr id="high">
+              <th scope="row">High numbers <mark>(num > <small class="pivot"></small>)</mark></th>
+            </tr>
+            <tr id="low">
+              <th scope="row">Low numbers <mark>(num <= <small class="pivot"></small>)</mark></th>
             </tr>
           </tbody>
         </table>
       </figure>
-    </section> -->
+    </section>
     <!-- ./ Tables -->
 
     <!-- Accordions -->
@@ -250,13 +233,23 @@
             }
           });
         }
+        console.info(obj);
+        // const x = obj.lists.sums;
+        // console.info(x.join(','));
+        // Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
+        // Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
+
         applyTo('#box-det', 'fill', `(${obj.sums.q1} <= sum <= ${obj.sums.q3}) [q1 <= sum <= q3]`);
         applyTo('#hist-det', 'fill', `(p-value ~ ${obj.sums.sw.pvalue}) [sums distribution is normal if p-value > 0.05]`);
-        console.info(obj);
-        const x = obj.lists.sums;
-        console.info(x.join(','));
-        Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
-        Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
+        const applyTops = (list, ele) => {
+          list.forEach((num) => applyTo(`#${ele}`, 'add', EE('td', [EE('mark', num < 10 ? `0${num}` : num), ' ', EE('small', `(${obj.numbers[num].perc}%)`)])));
+        }
+        applyTo('.pivot', 'fill', pivot);
+        applyTops(obj.tops.all, 'all');
+        applyTops(obj.tops.even, 'even');
+        applyTops(obj.tops.odd, 'odd');
+        applyTops(obj.tops.high, 'high');
+        applyTops(obj.tops.low, 'low');
       } catch (err) {
         console.info('ERROR ->', err);
       }
