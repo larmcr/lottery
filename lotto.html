@@ -222,7 +222,7 @@
         obj.sums.max = jStat.max(sums);
         const count = obj.lists.numbers.length;
         const numbers = Object.keys(obj.numbers);
-        obj.lists.combs = kCombinations(numbers, 5);
+        obj.lists.combs = kCombinations(numbers, 5).map((nums) => nums.map(Number));
         let toOrder = {};
         numbers.forEach((num) => {
           obj.numbers[num].perc = Math.round(obj.numbers[num].count / count * 10000) / 100;
@@ -286,6 +286,10 @@
         applyTops(obj.tops.high, 'high');
         applyTops(obj.tops.low, 'low');
 
+        obj.sums.bet = obj.lists.combs.filter((nums) => {
+          const sum = nums.reduce(PLUS);
+          return sum >= obj.sums.q1 && sum <= obj.sums.q3;
+        });
       } catch (err) {
         console.info('ERROR ->', err);
       }
