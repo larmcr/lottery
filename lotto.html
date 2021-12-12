@@ -4,12 +4,8 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Lotto</title>
   <meta name="description" content="JPS lotto">
-  <link rel="shortcut icon" href="https://picocss.com/favicon.ico">
-  <!-- <link rel="canonical" href="https://picocss.com/examples/classless/"> -->
-
-  <!-- Pico.css (Classless version) -->
+  <title>Lotto</title>
   <link rel="stylesheet" href="https://unpkg.com/@picocss/pico@latest/css/pico.classless.min.css">
   <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
@@ -18,7 +14,6 @@
 
 <body>
 
-  <!-- Header -->
   <header>
     <hgroup>
       <h1>JPS Lotto</h1>
@@ -33,10 +28,9 @@
       </ul>
     </nav>
   </header>
-  <!-- ./ Header -->
 
   <main>
-    <!-- Tables -->
+    
     <section id="tables">
 
       <h2>Numbers</h2>
@@ -121,9 +115,7 @@
         </table>
       </figure>
     </section>
-    <!-- ./ Tables -->
 
-    <!-- Accordions -->
     <section id="accordions">
       <h2>Plots</h2>
       <details open>
@@ -135,9 +127,7 @@
         <div id="histogram"></div>
       </details>
     </section>
-    <!-- ./ Accordions -->
 
-    <!-- Article-->
     <!-- <article id="article">
       <h2>Article</h2>
       <p>Nullam dui arcu, malesuada et sodales eu, efficitur vitae dolor. Sed ultricies dolor non ante vulputate
@@ -145,19 +135,12 @@
         cursus. Sed vestibulum metus eget dolor pharetra rutrum.</p>
       <footer><small>Duis nec elit placerat, suscipit nibh quis, finibus neque.</small></footer>
     </article> -->
-    <!-- ./ Article-->
   </main>
-  <!-- ./ Main -->
-
-  <!-- Minimal theme switcher -->
   <script async>
     const themeSwitcher = {
-      // Config
       buttonsTarget: 'a[data-theme-switcher]',
       buttonAttribute: 'data-theme-switcher',
       rootAttribute: 'data-theme',
-
-      // Init
       init() {
         document.querySelectorAll(this.buttonsTarget).forEach(function (button) {
           button.addEventListener('click', function (event) {
@@ -166,7 +149,6 @@
         }.bind(this), false)}.bind(this));
       },
     };
-    // Init
     themeSwitcher.init();
   </script>
 
@@ -301,7 +283,7 @@
           });
         }
 
-        // ls = long shot
+        // ls: long shot
         obj.lists.ls = numbers.filter((num) => obj.numbers[num].skip > LONG_SHOT).sort((a, b) => obj.numbers[b].skip - obj.numbers[a].skip).map(Number);
 
         const checkNumInList = (list, num, label) => {
@@ -325,13 +307,13 @@
         const x = obj.lists.sums;
         Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
         Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
-        console.info(x.join(','));
+        // console.info(x.join(','));
 
         const sumBetween = `(${obj.sums.q1} <= sum <= ${obj.sums.q3})`;
         applyTo('.sum-bet', 'fill', sumBetween);
         applyTo('.pivot', 'fill', pivot);
 
-        applyTo('#hist-det', 'fill', `(p-value ~ ${obj.sums.sw.pvalue})`);
+        applyTo('#hist-det', 'fill', `(p-value ~ ${Math.round(obj.sums.sw.pvalue * 100000) / 100000})`);
         
         const applyTops = (list, ele) => {
           list.forEach((num) => applyTo(`#${ele}`, 'add', EE('td', [EE('mark', format(num)), ' ', EE('small', `(${obj.numbers[num].perc} %)`)])));
