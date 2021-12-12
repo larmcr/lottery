@@ -131,7 +131,7 @@
         <div id="box"></div>
       </details>
       <details open>
-        <summary>Histogram <mark><small id="hist-det"></small></mark></summary>
+        <summary>Histogram <mark><small id="hist-det" title="sums distribution is normal if p-value > 0.05"></small></mark></summary>
         <div id="histogram"></div>
       </details>
     </section>
@@ -322,16 +322,16 @@
 
 
         console.info(obj);
-        // const x = obj.lists.sums;
-        // console.info(x.join(','));
-        // Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
-        // Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
-
+        const x = obj.lists.sums;
+        Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
+        Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
+        console.info(x.join(','));
+        
         const sumBetween = `(${obj.sums.q1} <= sum <= ${obj.sums.q3})`;
         applyTo('.sum-bet', 'fill', sumBetween);
         applyTo('.pivot', 'fill', pivot);
 
-        applyTo('#hist-det', 'fill', `(p-value ~ ${obj.sums.sw.pvalue}) [sums distribution is normal if p-value > 0.05]`);
+        applyTo('#hist-det', 'fill', `(p-value ~ ${obj.sums.sw.pvalue})`);
         
         const applyTops = (list, ele) => {
           list.forEach((num) => applyTo(`#${ele}`, 'add', EE('td', [EE('mark', format(num)), ' ', EE('small', `(${obj.numbers[num].perc} %)`)])));
