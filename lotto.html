@@ -49,6 +49,20 @@
           </tbody>
         </table>
       </figure>
+
+      <h2>Neighboring Pairs</h2>
+      <figure>
+        <table role="grid">
+          <thead>
+            <tr>
+              <th scope="col">Pair</th>
+              <th scope="col">Count</th>
+            </tr>
+          </thead>
+          <tbody id="pairs">
+          </tbody>
+        </table>
+      </figure>
       
       <h2>Tops</h2>
       <figure>
@@ -148,24 +162,45 @@
         const response = await fetch('./lotto.json');
         const json = await response.json();
         let obj = {
-          lists: { numbers: [], sums: [] },
+          lists: { nums: [], sums: [] },
           games: [],
           numbers: {},
+          pairs: {},
           sums: {},
           tops: {},
         };
         Object.keys(json).forEach((game, index) => {
-          obj.lists.numbers = obj.lists.numbers.concat(json[game].n, json[game].r);
-          obj.games.push({
+          obj.lists.nums = obj.lists.nums.concat(json[game].n, json[game].r);
+          const n = {
             game: Number(game),
             nums: json[game].n.sort(MINUS),
             sum: json[game].n.reduce(PLUS),
             type: 'n',
-          }, {
+          };
+          const r = {
             game: Number(game),
             nums: json[game].r.sort(MINUS),
             sum: json[game].r.reduce(PLUS),
             type: 'r',
+          };
+          obj.games.push(n, r);
+          n.nums.forEach((num, ind) => {
+            if (num + 1 === n.nums[ind + 1]) {
+              const key = `${num}-${num + 1}`;
+              if (!obj.pairs[key]) {
+                obj.pairs[key] = 0;
+              }
+              obj.pairs[key]++;
+            }
+          });
+          r.nums.forEach((num, ind) => {
+            if (num + 1 === r.nums[ind + 1]) {
+              const key = `${num}-${num + 1}`;
+              if (!obj.pairs[key]) {
+                obj.pairs[key] = 0;
+              }
+              obj.pairs[key]++;
+            }
           });
           obj.lists.sums.push(obj.games[index * 2].sum, obj.games[index * 2 + 1].sum);
           json[game].n.forEach((num) => {
@@ -182,7 +217,7 @@
           });
         });
         const games = Object.keys(obj.games);
-        obj.lists.numbers = obj.lists.numbers.sort(MINUS);
+        obj.lists.nums = obj.lists.nums.sort(MINUS);
         obj.lists.sums = obj.lists.sums.sort(MINUS);
         const sums = obj.lists.sums;
         const [q1, median, q3] = jStat.quartiles(sums);
@@ -272,9 +307,9 @@
 
 
         console.info(obj);
-        const x = obj.lists.sums;
-        Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
-        Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
+        // const x = obj.lists.sums;
+        // Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
+        // Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
         // console.info(x.join(','));
 
         const sumBetween = `(${obj.sums.q1} <= sum <= ${obj.sums.q3})`;
@@ -291,6 +326,10 @@
         applyTops(obj.tops.odd, 'odd');
         applyTops(obj.tops.high, 'high');
         applyTops(obj.tops.low, 'low');
+
+        Object.keys(obj.pairs).sort((a, b) => a.split('-')[0] - b.split('-')[0]).forEach((pair) => {
+          applyTo('#pairs', 'add', EE('tr', [EE('td', pair), EE('td', obj.pairs[pair])]));
+        });
 
         obj.sums.bet = obj.lists.combs.filter((nums) => {
           const sum = nums.reduce(PLUS);
