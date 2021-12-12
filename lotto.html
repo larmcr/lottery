@@ -213,6 +213,7 @@
             obj.numbers[num].count++;
           });
         });
+        const games = Object.keys(obj.games);
         obj.lists.numbers = obj.lists.numbers.sort(MINUS);
         obj.lists.sums = obj.lists.sums.sort(MINUS);
         const sums = obj.lists.sums;
@@ -223,12 +224,12 @@
         obj.sums.sw = swTest(sums, 0.05);
         obj.sums.min = jStat.min(sums);
         obj.sums.max = jStat.max(sums);
-        const count = obj.lists.numbers.length;
         const numbers = Object.keys(obj.numbers);
         obj.lists.combs = kCombinations(numbers, 5).map((nums) => nums.map(Number));
         let toOrder = {};
         numbers.forEach((num) => {
-          obj.numbers[num].perc = Math.round(obj.numbers[num].count / count * 10000) / 100;
+          obj.numbers[num].perc = Math.round(obj.numbers[num].count / games.length * 10000) / 100;
+          obj.numbers[num].lost = games.length - obj.numbers[num].count;
           toOrder[num] = obj.numbers[num].count;
         });
         obj.lists.order = Object.entries(toOrder).sort((a, b) => b[1] - a[1]).map((ent) => Number(ent[0]));
@@ -240,7 +241,6 @@
         obj.tops.low = obj.lists.order.filter((num) => num < pivot).slice(0, max);
         obj.tops.high = obj.lists.order.filter((num) => num >= pivot).slice(0, max);
 
-        const games = Object.keys(obj.games);
         for (let count = 0; count < games.length; ++count) {
           const index = (count + 1) * -1;
           obj.games.at(index).outs = [-1, -1, -1, -1, -1];
