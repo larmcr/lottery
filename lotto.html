@@ -69,6 +69,38 @@
             </tr>
           </tbody>
         </table>
+
+      <h2>Sums</h2>
+      <figure>
+        <table role="grid">
+          <thead>
+            <tr>
+              <th scope="col">Sum <small class="sum-bet"></small></th>
+              <th scope="col">Num</th>
+              <th scope="col">Num</th>
+              <th scope="col">Num</th>
+              <th scope="col">Num</th>
+              <th scope="col">Num</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="all">
+              <th scope="row">All numbers</th>
+            </tr>
+            <tr id="even">
+              <th scope="row">Even numbers</th>
+            </tr>
+            <tr id="odd">
+              <th scope="row">Odd numbers</th>
+            </tr>
+            <tr id="high">
+              <th scope="row">High numbers (num >= <small class="pivot"></small>)</th>
+            </tr>
+            <tr id="low">
+              <th scope="row">Low numbers (num < <small class="pivot"></small>)</th>
+            </tr>
+          </tbody>
+        </table>
       </figure>
     </section>
     <!-- ./ Tables -->
@@ -77,7 +109,7 @@
     <section id="accordions">
       <h2>Plots</h2>
       <details open>
-        <summary>Box <mark><small id="box-det"></small></mark></summary>
+        <summary>Box <mark><small class="sum-bet"></small></mark></summary>
         <div id="box"></div>
       </details>
       <details open>
@@ -239,17 +271,21 @@
         // Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
         // Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
 
-        applyTo('#box-det', 'fill', `(${obj.sums.q1} <= sum <= ${obj.sums.q3}) [q1 <= sum <= q3]`);
+        const sumBetween = `(${obj.sums.q1} <= sum <= ${obj.sums.q3})`;
+        applyTo('.sum-bet', 'fill', sumBetween);
+        applyTo('.pivot', 'fill', pivot);
+
         applyTo('#hist-det', 'fill', `(p-value ~ ${obj.sums.sw.pvalue}) [sums distribution is normal if p-value > 0.05]`);
         const applyTops = (list, ele) => {
           list.forEach((num) => applyTo(`#${ele}`, 'add', EE('td', [EE('mark', num < 10 ? `0${num}` : num), ' ', EE('small', `(${obj.numbers[num].perc}%)`)])));
         }
-        applyTo('.pivot', 'fill', pivot);
+        
         applyTops(obj.tops.all, 'all');
         applyTops(obj.tops.even, 'even');
         applyTops(obj.tops.odd, 'odd');
         applyTops(obj.tops.high, 'high');
         applyTops(obj.tops.low, 'low');
+
       } catch (err) {
         console.info('ERROR ->', err);
       }
