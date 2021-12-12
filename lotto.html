@@ -103,6 +103,26 @@
         </table>
       </figure>
     </section>
+
+    <h2>Numbers</h2>
+      <figure>
+        <table role="grid">
+          <thead>
+            <tr>
+              <th scope="col">Num</th>
+              <th scope="col">Count</th>
+              <th scope="col">Percentage</th>
+              <th scope="col">Skips since previous win</th>
+            </tr>
+          </thead>
+          <tbody id="nums">
+            <tr>
+              <th scope="row">All numbers</th>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    </section>
     <!-- ./ Tables -->
 
     <!-- Accordions -->
@@ -280,6 +300,9 @@
           });
         }
 
+        // ls = long shot
+        obj.lists.ls = numbers.filter((num) => obj.numbers[num].out > 16).sort((a, b) => obj.numbers[b].out - obj.numbers[a].out).map(Number);
+
         console.info(obj);
         // const x = obj.lists.sums;
         // console.info(x.join(','));
@@ -305,6 +328,8 @@
           const sum = nums.reduce(PLUS);
           return sum >= obj.sums.q1 && sum <= obj.sums.q3;
         });
+
+        // numbers.for
       } catch (err) {
         console.info('ERROR ->', err);
       }
