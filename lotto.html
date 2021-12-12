@@ -38,6 +38,23 @@
   <main>
     <!-- Tables -->
     <section id="tables">
+
+      <h2>Numbers</h2>
+      <figure>
+        <table role="grid">
+          <thead>
+            <tr>
+              <th scope="col">Num</th>
+              <th scope="col">Count</th>
+              <th scope="col">Percentage</th>
+              <th scope="col" title="since the previous win">Skip</th>
+            </tr>
+          </thead>
+          <tbody id="nums">
+          </tbody>
+        </table>
+      </figure>
+      
       <h2>Tops</h2>
       <figure>
         <table role="grid">
@@ -98,26 +115,6 @@
             </tr>
             <tr id="low">
               <th scope="row">Low numbers (num < <small class="pivot"></small>)</th>
-            </tr>
-          </tbody>
-        </table>
-      </figure>
-    </section>
-
-    <h2>Numbers</h2>
-      <figure>
-        <table role="grid">
-          <thead>
-            <tr>
-              <th scope="col">Num</th>
-              <th scope="col">Count</th>
-              <th scope="col">Percentage</th>
-              <th scope="col">Skips since previous win</th>
-            </tr>
-          </thead>
-          <tbody id="nums">
-            <tr>
-              <th scope="row">All numbers</th>
             </tr>
           </tbody>
         </table>
@@ -185,13 +182,15 @@
       const kCombinations=(t,n)=>{if(n>t.length||n<=0)return[];if(n===t.length)return[t];const e=[];if(1===n){for(let n=0;n<t.length;n++)e.push([t[n]]);return e}for(let o=0;o<t.length-n+1;o++){const r=t.slice(o,o+1),l=kCombinations(t.slice(o+1),n-1);for(let t=0;t<l.length;t++)e.push(r.concat(l[t]))}return e},combinations=t=>{const n=[];for(let e=1;e<=t.length;e++){const o=kCombinations(t,e);for(let t=0;t<o.length;t++)n.push(o[t])}return n};
 
       const applyTo = (selector, command, parameter, on = false, one = false, times = 10) => {
-      if ($(selector).length > 0) {
-        if (one) on ? $$(selector).on(command, parameter) : $$(selector)[command](parameter);
-        else on ? $(selector).on(command, parameter) : $(selector)[command](parameter);
-      } else if (times > 0) {
-        setTimeout(() => Global.applyTo(selector, command, parameter, on, one, --times), 250);
+        if ($(selector).length > 0) {
+          if (one) on ? $$(selector).on(command, parameter) : $$(selector)[command](parameter);
+          else on ? $(selector).on(command, parameter) : $(selector)[command](parameter);
+        } else if (times > 0) {
+          setTimeout(() => applyTo(selector, command, parameter, on, one, --times), 250);
+        }
       }
-    }
+
+      const format = (num) => num < 10 ? `0${num}` : `${num}`;
 
       try {
         const response = await fetch('./lotto.json');
@@ -292,16 +291,16 @@
           const index = (count + 1) * -1;
           obj.games.at(index).outs.forEach((out, ind) => {
             const num = obj.games.at(index).nums[ind];
-            if (typeof(obj.numbers[num].out) === 'undefined') {
-              obj.numbers[num].out = -1;
-            } else if (obj.numbers[num].out === -1) {
-              obj.numbers[num].out = out;
+            if (typeof(obj.numbers[num].skip) === 'undefined') {
+              obj.numbers[num].skip = -1;
+            } else if (obj.numbers[num].skip === -1) {
+              obj.numbers[num].skip = out;
             }
           });
         }
 
         // ls = long shot
-        obj.lists.ls = numbers.filter((num) => obj.numbers[num].out > 16).sort((a, b) => obj.numbers[b].out - obj.numbers[a].out).map(Number);
+        obj.lists.ls = numbers.filter((num) => obj.numbers[num].skip > 16).sort((a, b) => obj.numbers[b].skip - obj.numbers[a].skip).map(Number);
 
         console.info(obj);
         // const x = obj.lists.sums;
@@ -316,7 +315,7 @@
         applyTo('#hist-det', 'fill', `(p-value ~ ${obj.sums.sw.pvalue}) [sums distribution is normal if p-value > 0.05]`);
         
         const applyTops = (list, ele) => {
-          list.forEach((num) => applyTo(`#${ele}`, 'add', EE('td', [EE('mark', num < 10 ? `0${num}` : num), ' ', EE('small', `(${obj.numbers[num].perc}%)`)])));
+          list.forEach((num) => applyTo(`#${ele}`, 'add', EE('td', [EE('mark', format(num)), ' ', EE('small', `(${obj.numbers[num].perc}%)`)])));
         }
         applyTops(obj.tops.all, 'all');
         applyTops(obj.tops.even, 'even');
@@ -329,7 +328,10 @@
           return sum >= obj.sums.q1 && sum <= obj.sums.q3;
         });
 
-        // numbers.for
+        numbers.forEach((num) => {
+          const tr = EE('tr', [EE('td', format(num)), EE('td', obj.numbers[num].count), EE('td', `${obj.numbers[num].perc}%`), EE('td', obj.numbers[num].skip)]);
+          applyTo('#nums', 'add', tr);
+        });
       } catch (err) {
         console.info('ERROR ->', err);
       }
