@@ -48,7 +48,7 @@
               <th scope="col">Labels</th>
               <th scope="col">Count</th>
               <th scope="col">Percentage</th>
-              <th scope="col" title="since the previous win">Skip</th>
+              <th scope="col" title="Since the previous win">Skip</th>
             </tr>
           </thead>
           <tbody id="nums">
@@ -131,7 +131,7 @@
         <div id="box"></div>
       </details>
       <details open>
-        <summary>Histogram <mark><small id="hist-det" title="sums distribution is normal if p-value > 0.05"></small></mark></summary>
+        <summary>Histogram <mark><small id="hist-det" title="Sums distribution is normal if p-value > 0.05"></small></mark></summary>
         <div id="histogram"></div>
       </details>
     </section>
@@ -326,7 +326,7 @@
         Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
         Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
         console.info(x.join(','));
-        
+
         const sumBetween = `(${obj.sums.q1} <= sum <= ${obj.sums.q3})`;
         applyTo('.sum-bet', 'fill', sumBetween);
         applyTo('.pivot', 'fill', pivot);
