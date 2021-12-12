@@ -237,18 +237,21 @@
         obj.tops.low = obj.lists.order.filter((num) => num < pivot).slice(0, max);
         obj.tops.high = obj.lists.order.filter((num) => num >= pivot).slice(0, max);
 
-        for (let count = 0; count < max; ++count) {
+        const games = Object.keys(obj.games);
+        for (let count = 0; count < games.length; ++count) {
           const index = (count + 1) * -1;
           obj.games.at(index).outs = [-1, -1, -1, -1, -1];
           obj.games.at(index).nums.forEach((num, ind) => {
             let found = false;
             let i = index - 1;
-            for (; !found; --i) {
+            for (; !found && i > (games.length * -1); --i) {
               for (let j = 0; !found && j < 5; ++j) {
                 found = obj.games.at(i).nums[j] === num;
               }
             }
-            obj.games.at(index).outs[ind] = i * -1 + index - 2;
+            if (found) {
+              obj.games.at(index).outs[ind] = i * -1 + index - 2;
+            }
           });
         }
 
@@ -276,10 +279,10 @@
         applyTo('.pivot', 'fill', pivot);
 
         applyTo('#hist-det', 'fill', `(p-value ~ ${obj.sums.sw.pvalue}) [sums distribution is normal if p-value > 0.05]`);
+        
         const applyTops = (list, ele) => {
           list.forEach((num) => applyTo(`#${ele}`, 'add', EE('td', [EE('mark', num < 10 ? `0${num}` : num), ' ', EE('small', `(${obj.numbers[num].perc}%)`)])));
         }
-        
         applyTops(obj.tops.all, 'all');
         applyTops(obj.tops.even, 'even');
         applyTops(obj.tops.odd, 'odd');
