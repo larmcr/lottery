@@ -259,7 +259,6 @@
         for (let c = 0; c <= max; ++c) {
           obj.outs[c] = 0;
         }
-
         for (let count = 0; count < max; ++count) {
           const index = (count + 1) * -1;
           obj.games.at(index).outs.forEach((out) => {
@@ -268,6 +267,19 @@
             }
           });
         }
+
+        for (let count = 0; count < games.length; ++count) {
+          const index = (count + 1) * -1;
+          obj.games.at(index).outs.forEach((out, ind) => {
+            const num = obj.games.at(index).nums[ind];
+            if (typeof(obj.numbers[num].out) === 'undefined') {
+              obj.numbers[num].out = -1;
+            } else if (obj.numbers[num].out === -1) {
+              obj.numbers[num].out = out;
+            }
+          });
+        }
+
         console.info(obj);
         // const x = obj.lists.sums;
         // console.info(x.join(','));
