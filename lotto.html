@@ -81,43 +81,11 @@
             </tr>
           </tbody>
         </table>
-
-      <h2>Sums</h2>
-      <figure>
-        <table role="grid">
-          <thead>
-            <tr>
-              <th scope="col">Sum <small class="sum-bet"></small></th>
-              <th scope="col">Num</th>
-              <th scope="col">Num</th>
-              <th scope="col">Num</th>
-              <th scope="col">Num</th>
-              <th scope="col">Num</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr id="all">
-              <th scope="row">All numbers</th>
-            </tr>
-            <tr id="even">
-              <th scope="row">Even numbers</th>
-            </tr>
-            <tr id="odd">
-              <th scope="row">Odd numbers</th>
-            </tr>
-            <tr id="high">
-              <th scope="row">High numbers (num >= <small class="pivot"></small>)</th>
-            </tr>
-            <tr id="low">
-              <th scope="row">Low numbers (num < <small class="pivot"></small>)</th>
-            </tr>
-          </tbody>
-        </table>
       </figure>
     </section>
 
     <section id="accordions">
-      <h2>Plots</h2>
+      <h2>Sums</h2>
       <details open>
         <summary>Box <mark><small class="sum-bet"></small></mark></summary>
         <div id="box"></div>
@@ -334,6 +302,20 @@
           const tr = EE('tr', [EE('td', EE('mark', format(num))), labels, EE('td', obj.numbers[num].count), EE('td', `${obj.numbers[num].perc} %`), EE('td', obj.numbers[num].skip)]);
           applyTo('#nums', 'add', tr);
         });
+
+        const groups = obj.sums.bet.filter((group) => {
+          const labels = group.every((num) => obj.numbers[num].labels.length > 0);
+          const evens = group.filter((num) => num % 2);
+          return labels && (evens.length === 2 || evens.length === 3);
+        });
+        obj.groups = {};
+        groups.forEach((group) => {
+          const key = group.join('-');
+          obj.groups[key] = {
+            group,
+            perc: group.map((num) => obj.numbers[num].perc).reduce((a, b) => (a / 100) * (b / 100)),
+          }
+        })
       } catch (err) {
         console.info('ERROR ->', err);
       }
