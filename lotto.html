@@ -169,7 +169,7 @@
           lists: { nums: [], sums: [] },
           games: [],
           numbers: {},
-          pairs: {},
+          pairs: { pair: {}, order: []},
           sums: {},
           tops: {},
         };
@@ -191,19 +191,19 @@
           n.nums.forEach((num, ind) => {
             if (num + 1 === n.nums[ind + 1]) {
               const key = `${num}-${num + 1}`;
-              if (!obj.pairs[key]) {
-                obj.pairs[key] = 0;
+              if (!obj.pairs.pair[key]) {
+                obj.pairs.pair[key] = 0;
               }
-              obj.pairs[key]++;
+              obj.pairs.pair[key]++;
             }
           });
           r.nums.forEach((num, ind) => {
             if (num + 1 === r.nums[ind + 1]) {
               const key = `${num}-${num + 1}`;
-              if (!obj.pairs[key]) {
-                obj.pairs[key] = 0;
+              if (!obj.pairs.pair[key]) {
+                obj.pairs.pair[key] = 0;
               }
-              obj.pairs[key]++;
+              obj.pairs.pair[key]++;
             }
           });
           obj.lists.sums.push(obj.games[index * 2].sum, obj.games[index * 2 + 1].sum);
@@ -324,8 +324,8 @@
         applyTops(obj.tops.high, 'high');
         applyTops(obj.tops.low, 'low');
 
-        Object.keys(obj.pairs).sort((a, b) => a.split('-')[0] - b.split('-')[0]).forEach((pair) => {
-          applyTo('#pairs', 'add', EE('tr', [EE('td', EE('mark', formatPair(pair))), EE('td', obj.pairs[pair])]));
+        Object.keys(obj.pairs.pair).sort((a, b) => a.split('-')[0] - b.split('-')[0]).forEach((pair) => {
+          applyTo('#pairs', 'add', EE('tr', [EE('td', EE('mark', formatPair(pair))), EE('td', obj.pairs.pair[pair])]));
         });
 
         obj.sums.bet = obj.lists.combs.filter((nums) => {
@@ -353,9 +353,8 @@
           }
         });
 
-        const sortedPairs = Object.entries(obj.pairs).sort((a, b) => b[1] - a[1]).map((ent) => ent[0]);
-        obj.tops.pairs = sortedPairs.slice(0, max);
-        console.info(sortedPairs);
+        obj.pairs.order = Object.entries(obj.pairs.pair).sort((a, b) => b[1] - a[1]).map((ent) => ent[0]);
+        obj.tops.pair = obj.pairs.order.slice(0, max);
         
         console.info(obj);
         // const x = obj.lists.sums;
