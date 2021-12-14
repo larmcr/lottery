@@ -360,14 +360,14 @@
           const pairs = checkPairs(group);
           return labels && (evens.length === 2 || evens.length === 3) && pairs !== 0;
         });
-        obj.groups = {};
+        obj.groups = { nums: {} };
         groups.forEach((group) => {
           const key = group.join('-');
-          obj.groups[key] = {
-            group,
-            perc: group.map((num) => obj.numbers[num].perc).reduce((a, b) => (a / 100) * (b / 100)),
-          }
+          obj.groups.nums[key] = group.map((num) => obj.numbers[num].perc).reduce((a, b) => (a / 100) * (b / 100));
         });
+
+        obj.groups.order = Object.entries(obj.groups.nums).sort((a, b) => b[1] - a[1]).map((ent) => ent[0]);
+        obj.tops.group = obj.groups.order.slice(0, max);
         
         console.info(obj);
         // const x = obj.lists.sums;
