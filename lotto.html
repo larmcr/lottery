@@ -169,7 +169,7 @@
           lists: { nums: [], sums: [] },
           games: [],
           numbers: {},
-          pairs: { pair: {}, order: []},
+          pairs: { count: {}, order: []},
           sums: {},
           tops: {},
         };
@@ -191,19 +191,19 @@
           n.nums.forEach((num, ind) => {
             if (num + 1 === n.nums[ind + 1]) {
               const key = `${num}-${num + 1}`;
-              if (!obj.pairs.pair[key]) {
-                obj.pairs.pair[key] = 0;
+              if (!obj.pairs.count[key]) {
+                obj.pairs.count[key] = 0;
               }
-              obj.pairs.pair[key]++;
+              obj.pairs.count[key]++;
             }
           });
           r.nums.forEach((num, ind) => {
             if (num + 1 === r.nums[ind + 1]) {
               const key = `${num}-${num + 1}`;
-              if (!obj.pairs.pair[key]) {
-                obj.pairs.pair[key] = 0;
+              if (!obj.pairs.count[key]) {
+                obj.pairs.count[key] = 0;
               }
-              obj.pairs.pair[key]++;
+              obj.pairs.count[key]++;
             }
           });
           obj.lists.sums.push(obj.games[index * 2].sum, obj.games[index * 2 + 1].sum);
@@ -324,8 +324,8 @@
         applyTops(obj.tops.high, 'high');
         applyTops(obj.tops.low, 'low');
 
-        Object.keys(obj.pairs.pair).sort((a, b) => a.split('-')[0] - b.split('-')[0]).forEach((pair) => {
-          applyTo('#pairs', 'add', EE('tr', [EE('td', EE('mark', formatPair(pair))), EE('td', obj.pairs.pair[pair])]));
+        Object.keys(obj.pairs.count).sort((a, b) => a.split('-')[0] - b.split('-')[0]).forEach((pair) => {
+          applyTo('#pairs', 'add', EE('tr', [EE('td', EE('mark', formatPair(pair))), EE('td', obj.pairs.count[pair])]));
         });
 
         obj.sums.bet = obj.lists.combs.filter((nums) => {
@@ -339,10 +339,26 @@
           applyTo('#nums', 'add', tr);
         });
 
+        obj.pairs.order = Object.entries(obj.pairs.count).sort((a, b) => b[1] - a[1]).map((ent) => ent[0]);
+        obj.tops.pair = obj.pairs.order.slice(0, max);
+
+        const checkPairs = (group) => {
+          let result = -1;
+          for (let index = 1; result === -1 && index < group.length; ++index) {
+            const prev = group[index - 1];
+            const curr = group[index];
+            if (prev + 1 === curr) {
+              result = obj.tops.pair.includes(`${prev}-${curr}`) ? 1 : 0;
+            }
+          }
+          return result;
+        }
+
         const groups = obj.sums.bet.filter((group) => {
           const labels = group.every((num) => obj.numbers[num].labels.length > 0);
           const evens = group.filter((num) => num % 2);
-          return labels && (evens.length === 2 || evens.length === 3);
+          const pairs = checkPairs(group);
+          return labels && (evens.length === 2 || evens.length === 3) && pairs !== 0;
         });
         obj.groups = {};
         groups.forEach((group) => {
@@ -352,9 +368,6 @@
             perc: group.map((num) => obj.numbers[num].perc).reduce((a, b) => (a / 100) * (b / 100)),
           }
         });
-
-        obj.pairs.order = Object.entries(obj.pairs.pair).sort((a, b) => b[1] - a[1]).map((ent) => ent[0]);
-        obj.tops.pair = obj.pairs.order.slice(0, max);
         
         console.info(obj);
         // const x = obj.lists.sums;
