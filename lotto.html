@@ -50,6 +50,20 @@
         </table>
       </figure>
 
+      <h2>Groups</h2>
+      <figure>
+        <table role="grid">
+          <thead>
+            <tr>
+              <th scope="col">Groups</th>
+              <th scope="col">Percentage</th>
+            </tr>
+          </thead>
+          <tbody id="groups">
+          </tbody>
+        </table>
+      </figure>
+
       <h2>Neighboring Pairs</h2>
       <figure>
         <table role="grid">
@@ -151,6 +165,10 @@
       const formatPair = (pair) => {
         const [fir, sec] = pair.split('-');
         return `${formatNum(Number(fir))}-${formatNum(Number(sec))}`;
+      };
+      const formatGroup = (group) => {
+        const [fir, sec, thi, fou, fif] = group.split('-');
+        return `${formatNum(Number(fir))}-${formatNum(Number(sec))}-${formatNum(Number(thi))}-${formatNum(Number(fou))}-${formatNum(Number(fif))}`;
       };
 
       const applyTo = (selector, command, parameter, on = false, one = false, times = 10) => {
@@ -360,14 +378,19 @@
           const pairs = checkPairs(group);
           return labels && (evens.length === 2 || evens.length === 3) && pairs !== 0;
         });
-        obj.groups = { nums: {} };
+        obj.groups = { group: {} };
         groups.forEach((group) => {
           const key = group.join('-');
-          obj.groups.nums[key] = group.map((num) => obj.numbers[num].perc).reduce((a, b) => (a / 100) * (b / 100));
+          obj.groups.group[key] = group.map((num) => obj.numbers[num].perc).reduce((a, b) => (a / 100) * (b / 100));
         });
 
-        obj.groups.order = Object.entries(obj.groups.nums).sort((a, b) => b[1] - a[1]).map((ent) => ent[0]);
+        obj.groups.order = Object.entries(obj.groups.group).sort((a, b) => b[1] - a[1]).map((ent) => ent[0]);
         obj.tops.group = obj.groups.order.slice(0, max);
+
+        obj.tops.group.forEach((group) => {
+          console.info(group);
+          applyTo('#groups', 'add', EE('tr', [EE('td', EE('mark', formatGroup(group))), EE('td', obj.groups.group[group])]));
+        });
         
         console.info(obj);
         // const x = obj.lists.sums;
