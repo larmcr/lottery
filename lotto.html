@@ -33,6 +33,20 @@
     
     <section id="tables">
 
+      <h2>Groups</h2>
+      <figure>
+        <table role="grid">
+          <thead>
+            <tr>
+              <th scope="col">Group</th>
+              <th scope="col">Percentage</th>
+            </tr>
+          </thead>
+          <tbody id="groups">
+          </tbody>
+        </table>
+      </figure>
+
       <h2>Numbers</h2>
       <figure>
         <table role="grid">
@@ -46,20 +60,6 @@
             </tr>
           </thead>
           <tbody id="nums">
-          </tbody>
-        </table>
-      </figure>
-
-      <h2>Groups</h2>
-      <figure>
-        <table role="grid">
-          <thead>
-            <tr>
-              <th scope="col">Groups</th>
-              <th scope="col">Percentage</th>
-            </tr>
-          </thead>
-          <tbody id="groups">
           </tbody>
         </table>
       </figure>
@@ -388,14 +388,14 @@
         obj.tops.group = obj.groups.order.slice(0, max);
 
         obj.tops.group.forEach((group) => {
-          console.info(group);
-          applyTo('#groups', 'add', EE('tr', [EE('td', EE('mark', formatGroup(group))), EE('td', obj.groups.group[group])]));
+          applyTo('#groups', 'add', EE('tr', [EE('td', EE('mark', formatGroup(group))), EE('td', `${Math.round(obj.groups.group[group] * 100000000000000000) / 100000000000000000} %`)]));
         });
         
-        console.info(obj);
-        // const x = obj.lists.sums;
-        // Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
-        // Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
+        // console.info(obj);
+
+        const x = obj.lists.sums;
+        Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
+        Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
         // console.info(x.join(','));
       } catch (err) {
         console.info('ERROR ->', err);
