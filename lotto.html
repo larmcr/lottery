@@ -47,19 +47,34 @@
         </table>
       </figure>
 
-      <h2>Numbers</h2>
+      <h2>Tops</h2>
       <figure>
         <table role="grid">
           <thead>
             <tr>
-              <th scope="col">Num</th>
-              <th scope="col">Labels</th>
-              <th scope="col">Count</th>
-              <th scope="col">Percentage</th>
-              <th scope="col" title="Since the previous win">Skip</th>
+              <th scope="col">Top</th>
+              <th scope="col">Numbers</th>
             </tr>
           </thead>
-          <tbody id="nums">
+          <tbody>
+            <tr id="all">
+              <th scope="row">All</th>
+            </tr>
+            <tr id="even">
+              <th scope="row">Even</th>
+            </tr>
+            <tr id="odd">
+              <th scope="row">Odd</th>
+            </tr>
+            <tr id="high">
+              <th scope="row">High (num >= <small class="pivot"></small>)</th>
+            </tr>
+            <tr id="low">
+              <th scope="row">Low (num < <small class="pivot"></small>)</th>
+            </tr>
+            <tr id="pair">
+              <th scope="row">Pair</th>
+            </tr>
           </tbody>
         </table>
       </figure>
@@ -77,39 +92,24 @@
           </tbody>
         </table>
       </figure>
-      
-      <h2>Tops</h2>
+
+      <h2>Numbers</h2>
       <figure>
         <table role="grid">
           <thead>
             <tr>
-              <th scope="col">Top</th>
-              <th scope="col">First</th>
-              <th scope="col">Second</th>
-              <th scope="col">Third</th>
-              <th scope="col">Fourth</th>
-              <th scope="col">Fifth</th>
+              <th scope="col">Num</th>
+              <th scope="col">Labels</th>
+              <th scope="col">Count</th>
+              <th scope="col">Percentage</th>
+              <th scope="col" title="Since the previous win">Skip</th>
             </tr>
           </thead>
-          <tbody>
-            <tr id="all">
-              <th scope="row">All numbers</th>
-            </tr>
-            <tr id="even">
-              <th scope="row">Even numbers</th>
-            </tr>
-            <tr id="odd">
-              <th scope="row">Odd numbers</th>
-            </tr>
-            <tr id="high">
-              <th scope="row">High numbers (num >= <small class="pivot"></small>)</th>
-            </tr>
-            <tr id="low">
-              <th scope="row">Low numbers (num < <small class="pivot"></small>)</th>
-            </tr>
+          <tbody id="nums">
           </tbody>
         </table>
       </figure>
+
     </section>
 
     <section id="accordions">
@@ -334,7 +334,7 @@
         applyTo('#hist-det', 'fill', `(p-value ~ ${Math.round(obj.sums.sw.pvalue * 100000) / 100000})`);
         
         const applyTops = (list, ele) => {
-          list.forEach((num) => applyTo(`#${ele}`, 'add', EE('td', [EE('mark', formatNum(num)), ' ', EE('small', `(${obj.numbers[num].perc} %)`)])));
+          applyTo(`#${ele}`, 'add', EE('td', EE('mark', list.map(formatNum).join('-')))); 
         }
         applyTops(obj.tops.all, 'all');
         applyTops(obj.tops.even, 'even');
@@ -358,7 +358,7 @@
         });
 
         obj.pairs.order = Object.entries(obj.pairs.count).sort((a, b) => b[1] - a[1]).map((ent) => ent[0]);
-        obj.tops.pair = obj.pairs.order.slice(0, max);
+        obj.tops.pair = obj.pairs.order.slice(0, 3);
 
         const checkPairs = (group) => {
           let result = -1;
@@ -390,8 +390,10 @@
         obj.tops.group.forEach((group) => {
           applyTo('#groups', 'add', EE('tr', [EE('td', EE('mark', formatGroup(group))), EE('td', `${Math.round(obj.groups.group[group] * 100000000000000000) / 100000000000000000} %`)]));
         });
+
+        applyTo(`#pair`, 'add', EE('td', EE('mark', obj.tops.pair.map(formatPair).join(' / '))));
         
-        // console.info(obj);
+        console.info(obj);
 
         const x = obj.lists.sums;
         Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
