@@ -17,11 +17,11 @@ const getData = async () => {
     }
   }
   const last = await getJson('last');
-  fs.writeFileSync(`./data/${last.numeroSorteo}.json`, JSON.stringify(last));
-  // for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
-  //   const json = await getJson(sorteo);
-  //   fs.writeFileSync(`./data/${json.numeroSorteo}.json`, JSON.stringify(json));
-  // }
+  // fs.writeFileSync(`./data/${last.numeroSorteo}.json`, JSON.stringify(last));
+  for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
+    const json = await getJson(sorteo);
+    fs.writeFileSync(`./data/${json.numeroSorteo}.json`, JSON.stringify(json));
+  }
 }
 
 const processData = () => {
@@ -35,6 +35,6 @@ const processData = () => {
 }
 
 (async () => {
-  await getData();
+  // await getData();
   processData();
 })();
