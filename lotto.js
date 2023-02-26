@@ -17,8 +17,9 @@ const getData = async () => {
     }
   }
   const last = await getJson('last');
-  // fs.writeFileSync(`./data/${last.numeroSorteo}.json`, JSON.stringify(last));
-  for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
+  fs.writeFileSync(`./data/${last.numeroSorteo}.json`, JSON.stringify(last));
+  const max = last.numeroSorteo - 1;
+  for (let sorteo = max; flag; --sorteo) {
     const json = await getJson(sorteo);
     fs.writeFileSync(`./data/${json.numeroSorteo}.json`, JSON.stringify(json));
   }
