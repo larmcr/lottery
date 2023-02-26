@@ -3,7 +3,7 @@ const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fet
 
 const getData = async () => {
   const API = 'https://integration.jps.go.cr/api/app/lotto';
-  
+
   let flag = true;
 
   const getJson = async (id) => {
@@ -13,7 +13,7 @@ const getData = async () => {
       const json = await response.json();
       return json;
     }
-    catch(err) {
+    catch (err) {
       flag = false;
       console.info(`> ERROR -> ${err}`);
     }
@@ -30,7 +30,7 @@ const getData = async () => {
       console.info(`  > '${num}' not saved (already exists)`);
     }
   }
-  
+
   const last = await getJson('last');
   saveJson(last);
   for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
@@ -44,7 +44,7 @@ const processData = () => {
   const files = fs.readdirSync('./data');
   const lottos = {};
   files.forEach((file) => {
-    const { numeroSorteo, numeros, numerosRevancha} = JSON.parse(fs.readFileSync(`./data/${file}`));
+    const { numeroSorteo, numeros, numerosRevancha } = JSON.parse(fs.readFileSync(`./data/${file}`));
     lottos[numeroSorteo] = { n: numeros, r: numerosRevancha };
   });
   fs.writeFileSync('./lotto.json', JSON.stringify(lottos));
