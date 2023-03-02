@@ -1,0 +1,247 @@
+const MINI = require('minified');
+const { $, $$, EE } = MINI;
+
+(async () => {
+  const MINUS = (a, b) => (a - b);
+  const PLUS = (a, b) => (a + b);
+  const LONG_SHOT = 16; // >= 17
+
+  const swTest = (t,r) => { function n(t){return Math.exp(t)}function a(t,r){if(m<t|m<r){var a=normal_distribution_2t((POWER(t/r,1/3)+2/(9*r)-1)/e(2/(9*r)))/2;return r<t?a:1-a}var i=n(-.5*t);r%2==1&&(i*=e(2*t/d));for(var o=r;2<=o;)i=i*t/o,o-=2;for(var u=i,h=r;w*i<u;)i+=u=u*t/(h+=2);return 1-i}function i(t,r){for(var n=.5,i=.5,e=0;w<i;)i/=2,a(e=1/n-1,r)>t?n-=i:n+=i;return e}function e(t){return Math.sqrt(t)}function o(t){return 0==t?.5:.5<t?e(i(2*(1-t),1)):-e(i(2*t,1))}function u(t,r,n){var a,i=n,e=0,o=0;if("Normal"==t)return jStat.normal.inv(r,i.mean,i.std);if("T"==t)return jStat.studentt.inv(r,i.df);if("Chi-Square"==t)return jStat.chisquare.inv(r,i.df);if("F"==t)return(a=jStat.centralF.inv(r,i.df1,i.df2))||(a=inv_f_approx(r,n)),a;if("weibull"==t)return jStat.weibull.inv(r,i.scale,i.shape);if("exponential"==t)return jStat.exponential.inv(r,i.rate);if("beta"==t)return jStat.beta.inv(r,i.alpha,i.beta);if("spr"==t)return inv_f_spr(1-r,i.n);if("binomial"!=t&&"poisson"!=t)return"kolmogorov"==t?inv_distribution(r,n,{fun:ks_distribution},0,1):"lilliefors"==t?inv_distribution(r,n,{fun:lili_distribution},0,1):void debug.error("Distribution type: "+t+" doesn't exist.");for(;o<r;)o+=pdf(t,e,n),e+=1;return e-1}function h(t){var r,n=Math.round(t/2-.1),a=[],i=[],e=0,o=1;for(r=1;r<=t;r++){var h=u("Normal",(r-.375)/((o=1)*t+.25),{mean:0,std:1});i.push(h),e+=Math.pow(h,2)}var s=1/Math.pow(t,.5),f=-2.706056*Math.pow(s,5)+4.434685*Math.pow(s,4)-2.07119*Math.pow(s,3)-.147981*Math.pow(s,2)+.221157*s+i[t-o]*Math.pow(e,-.5),M=-3.582633*Math.pow(s,5)+5.682633*Math.pow(s,4)-1.752461*Math.pow(s,3)-.293762*Math.pow(s,2)+.042981*s+i[t-1-o]*Math.pow(e,-.5),p=(e-2*Math.pow(i[t-o],2)-2*Math.pow(i[t-1-o],2))/(1-2*Math.pow(f,2)-2*Math.pow(M,2)),l=Math.sqrt(p);for(a[1-o]=f,a[2-o]=M,r=3;r<n+1;r++)a[r-o]=-i[r-o]/l;return a}function s(t){return t<=50?SW_a1(t):t<=5e3?h(t):void alert("maximum 5000 values")}function f(t){return t.reduce(function(t,r){return Math.max(1*t,1*r)})}function M(t){return t.reduce(function(t,r){return Math.min(1*t,1*r)})}function p(t,r){if(void 0===r&&(r=6),"string"==typeof r&&(r=Number(r)),"infinite"==t)return"&infin;";if("ninfinite"==t)return"-&infin;";var n=Math.log10(1*Math.abs(t));10<(n=n<0?r:Math.round(n+.5)+r)&&(n=10);var a=(1*t).toPrecision(n);return"NaN"==(a=(1*a).toString())&&(a=t),a}function l(t){return t.reduce(function(t,r){return 1*t+1*r})}function v(t){var r,n,a,i,e,o,u,h,s,v,c=0,d=0,w=0,m=[],g=[];a=(r=l(t))/(n=t.length);for(var b=0;b<n;b++)residual1=t[b]-a,v=t[b]+" - "+p(a,3),m.push(residual1),g.push([t[b],v,residual1]),c+=Math.pow(residual1,2),d+=Math.pow(t[b]-a,3),w+=Math.pow(t[b]-a,4);return o=1<n?c/(n-1):0,u=c/n,i=Math.sqrt(o),e=Math.sqrt(u),h=Math.sqrt(n*(n-1))*d/(n*(n-2)*Math.pow(e,3)),s=n*(n+1)*(n-1)*w/((n-2)*(n-3)*Math.pow(c,2))-3*Math.pow(n-1,2)/((n-2)*(n-3)),{sum:r,min:M(t),max:f(t),n:n,average:a,ss:c,s:i,sigma:e,sample_variance:o,variance:u,residual_table:g,residual:m,skewness:h,kurtosis:s}}function c(t,r){var n=[...t];n=n.sort(function(t,r){return t-r});for(var a=0;a<n.length&&Number(n[a])<=0;a++)0==n[a].length&&(n.splice(a,1),a--);var i=v(n),e=i.ss,u=i.n;if(u<=5e3){var h=0,f=Math.round(u/2-.1),M=s(u);for(a=0;a<f;a++)h+=(n[u-a-1]-n[a])*M[a];var p=Math.pow(h,2)/e,l=.0038915*Math.pow(Math.log(u),3)-.083751*Math.pow(Math.log(u),2)-.31082*Math.log(u)-1.5861,c=Math.exp(.0030302*Math.pow(Math.log(u),2)-.082676*Math.log(u)-.4803),d=(Math.log(1-p)-l)/c,w=1-jStat.normal.cdf(d,0,1),m=o(1-r);return{w:p,b:h,statistic:d,pvalue:w,cval1:-1/0,cval2:m,range1:1-Math.exp(c*m+l),range2:1,n:n.length,ms:i}}}var d=Math.PI,w=1e-15,m=1e3;return c(t,r) };
+
+  const kCombinations = (t, n) => { if (n > t.length || n <= 0) return []; if (n === t.length) return [t]; const e = []; if (1 === n) { for (let n = 0; n < t.length; n++)e.push([t[n]]); return e } for (let o = 0; o < t.length - n + 1; o++) { const r = t.slice(o, o + 1), l = kCombinations(t.slice(o + 1), n - 1); for (let t = 0; t < l.length; t++)e.push(r.concat(l[t])) } return e }, combinations = t => { const n = []; for (let e = 1; e <= t.length; e++) { const o = kCombinations(t, e); for (let t = 0; t < o.length; t++)n.push(o[t]) } return n };
+
+  const formatNum = (num) => num < 10 ? `0${num}` : `${num}`;
+
+  const formatPair = (pair) => {
+    const [fir, sec] = pair.split('-');
+    return `${formatNum(Number(fir))}-${formatNum(Number(sec))}`;
+  }
+
+  const formatGroup = (group) => {
+    const [fir, sec, thi, fou, fif] = group.split('-');
+    return `${formatNum(Number(fir))}-${formatNum(Number(sec))}-${formatNum(Number(thi))}-${formatNum(Number(fou))}-${formatNum(Number(fif))}`;
+  }
+
+  const applyTo = (selector, command, parameter, on = false, one = false, times = 10) => {
+    if ($(selector).length > 0) {
+      if (one) on ? $$(selector).on(command, parameter) : $$(selector)[command](parameter);
+      else on ? $(selector).on(command, parameter) : $(selector)[command](parameter);
+    } else if (times > 0) {
+      setTimeout(() => applyTo(selector, command, parameter, on, one, --times), 250);
+    }
+  }
+
+  try {
+    const response = await fetch('./lotto.json');
+    const json = await response.json();
+    let obj = {
+      lists: { nums: [], sums: [] },
+      games: [],
+      numbers: {},
+      pairs: { count: {}, order: [] },
+      sums: {},
+      tops: {},
+    };
+    Object.keys(json).forEach((game, index) => {
+      obj.lists.nums = obj.lists.nums.concat(json[game].n, json[game].r);
+      const n = {
+        game: Number(game),
+        nums: json[game].n.sort(MINUS),
+        sum: json[game].n.reduce(PLUS),
+        type: 'n',
+      };
+      const r = {
+        game: Number(game),
+        nums: json[game].r.sort(MINUS),
+        sum: json[game].r.reduce(PLUS),
+        type: 'r',
+      };
+      obj.games.push(n, r);
+      n.nums.forEach((num, ind) => {
+        if (num + 1 === n.nums[ind + 1]) {
+          const key = `${num}-${num + 1}`;
+          obj.pairs.count[key] = obj.pairs.count[key] || 0;
+          obj.pairs.count[key]++;
+        }
+      });
+      r.nums.forEach((num, ind) => {
+        if (num + 1 === r.nums[ind + 1]) {
+          const key = `${num}-${num + 1}`;
+          obj.pairs.count[key] = obj.pairs.count[key] || 0;
+          obj.pairs.count[key]++;
+        }
+      });
+      obj.lists.sums.push(obj.games[index * 2].sum, obj.games[index * 2 + 1].sum);
+      json[game].n.forEach((num) => {
+        obj.numbers[num] = obj.numbers[num] || { count: 0 };
+        obj.numbers[num].count++;
+      });
+      json[game].r.forEach((num) => {
+        obj.numbers[num] = obj.numbers[num] || { count: 0 };
+        obj.numbers[num].count++;
+      });
+    });
+    const games = Object.keys(obj.games);
+    obj.lists.nums = obj.lists.nums.sort(MINUS);
+    obj.lists.sums = obj.lists.sums.sort(MINUS);
+    const sums = obj.lists.sums;
+    const [q1, median, q3] = jStat.quartiles(sums);
+    obj.sums.q1 = q1;
+    obj.sums.median = median;
+    obj.sums.q3 = q3;
+    obj.sums.sw = swTest(sums, 0.05);
+    obj.sums.min = jStat.min(sums);
+    obj.sums.max = jStat.max(sums);
+    const numbers = Object.keys(obj.numbers);
+    obj.lists.combs = kCombinations(numbers, 5).map((nums) => nums.map(Number));
+    let toOrder = {};
+    numbers.forEach((num) => {
+      obj.numbers[num].perc = Math.round(obj.numbers[num].count / games.length * 10000) / 100;
+      obj.numbers[num].lost = games.length - obj.numbers[num].count;
+      toOrder[num] = obj.numbers[num].count;
+    });
+    obj.lists.order = Object.entries(toOrder).sort((a, b) => b[1] - a[1]).map((ent) => Number(ent[0]));
+    const max = obj.games[0].nums.length;
+    const pivot = Math.floor(obj.lists.order.length / 2);
+    obj.tops.all = obj.lists.order.slice(0, max);
+    obj.tops.even = obj.lists.order.filter((num) => num % 2 === 0).slice(0, max);
+    obj.tops.odd = obj.lists.order.filter((num) => num % 2 !== 0).slice(0, max);
+    obj.tops.low = obj.lists.order.filter((num) => num < pivot).slice(0, max);
+    obj.tops.high = obj.lists.order.filter((num) => num >= pivot).slice(0, max);
+
+    for (let count = 0; count < games.length; ++count) {
+      const index = (count + 1) * -1;
+      obj.games.at(index).outs = [-1, -1, -1, -1, -1];
+      obj.games.at(index).nums.forEach((num, ind) => {
+        let found = false;
+        let i = index - 1;
+        for (; !found && i > (games.length * -1); --i) {
+          for (let j = 0; !found && j < 5; ++j) {
+            found = obj.games.at(i).nums[j] === num;
+          }
+        }
+        if (found) {
+          obj.games.at(index).outs[ind] = i * -1 + index - 2;
+        }
+      });
+    }
+
+    obj.outs = {};
+    for (let c = 0; c <= max; ++c) {
+      obj.outs[c] = 0;
+    }
+    for (let count = 0; count < max; ++count) {
+      const index = (count + 1) * -1;
+      obj.games.at(index).outs.forEach((out) => {
+        if (out <= max) {
+          obj.outs[out]++;
+        }
+      });
+    }
+
+    for (let count = 0; count < games.length; ++count) {
+      const index = (count + 1) * -1;
+      obj.games.at(index).outs.forEach((out, ind) => {
+        const num = obj.games.at(index).nums[ind];
+        if (typeof (obj.numbers[num].skip) === 'undefined') {
+          obj.numbers[num].skip = -1;
+        } else if (obj.numbers[num].skip === -1) {
+          obj.numbers[num].skip = out;
+        }
+      });
+    }
+
+    // ls: long shot
+    obj.lists.ls = numbers.filter((num) => obj.numbers[num].skip > LONG_SHOT).sort((a, b) => obj.numbers[b].skip - obj.numbers[a].skip).map(Number);
+
+    applyTo('#ls', 'add', EE('td', EE('mark', obj.lists.ls.sort(MINUS).map(formatNum).join('-'))));
+    applyTo('.ls', 'fill', LONG_SHOT);
+
+    const checkNumInList = (list, num, label) => {
+      if (list.includes(num)) {
+        obj.numbers[num].labels.push(label);
+      }
+    }
+    numbers.forEach((n) => {
+      const num = Number(n);
+      obj.numbers[num].labels = [];
+      checkNumInList(obj.lists.ls, num, 'LS');
+      checkNumInList(obj.tops.all, num, 'TA');
+      checkNumInList(obj.tops.even, num, 'TE');
+      checkNumInList(obj.tops.odd, num, 'TO');
+      checkNumInList(obj.tops.high, num, 'TH');
+      checkNumInList(obj.tops.low, num, 'TL');
+    });
+
+    const sumBetween = `(${obj.sums.q1} <= sum <= ${obj.sums.q3})`;
+    applyTo('.sum-bet', 'fill', sumBetween);
+    applyTo('.pivot', 'fill', pivot);
+
+    applyTo('#hist-det', 'fill', `(p-value ~ ${Math.round(obj.sums.sw.pvalue * 100000) / 100000})`);
+
+    const applyTops = (list, ele) => {
+      applyTo(`#${ele}`, 'add', EE('td', EE('mark', list.map(formatNum).join('-'))));
+    }
+    applyTops(obj.tops.all, 'all');
+    applyTops(obj.tops.even, 'even');
+    applyTops(obj.tops.odd, 'odd');
+    applyTops(obj.tops.high, 'high');
+    applyTops(obj.tops.low, 'low');
+
+    Object.keys(obj.pairs.count).sort((a, b) => a.split('-')[0] - b.split('-')[0]).forEach((pair) => {
+      applyTo('#pairs', 'add', EE('tr', [EE('td', EE('mark', formatPair(pair))), EE('td', obj.pairs.count[pair])]));
+    });
+
+    obj.sums.bet = obj.lists.combs.filter((nums) => {
+      const sum = nums.reduce(PLUS);
+      return sum >= obj.sums.q1 && sum <= obj.sums.q3;
+    });
+
+    numbers.forEach((num) => {
+      const labels = EE('td', [EE('small', `(${obj.numbers[num].labels.length})`), ' ', obj.numbers[num].labels.length > 0 ? EE('mark', obj.numbers[num].labels.join('-')) : '']);
+      const tr = EE('tr', [EE('td', EE('mark', formatNum(num))), labels, EE('td', obj.numbers[num].count), EE('td', `${obj.numbers[num].perc} %`), EE('td', obj.numbers[num].skip)]);
+      applyTo('#nums', 'add', tr);
+    });
+
+    obj.pairs.order = Object.entries(obj.pairs.count).sort((a, b) => b[1] - a[1]).map((ent) => ent[0]);
+    obj.tops.pair = obj.pairs.order.slice(0, 3);
+
+    const checkPairs = (group) => {
+      let result = -1;
+      for (let index = 1; result === -1 && index < group.length; ++index) {
+        const prev = group[index - 1];
+        const curr = group[index];
+        if (prev + 1 === curr) {
+          result = obj.tops.pair.includes(`${prev}-${curr}`) ? 1 : 0;
+        }
+      }
+      return result;
+    }
+
+    const groups = obj.sums.bet.filter((group) => {
+      const labels = group.every((num) => obj.numbers[num].labels.length > 0);
+      const evens = group.filter((num) => num % 2);
+      const pairs = checkPairs(group);
+      return labels && (evens.length === 2 || evens.length === 3) && pairs !== 0;
+    });
+    obj.groups = { group: {} };
+    groups.forEach((group) => {
+      const key = group.join('-');
+      obj.groups.group[key] = group.map((num) => obj.numbers[num].perc).reduce((a, b) => (a / 100) * (b / 100));
+    });
+
+    obj.groups.order = Object.entries(obj.groups.group).sort((a, b) => b[1] - a[1]).map((ent) => ent[0]);
+    obj.tops.group = obj.groups.order.slice(0, max);
+
+    obj.tops.group.forEach((group) => {
+      applyTo('#groups', 'add', EE('tr', [EE('td', EE('mark', formatGroup(group))), EE('td', `${Math.round(obj.groups.group[group] * 100000000000000000) / 100000000000000000} %`), EE('td', group.split('-').reduce((a, b) => Number(a) + Number(b)))]));
+    });
+
+    applyTo(`#pair`, 'add', EE('td', EE('mark', obj.tops.pair.map(formatPair).join(' / '))));
+    const x = obj.lists.sums;
+    Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
+    Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
+  } catch (err) {
+    console.info(`ERROR: ${err}`);
+  }
+})();
