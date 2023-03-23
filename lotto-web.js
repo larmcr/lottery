@@ -154,7 +154,7 @@ const { $, $$, EE } = MINI;
     // ls: long shot
     obj.lists.ls = numbers.filter((num) => obj.numbers[num].skip > LONG_SHOT).sort((a, b) => obj.numbers[b].skip - obj.numbers[a].skip).map(Number);
 
-    applyTo('#ls', 'add', EE('td', EE('mark', obj.lists.ls.sort(MINUS).map(formatNum).join('-'))));
+    applyTo('#ls', 'add', [EE('td', EE('mark', obj.lists.ls.sort(MINUS).map(formatNum).join('-'))), EE('td', obj.lists.ls.reduce(PLUS))]);
     applyTo('.ls', 'fill', LONG_SHOT);
 
     const checkNumInList = (list, num, label) => {
