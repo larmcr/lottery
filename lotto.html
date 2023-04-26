@@ -36,12 +36,11 @@
     <section id="accordions">
       <h2>Sums</h2>
       <details open>
-        <summary>Box <mark><small class="sum-bet"></small></mark></summary>
+        <summary role="button">Box <mark><small class="sum-bet"></small></mark></summary>
         <div id="box"></div>
       </details>
       <details open>
-        <summary>Histogram <mark><small id="hist-det"
-              title="Sums distribution is normal if p-value > 0.05"></small></mark></summary>
+        <summary role="button">Histogram <mark><small id="hist-det" title="Sums distribution is normal if p-value > 0.05"></small></mark></summary>
         <div id="histogram"></div>
       </details>
     </section>
@@ -88,26 +87,27 @@
             <tr>
               <th scope="col">Top</th>
               <th scope="col">Numbers</th>
+              <th scope="col">Sum</th>
             </tr>
           </thead>
           <tbody>
             <tr id="all">
-              <th scope="row">All</th>
+              <td scope="row">All</td>
             </tr>
             <tr id="even">
-              <th scope="row">Even</th>
+              <td scope="row">Even</td>
             </tr>
             <tr id="odd">
-              <th scope="row">Odd</th>
+              <td scope="row">Odd</td>
             </tr>
             <tr id="high">
-              <th scope="row">High (num >= <small class="pivot"></small>)</th>
+              <td scope="row">High (num >= <small class="pivot"></small>)</td>
             </tr>
             <tr id="low">
-              <th scope="row">Low (num < <small class="pivot"></small>)</th>
+              <td scope="row">Low (num < <small class="pivot"></small>)</td>
             </tr>
             <tr id="pair">
-              <th scope="row">Pair</th>
+              <td scope="row">Pair</td>
             </tr>
           </tbody>
         </table>

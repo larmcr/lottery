@@ -180,7 +180,7 @@ const { $, $$, EE } = MINI;
     applyTo('#hist-det', 'fill', `(p-value ~ ${Math.round(obj.sums.sw.pvalue * 100000) / 100000})`);
 
     const applyTops = (list, ele) => {
-      applyTo(`#${ele}`, 'add', EE('td', EE('mark', list.sort().map(formatNum).join('-'))));
+      applyTo(`#${ele}`, 'add', [EE('td', EE('mark', list.sort().map(formatNum).join('-'))), EE('td', EE('mark', list.reduce(PLUS)))]);
     }
     applyTops(obj.tops.all, 'all');
     applyTops(obj.tops.even, 'even');
