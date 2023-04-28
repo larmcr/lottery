@@ -174,10 +174,10 @@ const { $, $$, EE } = MINI;
     });
 
     const sumBetween = `(${obj.sums.q1} <= sum <= ${obj.sums.q3})`;
-    applyTo('.sum-bet', 'fill', sumBetween);
+    applyTo('.sum-box', 'fill', sumBetween);
     applyTo('.pivot', 'fill', pivot);
 
-    applyTo('#hist-det', 'fill', `(p-value ~ ${Math.round(obj.sums.sw.pvalue * 100000) / 100000})`);
+    applyTo('#sum-his', 'fill', `(p-value ~ ${Math.round(obj.sums.sw.pvalue * 100000) / 100000})`);
 
     const applyTops = (list, ele) => {
       applyTo(`#${ele}`, 'add', [EE('td', EE('mark', list.sort().map(formatNum).join('-'))), EE('td', EE('mark', list.reduce(PLUS)))]);
@@ -238,9 +238,21 @@ const { $, $$, EE } = MINI;
     });
 
     applyTo(`#pair`, 'add', EE('td', EE('mark', obj.tops.pair.map(formatPair).join(' / '))));
-    const x = obj.lists.sums;
-    Plotly.newPlot(document.getElementById('box'), [{ x, type: 'box', name: 'Sums' }]);
-    Plotly.newPlot(document.getElementById('histogram'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
+
+    (() => {
+      const x = obj.lists.sums;
+      Plotly.newPlot(document.getElementById('box-sum'), [{ x, type: 'box', name: 'Sums' }]);
+      Plotly.newPlot(document.getElementById('his-sum'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
+    })();
+
+    (() => {
+      const x = Object.keys(obj.numbers);
+      console.info(x)
+      const y = x.map((num) => obj.numbers[num].count);
+      console.info(y)
+      Plotly.newPlot(document.getElementById('plo-cou'), [{ x, y, mode: 'markers', type: 'scatter', name: 'Count' }]);
+    })();
+    
   } catch (err) {
     console.info(`ERROR: ${err}`);
   }
