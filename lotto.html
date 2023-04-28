@@ -12,140 +12,142 @@
   <script src="./minified-web.js"></script>
 </head>
 
-<body>
+<body style="padding-left: 25pt; padding-right: 25pt;">
 
   <script src="./lotto-web.min.js" defer></script>
 
-  <header>
-    <hgroup>
-      <h1>JPS Lotto</h1>
-      <h2>Analyze current JPS Lotto data</h2>
-    </hgroup>
-    <nav>
-      <ul>
-        <li>Theme:</li>
-        <li><a href="#" data-theme-switcher="auto">Auto</a></li>
-        <li><a href="#" data-theme-switcher="light">Light</a></li>
-        <li><a href="#" data-theme-switcher="dark">Dark</a></li>
-      </ul>
-    </nav>
-  </header>
+  <article>
+    <h3>JPS Lotto</h3>
+    <footer>
+      <nav>
+        <ul>
+          <li><a href="#" data-theme-switcher="auto">Auto</a></li>
+          <li><a href="#" data-theme-switcher="light">Light</a></li>
+          <li><a href="#" data-theme-switcher="dark">Dark</a></li>
+        </ul>
+      </nav>
+    </footer>
+  </article>
 
-  <main>
+  <article>
+    <h4>Sums</h4>
+    <details>
+      <summary>Box <mark><small class="sum-bet"></small></mark></summary>
+      <div id="box"></div>
+    </details>
+    <details>
+      <summary>Histogram <mark><small id="hist-det"
+            title="Sums distribution is normal if p-value > 0.05"></small></mark></summary>
+      <div id="histogram"></div>
+    </details>
+  </article>
 
-    <section id="accordions">
-      <h2>Sums</h2>
-      <details open>
-        <summary role="button">Box <mark><small class="sum-bet"></small></mark></summary>
-        <div id="box"></div>
-      </details>
-      <details open>
-        <summary role="button">Histogram <mark><small id="hist-det" title="Sums distribution is normal if p-value > 0.05"></small></mark></summary>
-        <div id="histogram"></div>
-      </details>
-    </section>
+  <article id="tables">
+    <h4>Groups</h4>
+    <figure>
+      <table role="grid">
+        <thead>
+          <tr>
+            <th scope="col">Group</th>
+            <th scope="col">Percentage</th>
+            <th scope="col">Sum</th>
+          </tr>
+        </thead>
+        <tbody id="groups">
+        </tbody>
+      </table>
+    </figure>
+  </article>
 
-    <section id="tables">
+  <article>
+    <h4>Lists</h4>
+    <figure>
+      <table role="grid">
+        <thead>
+          <tr>
+            <th scope="col">List</th>
+            <th scope="col">Numbers</th>
+            <th scope="col">Sum</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="ls">
+            <td>Long Shots (skip > <small class="ls"></small>)</td>
+          </tr>
+        </tbody>
+      </table>
+    </figure>
+  </article>
 
-      <h2>Groups</h2>
-      <figure>
-        <table role="grid">
-          <thead>
-            <tr>
-              <th scope="col">Group</th>
-              <th scope="col">Percentage</th>
-              <th scope="col">Sum</th>
-            </tr>
-          </thead>
-          <tbody id="groups">
-          </tbody>
-        </table>
-      </figure>
+  <article>
+    <h4>Tops</h4>
+    <figure>
+      <table role="grid">
+        <thead>
+          <tr>
+            <th scope="col">Top</th>
+            <th scope="col">Numbers</th>
+            <th scope="col">Sum</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr id="all">
+            <td scope="row">All</td>
+          </tr>
+          <tr id="even">
+            <td scope="row">Even</td>
+          </tr>
+          <tr id="odd">
+            <td scope="row">Odd</td>
+          </tr>
+          <tr id="high">
+            <td scope="row">High (num >= <small class="pivot"></small>)</td>
+          </tr>
+          <tr id="low">
+            <td scope="row">Low (num < <small class="pivot"></small>)</td>
+          </tr>
+          <tr id="pair">
+            <td scope="row">Pair</td>
+          </tr>
+        </tbody>
+      </table>
+    </figure>
+  </article>
 
-      <h2>Lists</h2>
-      <figure>
-        <table role="grid">
-          <thead>
-            <tr>
-              <th scope="col">List</th>
-              <th scope="col">Numbers</th>
-              <th scope="col">Sum</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr id="ls">
-              <td>Long Shots (skip > <small class="ls"></small>)</td>
-            </tr>
-          </tbody>
-        </table>
-      </figure>
+  <article>
+    <h4>Neighboring Pairs</h4>
+    <figure>
+      <table role="grid">
+        <thead>
+          <tr>
+            <th scope="col">Pair</th>
+            <th scope="col">Count</th>
+          </tr>
+        </thead>
+        <tbody id="pairs">
+        </tbody>
+      </table>
+    </figure>
+  </article>
 
-      <h2>Tops</h2>
-      <figure>
-        <table role="grid">
-          <thead>
-            <tr>
-              <th scope="col">Top</th>
-              <th scope="col">Numbers</th>
-              <th scope="col">Sum</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr id="all">
-              <td scope="row">All</td>
-            </tr>
-            <tr id="even">
-              <td scope="row">Even</td>
-            </tr>
-            <tr id="odd">
-              <td scope="row">Odd</td>
-            </tr>
-            <tr id="high">
-              <td scope="row">High (num >= <small class="pivot"></small>)</td>
-            </tr>
-            <tr id="low">
-              <td scope="row">Low (num < <small class="pivot"></small>)</td>
-            </tr>
-            <tr id="pair">
-              <td scope="row">Pair</td>
-            </tr>
-          </tbody>
-        </table>
-      </figure>
-
-      <h2>Neighboring Pairs</h2>
-      <figure>
-        <table role="grid">
-          <thead>
-            <tr>
-              <th scope="col">Pair</th>
-              <th scope="col">Count</th>
-            </tr>
-          </thead>
-          <tbody id="pairs">
-          </tbody>
-        </table>
-      </figure>
-
-      <h2>Numbers</h2>
-      <figure>
-        <table role="grid">
-          <thead>
-            <tr>
-              <th scope="col">Num</th>
-              <th scope="col">Labels</th>
-              <th scope="col">Count</th>
-              <th scope="col">Percentage</th>
-              <th scope="col" title="Since the previous win">Skip</th>
-            </tr>
-          </thead>
-          <tbody id="nums">
-          </tbody>
-        </table>
-      </figure>
-
-    </section>
-  </main>
+  <article>
+    <h4>Numbers</h4>
+    <figure>
+      <table role="grid">
+        <thead>
+          <tr>
+            <th scope="col">Num</th>
+            <th scope="col">Labels</th>
+            <th scope="col">Count</th>
+            <th scope="col">Percentage</th>
+            <th scope="col" title="Since the previous win">Skip</th>
+          </tr>
+        </thead>
+        <tbody id="nums">
+        </tbody>
+      </table>
+    </figure>
+  </article>
 
   <script async>
     const themeSwitcher = {
