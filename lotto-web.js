@@ -180,7 +180,7 @@ const { $, $$, EE } = MINI;
     applyTo('#sum-his', 'fill', `(p-value ~ ${Math.round(obj.sums.sw.pvalue * 100000) / 100000})`);
 
     const applyTops = (list, ele) => {
-      applyTo(`#${ele}`, 'add', [EE('td', EE('mark', list.sort().map(formatNum).join('-'))), EE('td', EE('mark', list.reduce(PLUS)))]);
+      applyTo(`#${ele}`, 'add', [EE('td', EE('mark', list.sort().map(formatNum).join('-'))), EE('td', list.reduce(PLUS))]);
     }
     applyTops(obj.tops.all, 'all');
     applyTops(obj.tops.even, 'even');
@@ -198,7 +198,7 @@ const { $, $$, EE } = MINI;
     });
 
     numbers.forEach((num) => {
-      const labels = EE('td', [EE('small', `(${obj.numbers[num].labels.length})`), ' ', obj.numbers[num].labels.length > 0 ? EE('mark', obj.numbers[num].labels.join('-')) : '']);
+      const labels = EE('td', [EE('small', `(${obj.numbers[num].labels.length})`), ' ', obj.numbers[num].labels.length > 0 ? EE('small', obj.numbers[num].labels.join('-')) : '']);
       const tr = EE('tr', [EE('td', EE('mark', formatNum(num))), labels, EE('td', obj.numbers[num].count), EE('td', `${obj.numbers[num].perc} %`), EE('td', obj.numbers[num].skip)]);
       applyTo('#nums', 'add', tr);
     });
@@ -241,16 +241,25 @@ const { $, $$, EE } = MINI;
 
     (() => {
       const x = obj.lists.sums;
-      Plotly.newPlot(document.getElementById('box-sum'), [{ x, type: 'box', name: 'Sums' }]);
-      Plotly.newPlot(document.getElementById('his-sum'), [{ x, type: 'histogram', histnorm: 'probability', name: 'Sums' }]);
+      Plotly.newPlot(document.getElementById('box-sum'), [{ x, type: 'box' }]);
+      Plotly.newPlot(document.getElementById('his-sum'), [{ x, type: 'histogram', histnorm: 'probability' }]);
     })();
 
     (() => {
-      const x = Object.keys(obj.numbers);
-      console.info(x)
-      const y = x.map((num) => obj.numbers[num].count);
-      console.info(y)
-      Plotly.newPlot(document.getElementById('plo-cou'), [{ x, y, mode: 'markers', type: 'scatter', name: 'Count' }]);
+      const x = obj.lists.order.map((num) => String(num));
+      const y = obj.lists.order.map((num) => obj.numbers[num].count);
+      const layout = {
+        xaxis: {
+          title: 'Numbers',
+          type: 'category',
+          tickmode: 'array',
+          tickvals: x
+        },
+        yaxis: {
+          title: 'Count',
+        },
+      }
+      Plotly.newPlot(document.getElementById('plo-cou'), [{ x, y, mode: 'markers', type: 'scatter' }], layout);
     })();
     
   } catch (err) {
