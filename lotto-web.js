@@ -198,7 +198,7 @@ const { $, $$, EE } = MINI;
     });
 
     numbers.forEach((num) => {
-      const labels = EE('td', [EE('small', `(${obj.numbers[num].labels.length})`), ' ', obj.numbers[num].labels.length > 0 ? EE('small', obj.numbers[num].labels.join('-')) : '']);
+      const labels = EE('td', [`(${obj.numbers[num].labels.length})`, ' ', obj.numbers[num].labels.length > 0 ? obj.numbers[num].labels.join('-') : '']);
       const tr = EE('tr', [EE('td', EE('mark', formatNum(num))), labels, EE('td', obj.numbers[num].count), EE('td', `${obj.numbers[num].perc} %`), EE('td', obj.numbers[num].skip)]);
       applyTo('#nums', 'add', tr);
     });
@@ -246,7 +246,7 @@ const { $, $$, EE } = MINI;
     })();
 
     (() => {
-      const x = obj.lists.order.map((num) => String(num));
+      const x = obj.lists.order.map((num) => formatNum(num));
       const y = obj.lists.order.map((num) => obj.numbers[num].count);
       const layout = {
         xaxis: {
