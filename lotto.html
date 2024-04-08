@@ -432,6 +432,7 @@
           }
           Plotly.newPlot(document.getElementById('plo-cou'), [{ x, y, mode: 'markers', type: 'scatter' }], layout);
         })();
+        console.info(obj);
       } catch (err) {
         console.info(`ERROR: ${err}`);
       }
