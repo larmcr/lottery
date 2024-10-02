@@ -280,10 +280,14 @@
           return all && !obj.groups[key] && sum >= q1 && sum <= q3 && equ > 1;
         });
         obj.combs = combs;
-
+        const combsSums = {};
         combs.forEach((comb) => {
-          const format = comb.map(formatNumber).join(',');
-          applyTo('#groups', 'add', EE('tr', [EE('td', EE('mark', format)), EE('td', comb.reduce((a, b) => a + b, 0))]));
+          const key = comb.map(formatNumber).join(',');
+          combsSums[key] = comb.reduce((a, b) => a + b, 0);
+        });
+        const combsOrder = Object.entries(combsSums).sort((a, b) => b[1] - a[1]);
+        combsOrder.forEach(([key, val]) => {
+          applyTo('#groups', 'add', EE('tr', [EE('td', EE('mark', key)), EE('td', val)]));
         });
         // let obj = {
         //   lists: { nums: [], sums: [] },
