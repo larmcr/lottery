@@ -46,7 +46,6 @@
           <thead>
             <tr>
               <th scope="col">Group</th>
-              <th scope="col">Percentage</th>
               <th scope="col">Sum</th>
             </tr>
           </thead>
@@ -281,7 +280,11 @@
           return all && !obj.groups[key] && sum >= q1 && sum <= q3 && equ > 1;
         });
         obj.combs = combs;
-        
+
+        combs.forEach((comb) => {
+          const format = comb.map(formatNumber).join(',');
+          applyTo('#groups', 'add', EE('tr', [EE('td', EE('mark', format)), EE('td', comb.reduce((a, b) => a + b, 0))]));
+        });
         // let obj = {
         //   lists: { nums: [], sums: [] },
         //   games: [],
