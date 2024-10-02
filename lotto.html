@@ -268,16 +268,16 @@
 
         const numsKeys = Object.keys(obj.nums);
         const numsValues = Object.values(obj.nums);
-        const medianNums = jStat.median(numsValues);
-        const [, , numQ3] = jStat.quartiles(numsValues);
+        const [, medianNums, numQ3] = jStat.quartiles(numsValues);
         const numsMedian = jStat.median(numsKeys.map(Number));
         let combs = kCombinations(numsKeys, 5).map((arr) => arr.map((num) => Number(num)));
         combs = combs.filter((comb) => {
           const sum = comb.reduce((a, b) => a + b, 0);
           const key = comb.map(formatNumber);
           const all = comb.every((num) => obj.nums[num] > numQ3);
-          const equ = comb.filter((num) => num < numsMedian).length;
-          return all && !obj.groups[key] && sum >= q1 && sum <= q3 && equ > 1;
+          const med = comb.filter((num) => num < numsMedian).length;
+          const div = comb.filter((num) => num % 2 === 0).length;
+          return all && !obj.groups[key] && sum >= q1 && sum <= q3 && med > 1 && div > 1 && div < 4;
         });
         obj.combs = combs;
 
