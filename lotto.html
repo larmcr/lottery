@@ -181,16 +181,16 @@
 
       const kCombinations = (t, n) => { if (n > t.length || n <= 0) return []; if (n === t.length) return [t]; const e = []; if (1 === n) { for (let n = 0; n < t.length; n++)e.push([t[n]]); return e } for (let o = 0; o < t.length - n + 1; o++) { const r = t.slice(o, o + 1), l = kCombinations(t.slice(o + 1), n - 1); for (let t = 0; t < l.length; t++)e.push(r.concat(l[t])) } return e };
 
-      const formatNum = (num) => num < 10 ? `0${num}` : `${num}`;
+      const formatNumber = (num) => num < 10 ? `0${num}` : `${num}`;
 
       const formatPair = (pair) => {
         const [fir, sec] = pair.split('-');
-        return `${formatNum(Number(fir))}-${formatNum(Number(sec))}`;
+        return `${formatNumber(Number(fir))}-${formatNumber(Number(sec))}`;
       }
 
       const formatGroup = (group) => {
         const [fir, sec, thi, fou, fif] = group.split('-');
-        return `${formatNum(Number(fir))}-${formatNum(Number(sec))}-${formatNum(Number(thi))}-${formatNum(Number(fou))}-${formatNum(Number(fif))}`;
+        return `${formatNumber(Number(fir))}-${formatNumber(Number(sec))}-${formatNumber(Number(thi))}-${formatNumber(Number(fou))}-${formatNumber(Number(fif))}`;
       }
 
       const applyTo = (selector, command, parameter, on = false, one = false, times = 10) => {
@@ -219,8 +219,8 @@
             obj.nums[num] = obj.nums[num] ?? 0;
             obj.nums[num]++;
           });
-          const keyN = n.map(formatNum).join(',');
-          const keyR = r.map(formatNum).join(',');
+          const keyN = n.map(formatNumber).join(',');
+          const keyR = r.map(formatNumber).join(',');
           obj.groups[keyN] = obj.groups[keyN] ?? 0;
           obj.groups[keyN]++;
           obj.groups[keyR] = obj.groups[keyR] ?? 0;
@@ -240,7 +240,7 @@
           }
         });
 
-        Plotly.newPlot(document.getElementById('box-sum'), [{ x: sums, type: 'box' }]);
+        Plotly.newPlot(document.getElementById('box-sum'), [{ x: sums, type: 'box', boxmean: 'sd' }]);
         Plotly.newPlot(document.getElementById('his-sum'), [{ x: sums, type: 'histogram', histnorm: 'probability' }]);
 
         const [q1, median, q3] = jStat.quartiles(sums);
@@ -252,7 +252,7 @@
         applyTo('.sum-box', 'fill', `${q1} <= sum <= ${q3}`);
 
         const orderNums = Object.entries(obj.nums).sort((a, b) => b[1] - a[1]);
-        const xVals = orderNums.map((num) => formatNum(Number(num[0])));
+        const xVals = orderNums.map((num) => formatNumber(Number(num[0])));
         const yVals = orderNums.map((num) => num[1]);
         const layout = {
           xaxis: {
@@ -267,17 +267,19 @@
         }
         Plotly.newPlot(document.getElementById('plo-cou'), [{ x: xVals, y: yVals, mode: 'markers', type: 'scatter' }], layout);
 
-        const combs = kCombinations(Object.keys(obj.nums), 5).map((arr) => arr.map((num) => Number(num)));
-        const combsFiltered = combs.filter((comb) => {
+        const numsValues = Object.values(obj.nums);
+        const medianNums = jStat.median(numsValues);
+        const [, , numQ3] = jStat.quartiles(numsValues);
+        console.info(numQ3);
+        let combs = kCombinations(Object.keys(obj.nums), 5).map((arr) => arr.map((num) => Number(num)));
+        combs = combs.filter((comb) => {
           const sum = comb.reduce((a, b) => a + b, 0);
-          const key = comb.map(formatNum);
-          return sum >= q1 && sum <= q3 && !obj.groups[key];
+          const key = comb.map(formatNumber);
+          const all = comb.every((num) => obj.nums[num] > numQ3);
+          return all && !obj.groups[key] && sum >= q1 && sum <= q3;
         });
         console.info(combs);
-        console.info(combsFiltered);
-        // const keys = combs.map((arr) => arr.map((num) => formatNum(Number(num))));
-        // console.info(keys);
-
+        
         // let obj = {
         //   lists: { nums: [], sums: [] },
         //   games: [],
