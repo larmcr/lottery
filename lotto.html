@@ -267,18 +267,20 @@
         }
         Plotly.newPlot(document.getElementById('plo-cou'), [{ x: xVals, y: yVals, mode: 'markers', type: 'scatter' }], layout);
 
+        const numsKeys = Object.keys(obj.nums);
         const numsValues = Object.values(obj.nums);
         const medianNums = jStat.median(numsValues);
         const [, , numQ3] = jStat.quartiles(numsValues);
-        console.info(numQ3);
-        let combs = kCombinations(Object.keys(obj.nums), 5).map((arr) => arr.map((num) => Number(num)));
+        const numsMedian = jStat.median(numsKeys.map(Number));
+        let combs = kCombinations(numsKeys, 5).map((arr) => arr.map((num) => Number(num)));
         combs = combs.filter((comb) => {
           const sum = comb.reduce((a, b) => a + b, 0);
           const key = comb.map(formatNumber);
           const all = comb.every((num) => obj.nums[num] > numQ3);
-          return all && !obj.groups[key] && sum >= q1 && sum <= q3;
+          const equ = comb.filter((num) => num < numsMedian).length;
+          return all && !obj.groups[key] && sum >= q1 && sum <= q3 && equ > 1;
         });
-        console.info(combs);
+        obj.combs = combs;
         
         // let obj = {
         //   lists: { nums: [], sums: [] },
