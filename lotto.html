@@ -280,6 +280,22 @@
           return all && !obj.groups[key] && sum >= q1 && sum <= q3 && equ > 1;
         });
         obj.combs = combs;
+
+        const plays = Object.keys(json).map(Number).sort((a, b) => b - a);
+        console.info(plays);
+        const ls = {};
+        obj.combs.forEach((comb) => {
+          comb.forEach((num) => {
+            if (ls[num] === undefined) {
+              for (let i = 0; i < plays.length && ls[num] === undefined; i++) {
+                if (json[plays[i]].r.includes(num)) {
+                  ls[num] = i;
+                }
+              }
+            }
+          });
+        });
+        console.info(ls);
         const combsSums = {};
         combs.forEach((comb) => {
           const key = comb.map(formatNumber).join(',');
