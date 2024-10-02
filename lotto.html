@@ -12,143 +12,144 @@
   <script src="./minified-web.js"></script>
 </head>
 
-<body style="padding-left: 25pt; padding-right: 25pt;">
+<body>
+  <main>
+    <article>
+      <h3>JPS Lotto</h3>
+      <footer>
+        <nav>
+          <ul>
+            <li><a href="#" data-theme-switcher="auto">Auto</a></li>
+            <li><a href="#" data-theme-switcher="light">Light</a></li>
+            <li><a href="#" data-theme-switcher="dark">Dark</a></li>
+          </ul>
+        </nav>
+      </footer>
+    </article>
 
-  <article>
-    <h3>JPS Lotto</h3>
-    <footer>
-      <nav>
-        <ul>
-          <li><a href="#" data-theme-switcher="auto">Auto</a></li>
-          <li><a href="#" data-theme-switcher="light">Light</a></li>
-          <li><a href="#" data-theme-switcher="dark">Dark</a></li>
-        </ul>
-      </nav>
-    </footer>
-  </article>
+    <article>
+      <h4>Sums</h4>
+      <details>
+        <summary role="button">Box <span style="float: right;"><code><small class="sum-box"></small></code></span></summary>
+        <div id="box-sum"></div>
+      </details>
+      <details>
+        <summary role="button">Histogram <span style="float: right;"><code><small id="sum-his" title="Sums distribution is normal if p-value > 0.05"></small></code></span></summary>
+        <div id="his-sum"></div>
+      </details>
+    </article>
 
-  <article>
-    <h4>Sums</h4>
-    <details>
-      <summary role="button">Box <span style="float: right;"><code><small class="sum-box"></small></code></span></summary>
-      <div id="box-sum"></div>
-    </details>
-    <details>
-      <summary role="button">Histogram <span style="float: right;"><code><small id="sum-his" title="Sums distribution is normal if p-value > 0.05"></small></code></span></summary>
-      <div id="his-sum"></div>
-    </details>
-  </article>
+    <article id="tables">
+      <h4>Groups</h4>
+      <figure>
+        <table role="grid">
+          <thead>
+            <tr>
+              <th scope="col">Group</th>
+              <th scope="col">Percentage</th>
+              <th scope="col">Sum</th>
+            </tr>
+          </thead>
+          <tbody id="groups">
+          </tbody>
+        </table>
+      </figure>
+    </article>
 
-  <article id="tables">
-    <h4>Groups</h4>
-    <figure>
-      <table role="grid">
-        <thead>
-          <tr>
-            <th scope="col">Group</th>
-            <th scope="col">Percentage</th>
-            <th scope="col">Sum</th>
-          </tr>
-        </thead>
-        <tbody id="groups">
-        </tbody>
-      </table>
-    </figure>
-  </article>
+    <article>
+      <h4>Lists</h4>
+      <figure>
+        <table role="grid">
+          <thead>
+            <tr>
+              <th scope="col">List</th>
+              <th scope="col">Numbers</th>
+              <th scope="col">Sum</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="ls">
+              <td>Long Shots (skip > <small class="ls"></small>)</td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    </article>
 
-  <article>
-    <h4>Lists</h4>
-    <figure>
-      <table role="grid">
-        <thead>
-          <tr>
-            <th scope="col">List</th>
-            <th scope="col">Numbers</th>
-            <th scope="col">Sum</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr id="ls">
-            <td>Long Shots (skip > <small class="ls"></small>)</td>
-          </tr>
-        </tbody>
-      </table>
-    </figure>
-  </article>
+    <article>
+      <h4>Tops</h4>
+      <figure>
+        <table role="grid">
+          <thead>
+            <tr>
+              <th scope="col">Top</th>
+              <th scope="col">Numbers</th>
+              <th scope="col">Sum</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr id="all">
+              <td scope="row">All</td>
+            </tr>
+            <tr id="even">
+              <td scope="row">Even</td>
+            </tr>
+            <tr id="odd">
+              <td scope="row">Odd</td>
+            </tr>
+            <tr id="high">
+              <td scope="row">High (num >= <small class="pivot"></small>)</td>
+            </tr>
+            <tr id="low">
+              <td scope="row">Low (num < <small class="pivot"></small>)</td>
+            </tr>
+            <tr id="pair">
+              <td scope="row">Pair</td>
+            </tr>
+          </tbody>
+        </table>
+      </figure>
+    </article>
 
-  <article>
-    <h4>Tops</h4>
-    <figure>
-      <table role="grid">
-        <thead>
-          <tr>
-            <th scope="col">Top</th>
-            <th scope="col">Numbers</th>
-            <th scope="col">Sum</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr id="all">
-            <td scope="row">All</td>
-          </tr>
-          <tr id="even">
-            <td scope="row">Even</td>
-          </tr>
-          <tr id="odd">
-            <td scope="row">Odd</td>
-          </tr>
-          <tr id="high">
-            <td scope="row">High (num >= <small class="pivot"></small>)</td>
-          </tr>
-          <tr id="low">
-            <td scope="row">Low (num < <small class="pivot"></small>)</td>
-          </tr>
-          <tr id="pair">
-            <td scope="row">Pair</td>
-          </tr>
-        </tbody>
-      </table>
-    </figure>
-  </article>
+    <article>
+      <h4>Neighboring Pairs</h4>
+      <figure>
+        <table role="grid">
+          <thead>
+            <tr>
+              <th scope="col">Pair</th>
+              <th scope="col">Count</th>
+            </tr>
+          </thead>
+          <tbody id="pairs">
+          </tbody>
+        </table>
+      </figure>
+    </article>
 
-  <article>
-    <h4>Neighboring Pairs</h4>
-    <figure>
-      <table role="grid">
-        <thead>
-          <tr>
-            <th scope="col">Pair</th>
-            <th scope="col">Count</th>
-          </tr>
-        </thead>
-        <tbody id="pairs">
-        </tbody>
-      </table>
-    </figure>
-  </article>
-
-  <article>
-    <h4>Numbers</h4>
-    <details>
-      <summary>Count</summary>
-      <div id="plo-cou"></div>
-    </details>
-    <figure>
-      <table role="grid">
-        <thead>
-          <tr>
-            <th scope="col">Num</th>
-            <th scope="col">Labels</th>
-            <th scope="col">Count</th>
-            <th scope="col">Percentage</th>
-            <th scope="col" title="Since the previous win">Skip</th>
-          </tr>
-        </thead>
-        <tbody id="nums">
-        </tbody>
-      </table>
-    </figure>
-  </article>
+    <article>
+      <h4>Numbers</h4>
+      <details>
+        <summary>Count</summary>
+        <div id="plo-cou"></div>
+      </details>
+      <figure>
+        <table role="grid">
+          <thead>
+            <tr>
+              <th scope="col">Num</th>
+              <th scope="col">Labels</th>
+              <th scope="col">Count</th>
+              <th scope="col">Percentage</th>
+              <th scope="col" title="Since the previous win">Skip</th>
+            </tr>
+          </thead>
+          <tbody id="nums">
+          </tbody>
+        </table>
+      </figure>
+    </article>
+  </main>
 
   <script async>
     const themeSwitcher = {
@@ -249,6 +250,22 @@
 
         applyTo('#sum-his', 'fill', `p-value ~ ${Math.round(sw.pvalue * 100000) / 100000}`);
         applyTo('.sum-box', 'fill', `${q1} <= sum <= ${q3}`);
+
+        const orderNums = Object.entries(obj.nums).sort((a, b) => b[1] - a[1]);
+        const xVals = orderNums.map((num) => formatNum(Number(num[0])));
+        const yVals = orderNums.map((num) => num[1]);
+        const layout = {
+          xaxis: {
+            title: 'Numbers',
+            type: 'category',
+            tickmode: 'array',
+            tickvals: xVals
+          },
+          yaxis: {
+            title: 'Count',
+          },
+        }
+        Plotly.newPlot(document.getElementById('plo-cou'), [{ x: xVals, y: yVals, mode: 'markers', type: 'scatter' }], layout);
 
         // let obj = {
         //   lists: { nums: [], sums: [] },
@@ -455,28 +472,6 @@
 
         // applyTo(`#pair`, 'add', EE('td', EE('mark', obj.tops.pair.map(formatPair).join(' / '))));
 
-        // (() => {
-        //   const x = obj.lists.sums;
-        //   Plotly.newPlot(document.getElementById('box-sum'), [{ x, type: 'box' }]);
-        //   Plotly.newPlot(document.getElementById('his-sum'), [{ x, type: 'histogram', histnorm: 'probability' }]);
-        // })();
-
-        // (() => {
-        //   const x = obj.lists.order.map((num) => formatNum(num));
-        //   const y = obj.lists.order.map((num) => obj.numbers[num].count);
-        //   const layout = {
-        //     xaxis: {
-        //       title: 'Numbers',
-        //       type: 'category',
-        //       tickmode: 'array',
-        //       tickvals: x
-        //     },
-        //     yaxis: {
-        //       title: 'Count',
-        //     },
-        //   }
-        //   Plotly.newPlot(document.getElementById('plo-cou'), [{ x, y, mode: 'markers', type: 'scatter' }], layout);
-        // })();
         console.info(obj);
       } catch (err) {
         console.info(`ERROR: ${err}`);
