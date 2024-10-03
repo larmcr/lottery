@@ -129,7 +129,7 @@
     <article>
       <h4>Numbers</h4>
       <details>
-        <summary>Count</summary>
+        <summary role="button">Count</summary>
         <div id="plo-cou"></div>
       </details>
       <figure>
@@ -239,7 +239,7 @@
           }
         });
 
-        Plotly.newPlot(document.getElementById('box-sum'), [{ x: sums, type: 'box', boxmean: 'sd' }]);
+        Plotly.newPlot(document.getElementById('box-sum'), [{ x: sums, type: 'box', boxmean: true }]);
         Plotly.newPlot(document.getElementById('his-sum'), [{ x: sums, type: 'histogram', histnorm: 'probability' }]);
 
         const [q1, median, q3] = jStat.quartiles(sums);
