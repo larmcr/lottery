@@ -113,15 +113,11 @@
               return numCount[1] > q3;
             });
 
-            const skips = {
-              chances: {},
-              loteria: {},
-            };
+            const skips = [];
 
             options.forEach(([n, _]) => {
               const num = Number(n);
-              skips.chances[num] = chances.findIndex((a) => a === num);
-              skips.loteria[num] = loteria.findIndex((a) => a === num);
+              skips.push([num, chances.findIndex((a) => a === num), loteria.findIndex((a) => a === num)]);
             });
 
             console.info(counts);
