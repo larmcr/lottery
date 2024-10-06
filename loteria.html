@@ -113,13 +113,12 @@
               return numCount[1] > q3;
             });
 
-            const skips = [];
-
-            options.forEach(([n, _]) => {
+            const skips = options.map(([n, _]) => {
               const num = Number(n);
-              skips.push([num, chances.findIndex((a) => a === num), loteria.findIndex((a) => a === num)]);
+              return [num, chances.findIndex((a) => a === num), loteria.findIndex((a) => a === num)];
             });
 
+            console.info([q1, median, q3]);
             console.info(counts);
             console.info(options);
             console.info(skips);
