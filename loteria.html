@@ -54,19 +54,20 @@
         const formatNumber = (num) => num < 10 ? `0${num}` : `${num}`;
 
         (async () => {
-          try {
+          // try {
             let response = await fetch("./chances.json");
             let json = await response.json();
-            let values = Object.values(json);
 
-            let nums = values.map(({ n }) => n).flat();
+            let values = Object.values(json);
+            const chances = values.map(({ n }) => n).flat();
             let sers = values.map(({ s }) => s).flat();
 
             response = await fetch("./loterianacional.json");
             json = await response.json();
-            values = Object.values(json);const formatNumber = (num) => num < 10 ? `0${num}` : `${num}`;
 
-            nums = nums.concat(values.map(({ n }) => n).flat());
+            values = Object.values(json);
+            const loteria = values.map(({ n }) => n).flat();
+            const nums = chances.concat(loteria);
             sers = sers.concat(values.map(({ s }) => s).flat());
             sers = sers.filter((ser) => ser > 0);
 
@@ -107,12 +108,28 @@
             applyTo('#num-his', 'fill', `p-value ~ ${Math.round(sw.pvalue * 100000) / 100000}`);
 
             const [q1, median, q3] = jStat.quartiles(y);
-            console.info([q1, median, q3]);
+
+            const options = orderNums.filter((numCount) => {
+              return numCount[1] > q3;
+            });
+
+            const skips = {
+              chances: {},
+              loteria: {},
+            };
+
+            options.forEach(([n, _]) => {
+              const num = Number(n);
+              skips.chances[num] = chances.findIndex((a) => a === num);
+              skips.loteria[num] = loteria.findIndex((a) => a === num);
+            });
 
             console.info(counts);
-          } catch (err) {
-            console.info(`ERROR: ${err}`);
-          }
+            console.info(options);
+            console.info(skips);
+          // } catch (err) {
+           // console.info(`ERROR: ${err}`);
+          //}
         })();
       </script>
     </main>
