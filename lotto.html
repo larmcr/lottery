@@ -204,7 +204,7 @@
       try {
         const response = await fetch('./lotto.json');
         const json = await response.json();
-        const obj = {
+        const lotto = {
           nums: {},
           sums: {},
           groups: {},
@@ -215,28 +215,26 @@
           r = r.sort((a, b) => a - b);
           const nums = n.concat(r);
           nums.forEach((num) => {
-            obj.nums[num] = obj.nums[num] ?? 0;
-            obj.nums[num]++;
+            lotto.nums[num] = lotto.nums[num] ?? 0;
+            lotto.nums[num]++;
           });
           const keyN = n.map(formatNumber).join(',');
           const keyR = r.map(formatNumber).join(',');
-          obj.groups[keyN] = obj.groups[keyN] ?? 0;
-          obj.groups[keyN]++;
-          obj.groups[keyR] = obj.groups[keyR] ?? 0;
-          obj.groups[keyR]++;
+          lotto.groups[keyN] = lotto.groups[keyN] ?? 0;
+          lotto.groups[keyN]++;
+          lotto.groups[keyR] = lotto.groups[keyR] ?? 0;
+          lotto.groups[keyR]++;
           const sumN = n.reduce((a, b) => a + b, 0);
           const sumR = r.reduce((a, b) => a + b, 0);
-          obj.sums[sumN] = obj.sums[sumN] ?? 0;
-          obj.sums[sumN]++;
-          obj.sums[sumR] = obj.sums[sumR] ?? 0;
-          obj.sums[sumR]++;
+          lotto.sums[sumN] = lotto.sums[sumN] ?? 0;
+          lotto.sums[sumN]++;
+          lotto.sums[sumR] = lotto.sums[sumR] ?? 0;
+          lotto.sums[sumR]++;
         }
         const sums = [];
-        Object.keys(obj.sums).forEach((sum) => {
-          const count = obj.sums[sum];
-          for (let i = 0; i < count; i++) {
-            sums.push(Number(sum));
-          }
+        Object.keys(lotto.sums).forEach((sum) => {
+          const count = lotto.sums[sum];
+          sums.push(... Array(count).fill(Number(sum)))
         });
 
         Plotly.newPlot(document.getElementById('box-sum'), [{ x: sums, type: 'box', boxmean: true }]);
@@ -250,7 +248,7 @@
         applyTo('#sum-his', 'fill', `p-value ~ ${Math.round(sw.pvalue * 100000) / 100000}`);
         applyTo('.sum-box', 'fill', `${q1} <= sum <= ${q3}`);
 
-        const orderNums = Object.entries(obj.nums).sort((a, b) => b[1] - a[1]);
+        const orderNums = Object.entries(lotto.nums).sort((a, b) => b[1] - a[1]);
         const xVals = orderNums.map((num) => formatNumber(Number(num[0])));
         const yVals = orderNums.map((num) => num[1]);
         const layout = {
@@ -266,36 +264,44 @@
         }
         Plotly.newPlot(document.getElementById('plo-cou'), [{ x: xVals, y: yVals, mode: 'markers', type: 'scatter' }], layout);
 
-        const numsKeys = Object.keys(obj.nums);
-        const numsValues = Object.values(obj.nums);
+        const numsKeys = Object.keys(lotto.nums);
+        const numsValues = Object.values(lotto.nums);
         const [, medianNums, numQ3] = jStat.quartiles(numsValues);
         const numsMedian = jStat.median(numsKeys.map(Number));
         let combs = kCombinations(numsKeys, 5).map((arr) => arr.map((num) => Number(num)));
         combs = combs.filter((comb) => {
           const sum = comb.reduce((a, b) => a + b, 0);
           const key = comb.map(formatNumber);
-          const all = comb.every((num) => obj.nums[num] > numQ3);
+          const all = comb.every((num) => lotto.nums[num] > medianNums);
           const med = comb.filter((num) => num < numsMedian).length;
           const div = comb.filter((num) => num % 2 === 0).length;
-          return all && !obj.groups[key] && sum >= q1 && sum <= q3 && med > 1 && div > 1 && div < 4;
+          return all && !lotto.groups[key] && sum >= q1 && sum <= q3 && med > 1 && div > 1 && div < 4;
         });
-        obj.combs = combs;
 
         const plays = Object.keys(json).map(Number).sort((a, b) => b - a);
-        console.info(plays);
-        const ls = {};
-        obj.combs.forEach((comb) => {
+        const skips = {};
+        combs.forEach((comb) => {
           comb.forEach((num) => {
-            if (ls[num] === undefined) {
-              for (let i = 0; i < plays.length && ls[num] === undefined; i++) {
+            if (skips[num] === undefined) {
+              for (let i = 0; i < plays.length && skips[num] === undefined; i++) {
                 if (json[plays[i]].r.includes(num)) {
-                  ls[num] = i;
+                  skips[num] = i * 2;
+                } else if (json[plays[i]].n.includes(num)) {
+                  skips[num] = i * 2 + 1;
                 }
               }
             }
           });
         });
-        console.info(ls);
+        console.info(skips);
+
+        const valids = Object.keys(skips).filter((num) => skips[num] > 4).map(Number);
+        console.info(valids);
+        combs = combs.filter((comb) => {
+          return comb.every((num) => valids.includes(num));
+        });
+
+        lotto.combs = combs;
         const combsSums = {};
         combs.forEach((comb) => {
           const key = comb.map(formatNumber).join(',');
@@ -306,7 +312,12 @@
           applyTo('#groups', 'add', EE('tr', [EE('td', EE('mark', key)), EE('td', val)]));
         });
 
-        console.info(obj);
+        Object.keys(lotto.combs).forEach((comb) => {
+          const vals = lotto.combs[comb];
+          const sum = vals.map((val) => skips[val])
+          console.info(`${vals}: ${sum.reduce((a, b) => a + b, 0)}`);
+        });
+        console.info(lotto);
       } catch (err) {
         console.info(`ERROR: ${err}`);
       }
