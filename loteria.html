@@ -57,17 +57,18 @@
           // try {
             let response = await fetch("./chances.json");
             let json = await response.json();
-
-            let values = Object.values(json);
+            let values = Object.keys(json).map(Number).sort((a, b) => b - a).map((key) => json[key]);
             const chances = values.map(({ n }) => n).flat();
+            
             let sers = values.map(({ s }) => s).flat();
 
             response = await fetch("./loterianacional.json");
             json = await response.json();
-
-            values = Object.values(json);
+            values = Object.keys(json).map(Number).sort((a, b) => b - a).map((key) => json[key]);
             const loteria = values.map(({ n }) => n).flat();
+
             const nums = chances.concat(loteria);
+
             sers = sers.concat(values.map(({ s }) => s).flat());
             sers = sers.filter((ser) => ser > 0);
 
@@ -115,7 +116,14 @@
 
             const skips = options.map(([n, _]) => {
               const num = Number(n);
-              return [num, chances.findIndex((a) => a === num), loteria.findIndex((a) => a === num)];
+              const indChs = chances.findIndex((a) => a === num);
+              const indLtr = loteria.findIndex((a) => a === num);
+              const sum = indChs + indLtr;
+              if (indChs > 100 && indLtr > 100) {
+                return [num, indChs, indLtr, sum];
+              } else {
+                return null;
+              }
             });
 
             console.info([q1, median, q3]);
