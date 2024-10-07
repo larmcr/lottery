@@ -27,22 +27,6 @@
       </details>
     </article>
 
-    <article id="tables">
-      <h4>Groups</h4>
-      <figure>
-        <table role="grid">
-          <thead>
-            <tr>
-              <th scope="col">Group</th>
-              <th scope="col">Sum</th>
-            </tr>
-          </thead>
-          <tbody id="groups">
-          </tbody>
-        </table>
-      </figure>
-    </article>
-
     <article>
       <h4>Numbers</h4>
       <details>
@@ -50,7 +34,7 @@
         <div id="plo-cou"></div>
       </details>
       <figure>
-        <table role="grid">
+        <table role="grid" class="striped">
           <thead>
             <tr>
               <th scope="col">Numbers</th>
@@ -68,53 +52,24 @@
     </article>
   </main>
 
-  <script async>
-    const themeSwitcher = {
-      buttonsTarget: 'a[data-theme-switcher]',
-      buttonAttribute: 'data-theme-switcher',
-      rootAttribute: 'data-theme',
-      init() {
-        document.querySelectorAll(this.buttonsTarget).forEach(function (button) {
-          button.addEventListener('click', function (event) {
-            event.preventDefault();
-            document.querySelector('html').setAttribute(this.rootAttribute, event.target.getAttribute(this.buttonAttribute));
-          }.bind(this), false)
-        }.bind(this));
-      },
-    };
-    themeSwitcher.init();
-  </script>
-
   <script defer>
     const MINI = require('minified');
     const { $, $$, EE } = MINI;
 
+    const kCombinations = (t, n) => { if (n > t.length || n <= 0) return []; if (n === t.length) return [t]; const e = []; if (1 === n) { for (let n = 0; n < t.length; n++)e.push([t[n]]); return e } for (let o = 0; o < t.length - n + 1; o++) { const r = t.slice(o, o + 1), l = kCombinations(t.slice(o + 1), n - 1); for (let t = 0; t < l.length; t++)e.push(r.concat(l[t])) } return e };
+
+    const formatNumber = (num) => num < 10 ? `0${num}` : `${num}`;
+
+    const applyTo = (selector, command, parameter, on = false, one = false, times = 10) => {
+      if ($(selector).length > 0) {
+        if (one) on ? $$(selector).on(command, parameter) : $$(selector)[command](parameter);
+        else on ? $(selector).on(command, parameter) : $(selector)[command](parameter);
+      } else if (times > 0) {
+        setTimeout(() => applyTo(selector, command, parameter, on, one, --times), 250);
+      }
+    }
+
     (async () => {
-      
-
-      const kCombinations = (t, n) => { if (n > t.length || n <= 0) return []; if (n === t.length) return [t]; const e = []; if (1 === n) { for (let n = 0; n < t.length; n++)e.push([t[n]]); return e } for (let o = 0; o < t.length - n + 1; o++) { const r = t.slice(o, o + 1), l = kCombinations(t.slice(o + 1), n - 1); for (let t = 0; t < l.length; t++)e.push(r.concat(l[t])) } return e };
-
-      const formatNumber = (num) => num < 10 ? `0${num}` : `${num}`;
-
-      const formatPair = (pair) => {
-        const [fir, sec] = pair.split('-');
-        return `${formatNumber(Number(fir))}-${formatNumber(Number(sec))}`;
-      }
-
-      const formatGroup = (group) => {
-        const [fir, sec, thi, fou, fif] = group.split('-');
-        return `${formatNumber(Number(fir))}-${formatNumber(Number(sec))}-${formatNumber(Number(thi))}-${formatNumber(Number(fou))}-${formatNumber(Number(fif))}`;
-      }
-
-      const applyTo = (selector, command, parameter, on = false, one = false, times = 10) => {
-        if ($(selector).length > 0) {
-          if (one) on ? $$(selector).on(command, parameter) : $$(selector)[command](parameter);
-          else on ? $(selector).on(command, parameter) : $(selector)[command](parameter);
-        } else if (times > 0) {
-          setTimeout(() => applyTo(selector, command, parameter, on, one, --times), 250);
-        }
-      }
-
       const response = await fetch('./lotto.json');
       const json = await response.json();
       const lotto = {
@@ -206,10 +161,8 @@
           }
         });
       });
-      console.info(skips);
 
       const valids = Object.keys(skips).filter((num) => skips[num] > 5).map(Number);
-      console.info(valids);
       combs = combs.filter((comb) => {
         return comb.every((num) => valids.includes(num));
       });
@@ -221,9 +174,6 @@
         combsSums[key] = comb.reduce((a, b) => a + b, 0);
       });
       const combsOrder = Object.entries(combsSums).sort((a, b) => b[1] - a[1]);
-      combsOrder.forEach(([key, val]) => {
-        applyTo('#groups', 'add', EE('tr', [EE('td', EE('mark', key)), EE('td', val)]));
-      });
 
       combsOrder.forEach(([key, sum]) => {
         const numbers = key.split(',').map(Number);
@@ -231,7 +181,6 @@
         const countsSum = arrCounts.reduce((a, b) => a + b, 0);
         const arrSkips = numbers.map((n) => skips[n]);
         const skipsSum = arrSkips.reduce((a, b) => a + b, 0);
-        console.info(`${numbers} : ${arrCounts} : ${countsSum} : ${arrSkips} : ${skipsSum}`);
         applyTo('#nums', 'add', EE('tr', [EE('td', EE('mark', key)), EE('td', sum), EE('td', arrCounts.join(',')), EE('td', countsSum), EE('td', arrSkips.join(',')), EE('td', skipsSum)]));
       });
       console.info(lotto);
