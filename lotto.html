@@ -16,19 +16,6 @@
 <body>
   <main>
     <article>
-      <h3>JPS Lotto</h3>
-      <footer>
-        <nav>
-          <ul>
-            <li><a href="#" data-theme-switcher="auto">Auto</a></li>
-            <li><a href="#" data-theme-switcher="light">Light</a></li>
-            <li><a href="#" data-theme-switcher="dark">Dark</a></li>
-          </ul>
-        </nav>
-      </footer>
-    </article>
-
-    <article>
       <h4>Sums</h4>
       <details>
         <summary role="button">Box <span style="float: right;"><code><small class="sum-box"></small></code></span></summary>
@@ -57,77 +44,6 @@
     </article>
 
     <article>
-      <h4>Lists</h4>
-      <figure>
-        <table role="grid">
-          <thead>
-            <tr>
-              <th scope="col">List</th>
-              <th scope="col">Numbers</th>
-              <th scope="col">Sum</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr id="ls">
-              <td>Long Shots (skip > <small class="ls"></small>)</td>
-            </tr>
-          </tbody>
-        </table>
-      </figure>
-    </article>
-
-    <article>
-      <h4>Tops</h4>
-      <figure>
-        <table role="grid">
-          <thead>
-            <tr>
-              <th scope="col">Top</th>
-              <th scope="col">Numbers</th>
-              <th scope="col">Sum</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr id="all">
-              <td scope="row">All</td>
-            </tr>
-            <tr id="even">
-              <td scope="row">Even</td>
-            </tr>
-            <tr id="odd">
-              <td scope="row">Odd</td>
-            </tr>
-            <tr id="high">
-              <td scope="row">High (num >= <small class="pivot"></small>)</td>
-            </tr>
-            <tr id="low">
-              <td scope="row">Low (num < <small class="pivot"></small>)</td>
-            </tr>
-            <tr id="pair">
-              <td scope="row">Pair</td>
-            </tr>
-          </tbody>
-        </table>
-      </figure>
-    </article>
-
-    <article>
-      <h4>Neighboring Pairs</h4>
-      <figure>
-        <table role="grid">
-          <thead>
-            <tr>
-              <th scope="col">Pair</th>
-              <th scope="col">Count</th>
-            </tr>
-          </thead>
-          <tbody id="pairs">
-          </tbody>
-        </table>
-      </figure>
-    </article>
-
-    <article>
       <h4>Numbers</h4>
       <details>
         <summary role="button">Count</summary>
@@ -137,11 +53,12 @@
         <table role="grid">
           <thead>
             <tr>
-              <th scope="col">Num</th>
-              <th scope="col">Labels</th>
-              <th scope="col">Count</th>
-              <th scope="col">Percentage</th>
-              <th scope="col" title="Since the previous win">Skip</th>
+              <th scope="col">Numbers</th>
+              <th scope="col">Sum</th>
+              <th scope="col">Counts</th>
+              <th scope="col">Counts Sum</th>
+              <th scope="col">Skips</th>
+              <th scope="col">Skips Sum</th>
             </tr>
           </thead>
           <tbody id="nums">
@@ -198,126 +115,126 @@
         }
       }
 
-      try {
-        const response = await fetch('./lotto.json');
-        const json = await response.json();
-        const lotto = {
-          nums: {},
-          sums: {},
-          groups: {},
-        };
-        for (const key in json) {
-          let { n, r } = json[key];
-          n = n.sort((a, b) => a - b);
-          r = r.sort((a, b) => a - b);
-          const nums = n.concat(r);
-          nums.forEach((num) => {
-            lotto.nums[num] = lotto.nums[num] ?? 0;
-            lotto.nums[num]++;
-          });
-          const keyN = n.map(formatNumber).join(',');
-          const keyR = r.map(formatNumber).join(',');
-          lotto.groups[keyN] = lotto.groups[keyN] ?? 0;
-          lotto.groups[keyN]++;
-          lotto.groups[keyR] = lotto.groups[keyR] ?? 0;
-          lotto.groups[keyR]++;
-          const sumN = n.reduce((a, b) => a + b, 0);
-          const sumR = r.reduce((a, b) => a + b, 0);
-          lotto.sums[sumN] = lotto.sums[sumN] ?? 0;
-          lotto.sums[sumN]++;
-          lotto.sums[sumR] = lotto.sums[sumR] ?? 0;
-          lotto.sums[sumR]++;
-        }
-        const sums = [];
-        Object.keys(lotto.sums).forEach((sum) => {
-          const count = lotto.sums[sum];
-          sums.push(... Array(count).fill(Number(sum)))
+      const response = await fetch('./lotto.json');
+      const json = await response.json();
+      const lotto = {
+        nums: {},
+        sums: {},
+        groups: {},
+      };
+      for (const key in json) {
+        let { n, r } = json[key];
+        n = n.sort((a, b) => a - b);
+        r = r.sort((a, b) => a - b);
+        const nums = n.concat(r);
+        nums.forEach((num) => {
+          lotto.nums[num] = lotto.nums[num] ?? 0;
+          lotto.nums[num]++;
         });
+        const keyN = n.map(formatNumber).join(',');
+        const keyR = r.map(formatNumber).join(',');
+        lotto.groups[keyN] = lotto.groups[keyN] ?? 0;
+        lotto.groups[keyN]++;
+        lotto.groups[keyR] = lotto.groups[keyR] ?? 0;
+        lotto.groups[keyR]++;
+        const sumN = n.reduce((a, b) => a + b, 0);
+        const sumR = r.reduce((a, b) => a + b, 0);
+        lotto.sums[sumN] = lotto.sums[sumN] ?? 0;
+        lotto.sums[sumN]++;
+        lotto.sums[sumR] = lotto.sums[sumR] ?? 0;
+        lotto.sums[sumR]++;
+      }
+      const sums = [];
+      Object.keys(lotto.sums).forEach((sum) => {
+        const count = lotto.sums[sum];
+        sums.push(... Array(count).fill(Number(sum)))
+      });
 
-        Plotly.newPlot(document.getElementById('box-sum'), [{ x: sums, type: 'box', boxmean: true }]);
-        Plotly.newPlot(document.getElementById('his-sum'), [{ x: sums, type: 'histogram', histnorm: 'probability' }]);
+      Plotly.newPlot(document.getElementById('box-sum'), [{ x: sums, type: 'box', boxmean: true }]);
+      Plotly.newPlot(document.getElementById('his-sum'), [{ x: sums, type: 'histogram', histnorm: 'probability' }]);
 
-        const [q1, median, q3] = jStat.quartiles(sums);
-        const sw = window.swTest(sums, 0.05);
-        const min = jStat.min(sums);
-        const max = jStat.max(sums);
+      const [q1, median, q3] = jStat.quartiles(sums);
+      const sw = window.swTest(sums, 0.05);
+      const min = jStat.min(sums);
+      const max = jStat.max(sums);
 
-        applyTo('#sum-his', 'fill', `p-value ~ ${Math.round(sw.pvalue * 100000) / 100000}`);
-        applyTo('.sum-box', 'fill', `${q1} <= sum <= ${q3}`);
+      applyTo('#sum-his', 'fill', `p-value ~ ${Math.round(sw.pvalue * 100000) / 100000}`);
+      applyTo('.sum-box', 'fill', `${q1} <= sum <= ${q3}`);
 
-        const orderNums = Object.entries(lotto.nums).sort((a, b) => b[1] - a[1]);
-        const xVals = orderNums.map((num) => formatNumber(Number(num[0])));
-        const yVals = orderNums.map((num) => num[1]);
-        const layout = {
-          xaxis: {
-            title: 'Numbers',
-            type: 'category',
-            tickmode: 'array',
-            tickvals: xVals,
-          },
-          yaxis: {
-            title: 'Count',
-          },
-        }
-        Plotly.newPlot(document.getElementById('plo-cou'), [{ x: xVals, y: yVals, mode: 'markers', type: 'scatter' }], layout);
+      const orderNums = Object.entries(lotto.nums).sort((a, b) => b[1] - a[1]);
+      const xVals = orderNums.map((num) => formatNumber(Number(num[0])));
+      const yVals = orderNums.map((num) => num[1]);
+      const layout = {
+        xaxis: {
+          title: 'Numbers',
+          type: 'category',
+          tickmode: 'array',
+          tickvals: xVals,
+        },
+        yaxis: {
+          title: 'Count',
+        },
+      }
+      Plotly.newPlot(document.getElementById('plo-cou'), [{ x: xVals, y: yVals, mode: 'markers', type: 'scatter' }], layout);
 
-        const numsKeys = Object.keys(lotto.nums);
-        const numsValues = Object.values(lotto.nums);
-        const [, medianNums, numQ3] = jStat.quartiles(numsValues);
-        const numsMedian = jStat.median(numsKeys.map(Number));
-        let combs = kCombinations(numsKeys, 5).map((arr) => arr.map((num) => Number(num)));
-        combs = combs.filter((comb) => {
-          const sum = comb.reduce((a, b) => a + b, 0);
-          const key = comb.map(formatNumber);
-          const all = comb.every((num) => lotto.nums[num] > medianNums);
-          const med = comb.filter((num) => num < numsMedian).length;
-          const div = comb.filter((num) => num % 2 === 0).length;
-          return all && !lotto.groups[key] && sum >= q1 && sum <= q3 && med > 1 && div > 1 && div < 4;
-        });
+      const numsKeys = Object.keys(lotto.nums);
+      const numsValues = Object.values(lotto.nums);
+      const [, medianNums, numQ3] = jStat.quartiles(numsValues);
+      const numsMedian = jStat.median(numsKeys.map(Number));
+      let combs = kCombinations(numsKeys, 5).map((arr) => arr.map((num) => Number(num)));
+      combs = combs.filter((comb) => {
+        const sum = comb.reduce((a, b) => a + b, 0);
+        const key = comb.map(formatNumber);
+        const all = comb.every((num) => lotto.nums[num] > medianNums);
+        const med = comb.filter((num) => num < numsMedian).length;
+        const div = comb.filter((num) => num % 2 === 0).length;
+        return all && !lotto.groups[key] && sum >= q1 && sum <= q3 && med > 1 && div > 1 && div < 4;
+      });
 
-        const plays = Object.keys(json).map(Number).sort((a, b) => b - a);
-        const skips = {};
-        combs.forEach((comb) => {
-          comb.forEach((num) => {
-            if (skips[num] === undefined) {
-              for (let i = 0; i < plays.length && skips[num] === undefined; i++) {
-                if (json[plays[i]].r.includes(num)) {
-                  skips[num] = i * 2;
-                } else if (json[plays[i]].n.includes(num)) {
-                  skips[num] = i * 2 + 1;
-                }
+      const plays = Object.keys(json).map(Number).sort((a, b) => b - a);
+      const skips = {};
+      combs.forEach((comb) => {
+        comb.forEach((num) => {
+          if (skips[num] === undefined) {
+            for (let i = 0; i < plays.length && skips[num] === undefined; i++) {
+              if (json[plays[i]].r.includes(num)) {
+                skips[num] = i * 2;
+              } else if (json[plays[i]].n.includes(num)) {
+                skips[num] = i * 2 + 1;
               }
             }
-          });
+          }
         });
-        console.info(skips);
+      });
+      console.info(skips);
 
-        const valids = Object.keys(skips).filter((num) => skips[num] > 5).map(Number);
-        console.info(valids);
-        combs = combs.filter((comb) => {
-          return comb.every((num) => valids.includes(num));
-        });
+      const valids = Object.keys(skips).filter((num) => skips[num] > 5).map(Number);
+      console.info(valids);
+      combs = combs.filter((comb) => {
+        return comb.every((num) => valids.includes(num));
+      });
 
-        lotto.combs = combs;
-        const combsSums = {};
-        combs.forEach((comb) => {
-          const key = comb.map(formatNumber).join(',');
-          combsSums[key] = comb.reduce((a, b) => a + b, 0);
-        });
-        const combsOrder = Object.entries(combsSums).sort((a, b) => b[1] - a[1]);
-        combsOrder.forEach(([key, val]) => {
-          applyTo('#groups', 'add', EE('tr', [EE('td', EE('mark', key)), EE('td', val)]));
-        });
+      lotto.combs = combs;
+      const combsSums = {};
+      combs.forEach((comb) => {
+        const key = comb.map(formatNumber).join(',');
+        combsSums[key] = comb.reduce((a, b) => a + b, 0);
+      });
+      const combsOrder = Object.entries(combsSums).sort((a, b) => b[1] - a[1]);
+      combsOrder.forEach(([key, val]) => {
+        applyTo('#groups', 'add', EE('tr', [EE('td', EE('mark', key)), EE('td', val)]));
+      });
 
-        Object.keys(lotto.combs).forEach((comb) => {
-          const vals = lotto.combs[comb];
-          const sum = vals.map((val) => skips[val])
-          console.info(`${vals}: ${sum.reduce((a, b) => a + b, 0)}`);
-        });
-        console.info(lotto);
-      } catch (err) {
-        console.info(`ERROR: ${err}`);
-      }
+      combsOrder.forEach(([key, sum]) => {
+        const numbers = key.split(',').map(Number);
+        const arrCounts = numbers.map((n) => lotto.nums[n]);
+        const countsSum = arrCounts.reduce((a, b) => a + b, 0);
+        const arrSkips = numbers.map((n) => skips[n]);
+        const skipsSum = arrSkips.reduce((a, b) => a + b, 0);
+        console.info(`${numbers} : ${arrCounts} : ${countsSum} : ${arrSkips} : ${skipsSum}`);
+        applyTo('#nums', 'add', EE('tr', [EE('td', EE('mark', key)), EE('td', sum), EE('td', arrCounts.join(',')), EE('td', countsSum), EE('td', arrSkips.join(',')), EE('td', skipsSum)]));
+      });
+      console.info(lotto);
     })();
   </script>
 </body>
