@@ -9,6 +9,7 @@
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
     <script src="./minified-web.js"></script>
+    <script src="./applyTo.js"></script>
     <script src="./sw-test.js"></script>
   </head>
 
@@ -39,100 +40,84 @@
       <article>
 
       <script defer>
-        const MINI = require('minified');
-        const { $, $$, EE } = MINI;
-
-        const applyTo = (selector, command, parameter, on = false, one = false, times = 10) => {
-          if ($(selector).length > 0) {
-            if (one) on ? $$(selector).on(command, parameter) : $$(selector)[command](parameter);
-            else on ? $(selector).on(command, parameter) : $(selector)[command](parameter);
-          } else if (times > 0) {
-            setTimeout(() => applyTo(selector, command, parameter, on, one, --times), 250);
-          }
-        }
-
         const formatNumber = (num) => num < 10 ? `0${num}` : `${num}`;
 
         (async () => {
-          // try {
-            let response = await fetch("./chances.json");
-            let json = await response.json();
-            let values = Object.keys(json).map(Number).sort((a, b) => b - a).map((key) => json[key]);
-            const chances = values.map(({ n }) => n).flat();
-            
-            let sers = values.map(({ s }) => s).flat();
+          let response = await fetch("./chances.json");
+          let json = await response.json();
+          let values = Object.keys(json).map(Number).sort((a, b) => b - a).map((key) => json[key]);
+          const chances = values.map(({ n }) => n).flat();
+          
+          let sers = values.map(({ s }) => s).flat();
 
-            response = await fetch("./loterianacional.json");
-            json = await response.json();
-            values = Object.keys(json).map(Number).sort((a, b) => b - a).map((key) => json[key]);
-            const loteria = values.map(({ n }) => n).flat();
+          response = await fetch("./loterianacional.json");
+          json = await response.json();
+          values = Object.keys(json).map(Number).sort((a, b) => b - a).map((key) => json[key]);
+          const loteria = values.map(({ n }) => n).flat();
 
-            const nums = chances.concat(loteria);
+          const nums = chances.concat(loteria);
 
-            sers = sers.concat(values.map(({ s }) => s).flat());
-            sers = sers.filter((ser) => ser > 0);
+          sers = sers.concat(values.map(({ s }) => s).flat());
+          sers = sers.filter((ser) => ser > 0);
 
-            Plotly.newPlot(document.getElementById('his-num'), [{ x: nums, type: 'histogram', histnorm: 'probability' }]);
-            Plotly.newPlot(document.getElementById('his-ser'), [{ x: sers, type: 'histogram', histnorm: 'probability' }]);
+          Plotly.newPlot(document.getElementById('his-num'), [{ x: nums, type: 'histogram', histnorm: 'probability' }]);
+          Plotly.newPlot(document.getElementById('his-ser'), [{ x: sers, type: 'histogram', histnorm: 'probability' }]);
 
-            const counts = {
-              nums: {},
-              sers: {},
+          const counts = {
+            nums: {},
+            sers: {},
+          }
+          for (let num = 0; num < 100; ++num) {
+            counts.nums[num] = 0;nums
+          }
+          for (let ser = 0; ser < 1000; ++ser) {
+            counts.sers[ser] = 0;
+          }
+
+          nums.forEach((num) => counts.nums[num]++);
+          sers.forEach((ser) => counts.sers[ser]++);
+
+          const orderNums = Object.entries(counts.nums).sort((a, b) => b[1] - a[1]);
+          const x = orderNums.map((num) => formatNumber(Number(num[0])));
+          const y = orderNums.map((num) => num[1]);
+          const layout = {
+            xaxis: {
+              title: 'Numbers',
+              type: 'category',
+              tickmode: 'array',
+              tickvals: x,
+            },
+            yaxis: {
+              title: 'Count Numbers',
+            },
+          }
+          Plotly.newPlot(document.getElementById('cou-num'), [{ x, y, mode: 'markers', type: 'scatter' }], layout);
+
+          const sw = window.swTest(y, 0.05);
+          window.applyTo('#num-his', 'fill', `p-value ~ ${Math.round(sw.pvalue * 100000) / 100000}`);
+
+          const [q1, median, q3] = jStat.quartiles(y);
+
+          const options = orderNums.filter((numCount) => {
+            return numCount[1] > q3;
+          });
+
+          const skips = options.map(([n, _]) => {
+            const num = Number(n);
+            const indChs = chances.findIndex((a) => a === num);
+            const indLtr = loteria.findIndex((a) => a === num);
+            const sum = indChs + indLtr;
+            if (indChs > 100 && indLtr > 100) {
+              return [num, indChs, indLtr, sum];
+            } else {
+              return null;
             }
-            for (let num = 0; num < 100; ++num) {
-              counts.nums[num] = 0;nums
-            }
-            for (let ser = 0; ser < 1000; ++ser) {
-              counts.sers[ser] = 0;
-            }
+          }).filter(Boolean);
 
-            nums.forEach((num) => counts.nums[num]++);
-            sers.forEach((ser) => counts.sers[ser]++);
-
-            const orderNums = Object.entries(counts.nums).sort((a, b) => b[1] - a[1]);
-            const x = orderNums.map((num) => formatNumber(Number(num[0])));
-            const y = orderNums.map((num) => num[1]);
-            const layout = {
-              xaxis: {
-                title: 'Numbers',
-                type: 'category',
-                tickmode: 'array',
-                tickvals: x,
-              },
-              yaxis: {
-                title: 'Count Numbers',
-              },
-            }
-            Plotly.newPlot(document.getElementById('cou-num'), [{ x, y, mode: 'markers', type: 'scatter' }], layout);
-
-            const sw = window.swTest(y, 0.05);
-            applyTo('#num-his', 'fill', `p-value ~ ${Math.round(sw.pvalue * 100000) / 100000}`);
-
-            const [q1, median, q3] = jStat.quartiles(y);
-
-            const options = orderNums.filter((numCount) => {
-              return numCount[1] > q3;
-            });
-
-            const skips = options.map(([n, _]) => {
-              const num = Number(n);
-              const indChs = chances.findIndex((a) => a === num);
-              const indLtr = loteria.findIndex((a) => a === num);
-              const sum = indChs + indLtr;
-              if (indChs > 100 && indLtr > 100) {
-                return [num, indChs, indLtr, sum];
-              } else {
-                return null;
-              }
-            });
-
-            console.info([q1, median, q3]);
-            console.info(counts);
-            console.info(options);
-            console.info(skips);
-          // } catch (err) {
-           // console.info(`ERROR: ${err}`);
-          //}
+          console.info([q1, median, q3]);
+          console.info(counts);
+          console.info(options);
+          console.info(skips);
         })();
       </script>
     </main>
