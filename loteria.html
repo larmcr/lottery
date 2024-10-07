@@ -5,7 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content="JPS chances" />
     <title>Chances y Lotería Nacional</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css">
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css"
+    />
     <script src="https://cdn.plot.ly/plotly-latest.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/jstat@latest/dist/jstat.min.js"></script>
     <script src="./minified-web.js"></script>
@@ -34,7 +37,15 @@
       <article>
         <h4>Counts</h4>
         <details>
-          <summary role="button">Numbers<span style="float: right;"><code><small id="num-his" title="Numbers distribution is normal if p-value > 0.05"></small></code></span></summary>
+          <summary role="button">
+            Numbers<span style="float: right"
+              ><code
+                ><small
+                  id="num-his"
+                  title="Numbers distribution is normal if p-value > 0.05"
+                ></small></code
+            ></span>
+          </summary>
           <div id="cou-num"></div>
         </details>
       </article>
@@ -56,19 +67,25 @@
       </article>
 
       <script defer>
-        const formatNumber = (num) => num < 10 ? `0${num}` : `${num}`;
+        const formatNumber = (num) => (num < 10 ? `0${num}` : `${num}`);
 
         (async () => {
           let response = await fetch("./chances.json");
           let json = await response.json();
-          let values = Object.keys(json).map(Number).sort((a, b) => b - a).map((key) => json[key]);
+          let values = Object.keys(json)
+            .map(Number)
+            .sort((a, b) => b - a)
+            .map((key) => json[key]);
           const chances = values.map(({ n }) => n).flat();
-          
+
           let sers = values.map(({ s }) => s).flat();
 
           response = await fetch("./loterianacional.json");
           json = await response.json();
-          values = Object.keys(json).map(Number).sort((a, b) => b - a).map((key) => json[key]);
+          values = Object.keys(json)
+            .map(Number)
+            .sort((a, b) => b - a)
+            .map((key) => json[key]);
           const loteria = values.map(({ n }) => n).flat();
 
           const nums = chances.concat(loteria);
@@ -76,15 +93,20 @@
           sers = sers.concat(values.map(({ s }) => s).flat());
           sers = sers.filter((ser) => ser > 0);
 
-          Plotly.newPlot(document.getElementById('his-num'), [{ x: nums, type: 'histogram', histnorm: 'probability' }]);
-          Plotly.newPlot(document.getElementById('his-ser'), [{ x: sers, type: 'histogram', histnorm: 'probability' }]);
+          Plotly.newPlot(document.getElementById("his-num"), [
+            { x: nums, type: "histogram", histnorm: "probability" },
+          ]);
+          Plotly.newPlot(document.getElementById("his-ser"), [
+            { x: sers, type: "histogram", histnorm: "probability" },
+          ]);
 
           const counts = {
             nums: {},
             sers: {},
-          }
+          };
           for (let num = 0; num < 100; ++num) {
-            counts.nums[num] = 0;nums
+            counts.nums[num] = 0;
+            nums;
           }
           for (let ser = 0; ser < 1000; ++ser) {
             counts.sers[ser] = 0;
@@ -93,24 +115,34 @@
           nums.forEach((num) => counts.nums[num]++);
           sers.forEach((ser) => counts.sers[ser]++);
 
-          const orderNums = Object.entries(counts.nums).sort((a, b) => b[1] - a[1]);
+          const orderNums = Object.entries(counts.nums).sort(
+            (a, b) => b[1] - a[1]
+          );
           const x = orderNums.map((num) => formatNumber(Number(num[0])));
           const y = orderNums.map((num) => num[1]);
           const layout = {
             xaxis: {
-              title: 'Numbers',
-              type: 'category',
-              tickmode: 'array',
+              title: "Numbers",
+              type: "category",
+              tickmode: "array",
               tickvals: x,
             },
             yaxis: {
-              title: 'Count Numbers',
+              title: "Count Numbers",
             },
-          }
-          Plotly.newPlot(document.getElementById('cou-num'), [{ x, y, mode: 'markers', type: 'scatter' }], layout);
+          };
+          Plotly.newPlot(
+            document.getElementById("cou-num"),
+            [{ x, y, mode: "markers", type: "scatter" }],
+            layout
+          );
 
           const sw = window.swTest(y, 0.05);
-          window.applyTo('#num-his', 'fill', `p-value ~ ${Math.round(sw.pvalue * 100000) / 100000}`);
+          window.applyTo(
+            "#num-his",
+            "fill",
+            `p-value ~ ${Math.round(sw.pvalue * 100000) / 100000}`
+          );
 
           const [q1, median, q3] = jStat.quartiles(y);
 
@@ -118,9 +150,8 @@
             return numCount[1] > q3;
           });
 
-          options.forEach(([n, _]) => {
+          options.forEach(([n, count]) => {
             const num = Number(n);
-            const count = counts.nums[num];
             const skipChs = chances.findIndex((a) => a === num);
             const skipLtr = loteria.findIndex((a) => a === num);
             const skipsSum = skipChs + skipLtr;
@@ -134,7 +165,7 @@
                   EE("td", skipChs),
                   EE("td", skipLtr),
                   EE("td", skipsSum),
-                ]),
+                ])
               );
             }
           });
