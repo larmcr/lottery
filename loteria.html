@@ -37,7 +37,23 @@
           <summary role="button">Numbers<span style="float: right;"><code><small id="num-his" title="Numbers distribution is normal if p-value > 0.05"></small></code></span></summary>
           <div id="cou-num"></div>
         </details>
+      </article>
+
       <article>
+        <h4>Numbers</h4>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th scope="col">Number</th>
+              <th scope="col">Count</th>
+              <th scope="col">Skip Chances</th>
+              <th scope="col">Skip Lotería</th>
+              <th scope="col">Skips Sum</th>
+            </tr>
+          </thead>
+          <tbody id="nums"></tbody>
+        </table>
+      </article>
 
       <script defer>
         const formatNumber = (num) => num < 10 ? `0${num}` : `${num}`;
@@ -102,22 +118,30 @@
             return numCount[1] > q3;
           });
 
-          const skips = options.map(([n, _]) => {
+          options.forEach(([n, _]) => {
             const num = Number(n);
-            const indChs = chances.findIndex((a) => a === num);
-            const indLtr = loteria.findIndex((a) => a === num);
-            const sum = indChs + indLtr;
-            if (indChs > 100 && indLtr > 100) {
-              return [num, indChs, indLtr, sum];
-            } else {
-              return null;
+            const count = counts.nums[num];
+            const skipChs = chances.findIndex((a) => a === num);
+            const skipLtr = loteria.findIndex((a) => a === num);
+            const skipsSum = skipChs + skipLtr;
+            if (skipChs > 100 && skipLtr > 100) {
+              window.applyTo(
+                "#nums",
+                "add",
+                EE("tr", [
+                  EE("td", EE("mark", num)),
+                  EE("td", count),
+                  EE("td", skipChs),
+                  EE("td", skipLtr),
+                  EE("td", skipsSum),
+                ]),
+              );
             }
-          }).filter(Boolean);
+          });
 
-          console.info([q1, median, q3]);
+          // console.info([q1, median, q3]);
           console.info(counts);
           console.info(options);
-          console.info(skips);
         })();
       </script>
     </main>
