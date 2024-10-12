@@ -172,7 +172,7 @@
         combs = combs.filter((comb) => {
           const sum = comb.reduce((a, b) => a + b, 0);
           const key = comb.map(formatNumber);
-          const all = comb.every((num) => lotto.nums[num] > numQ3);
+          const all = comb.every((num) => lotto.nums[num] > medianNums);
           const med = comb.filter((num) => num < numsMedian).length;
           const div = comb.filter((num) => num % 2 === 0).length;
           return (
