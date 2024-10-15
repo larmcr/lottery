@@ -209,7 +209,7 @@
         });
 
         const valids = Object.keys(skips)
-          .filter((num) => skips[num] > 6)
+          .filter((num) => skips[num] > 8)
           .map(Number);
         combs = combs.filter((comb) => {
           return comb.every((num) => valids.includes(num));
