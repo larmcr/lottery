@@ -34,7 +34,7 @@
         </details>
         <details>
           <summary role="button">
-            Counts
+            Counts <span id="count"></span>
             <span style="float: right">
               <code>
                 <small
@@ -132,6 +132,9 @@
             layout
           );
 
+          const count = Object.values(counts.nums).reduce((a, b) => a + b, 0);
+          window.applyTo("#count", "fill", EE('small', `(${count})`));
+
           const sw = window.swTest(y, 0.05);
           window.applyTo(
             "#num-his",
@@ -140,6 +143,7 @@
           );
 
           const [q1, median, q3] = jStat.quartiles(y);
+          console.info(`[Q1: ${q1}, Median: ${median}, Q3: ${q3}]`);
 
           const options = orderNums.filter((numCount) => {
             return numCount[1] > q3;
