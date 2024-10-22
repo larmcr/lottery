@@ -122,7 +122,7 @@
         });
 
         Plotly.newPlot(document.getElementById("box-sum"), [
-          { x: sums, type: "box", boxmean: true },
+          { x: sums, type: "box", boxmean: true, name: "Sum" },
         ]);
         Plotly.newPlot(document.getElementById("his-sum"), [
           { x: sums, type: "histogram", histnorm: "probability" },
@@ -209,7 +209,7 @@
         });
 
         const valids = Object.keys(skips)
-          .filter((num) => skips[num] > 7)
+          .filter((num) => skips[num] > 9)
           .map(Number);
         combs = combs.filter((comb) => {
           return comb.every((num) => valids.includes(num));
