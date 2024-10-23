@@ -47,21 +47,9 @@
       <article>
         <h4>Pairs</h4>
         <details>
-          <summary role="button">Pairs</summary>
+          <summary role="button">Counts / Skips</summary>
           <div id="plo-pai"></div>
         </details>
-        <table class="striped">
-          <thead>
-            <tr>
-              <th scope="col">Pair</th>
-              <th scope="col">Counts</th>
-              <th scope="col">Counts Sum</th>
-              <th scope="col">Skips</th>
-              <th scope="col">Skips Sum</th>
-            </tr>
-          </thead>
-          <tbody id="skips"></tbody>
-        </table>
       </article>
 
       <article>
@@ -118,7 +106,8 @@
           const fir = formatNumber(num - 1);
           const sec = formatNumber(num);
           const key = `${fir},${sec}`;
-          lotto.pairs[key] = 0;
+          lotto.pairs[key] = {};
+          lotto.pairs[key].count = 0;
         }
         for (const key in json) {
           let { n, r } = json[key];
@@ -128,7 +117,7 @@
           Object.keys(lotto.pairs).forEach((pair) => {
             const [fir, sec] = pair.split(",");
             if (n.includes(Number(fir)) && r.includes(Number(sec))) {
-              lotto.pairs[pair]++;
+              lotto.pairs[pair].count++;
             }
           });
 
@@ -176,35 +165,13 @@
         window.applyTo(".sum-box", "fill", `${q1} <= sum <= ${q3}`);
 
         const orderPairs = Object.entries(lotto.pairs).sort(
-          (a, b) => b[1] - a[1]
+          (a, b) => b[1].count - a[1].count
         );
+
+        console.info(orderPairs);
 
         const xPairs = orderPairs.map((num) => num[0]);
-        const pairsCount = orderPairs.map((num) => num[1]);
-
-        Plotly.newPlot(
-          document.getElementById("plo-pai"),
-          [
-            {
-              name: "Count",
-              x: xPairs,
-              y: pairsCount,
-              mode: "markers",
-              type: "scatter",
-            },
-          ],
-          {
-            xaxis: {
-              title: "Pairs",
-              type: "category",
-              tickmode: "array",
-              tickvals: xPairs,
-            },
-            yaxis: {
-              title: "Pairs",
-            },
-          }
-        );
+        const pairsCount = orderPairs.map((num) => num[1].count);
 
         const orderNums = Object.entries(lotto.counts).sort(
           (a, b) => b[1] - a[1]
@@ -243,35 +210,55 @@
         const skips = {};
         xCounts.map(Number).forEach((num) => {
           for (let i = 0; i < plays.length && skips[num] === undefined; i++) {
-            if (json[plays[i]].r.includes(num)) {
+            if (json[plays[i]].n.includes(num)) {
               skips[num] = i * 2;
-            } else if (json[plays[i]].n.includes(num)) {
+            } else if (json[plays[i]].r.includes(num)) {
               skips[num] = i * 2 + 1;
             }
           }
         });
 
-        const validSkips = {};
-        combs.forEach((comb) => {
-          comb.forEach((num) => {
-            validSkips[num] = skips[num];
-          });
+        orderPairs.forEach(([key, _]) => {
+          const [fir, sec] = key.split(",").map(Number);
+          lotto.pairs[key].skips = [skips[fir], skips[sec]];
+          lotto.pairs[key].skip = skips[fir] + skips[sec];
         });
+
+        const pairsSkips = xPairs.map((key) => lotto.pairs[key].skip);
+
+        Plotly.newPlot(
+          document.getElementById("plo-pai"),
+          [
+            {
+              name: "Count",
+              x: xPairs,
+              y: pairsCount,
+              mode: "markers",
+              type: "scatter",
+            },
+            {
+              name: "Skip",
+              x: xPairs,
+              y: pairsSkips,
+              mode: "markers",
+              type: "scatter",
+            },
+          ],
+          {
+            xaxis: {
+              title: "Pairs",
+              type: "category",
+              tickmode: "array",
+              tickvals: xPairs,
+            },
+            yaxis: {
+              title: "Counts / Skips",
+            },
+          }
+        );
 
         const skipVals = xCounts.map((x) => skips[Number(x)]);
         const diffVals = xCounts.map((_, i) => countVals[i] - skipVals[i]);
-
-        const layout = {
-          xaxis: {
-            title: "Numbers",
-            type: "category",
-            tickmode: "array",
-            tickvals: xCounts,
-          },
-          yaxis: {
-            title: "Counts / Skips / Differences",
-          },
-        };
 
         Plotly.newPlot(
           document.getElementById("plo-cou-ski"),
@@ -298,8 +285,25 @@
               type: "scatter",
             },
           ],
-          layout
+          {
+            xaxis: {
+              title: "Numbers",
+              type: "category",
+              tickmode: "array",
+              tickvals: xCounts,
+            },
+            yaxis: {
+              title: "Counts / Skips / Differences",
+            },
+          }
         );
+
+        const validSkips = {};
+        combs.forEach((comb) => {
+          comb.forEach((num) => {
+            validSkips[num] = skips[num];
+          });
+        });
 
         const valids = Object.keys(validSkips)
           .filter((num) => validSkips[num] > 9)
