@@ -180,15 +180,15 @@
         );
 
         const xPairs = orderPairs.map((num) => num[0]);
-        const yPairs = orderPairs.map((num) => num[1]);
+        const pairsCount = orderPairs.map((num) => num[1]);
 
         Plotly.newPlot(
           document.getElementById("plo-pai"),
           [
             {
-              name: "Pairs",
+              name: "Count",
               x: xPairs,
-              y: yPairs,
+              y: pairsCount,
               mode: "markers",
               type: "scatter",
             },
@@ -201,7 +201,7 @@
               tickvals: xPairs,
             },
             yaxis: {
-              title: "Counts / Skips / Differences",
+              title: "Pairs",
             },
           }
         );
