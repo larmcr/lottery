@@ -47,8 +47,8 @@
       <article>
         <h4>Numbers</h4>
         <details>
-          <summary role="button">Count</summary>
-          <div id="plo-cou"></div>
+          <summary role="button">Counts & Skips</summary>
+          <div id="plo-cou-ski"></div>
         </details>
         <table class="striped">
           <thead>
@@ -143,8 +143,8 @@
         const orderNums = Object.entries(lotto.nums).sort(
           (a, b) => b[1] - a[1]
         );
-        const xVals = orderNums.map((num) => formatNumber(Number(num[0])));
-        const yVals = orderNums.map((num) => num[1]);
+        const xCounts = orderNums.map((num) => formatNumber(Number(num[0])));
+        const countVals = orderNums.map((num) => num[1]);
 
         const numsKeys = Object.keys(lotto.nums);
         const numsValues = Object.values(lotto.nums);
@@ -173,48 +173,34 @@
         const plays = Object.keys(json)
           .map(Number)
           .sort((a, b) => b - a);
-        const skips = {};
-        combs.forEach((comb) => {
-          comb.forEach((num) => {
-            if (skips[num] === undefined) {
-              for (
-                let i = 0;
-                i < plays.length && skips[num] === undefined;
-                i++
-              ) {
-                if (json[plays[i]].r.includes(num)) {
-                  skips[num] = i * 2;
-                } else if (json[plays[i]].n.includes(num)) {
-                  skips[num] = i * 2 + 1;
-                }
-              }
-            }
-          });
-        });
 
-        const allSkips = {};
-        xVals.map(Number).forEach((num) => {
-          for (
-            let i = 0;
-            i < plays.length && allSkips[num] === undefined;
-            i++
-          ) {
+        const skips = {};
+        xCounts.map(Number).forEach((num) => {
+          for (let i = 0; i < plays.length && skips[num] === undefined; i++) {
             if (json[plays[i]].r.includes(num)) {
-              allSkips[num] = i * 2;
+              skips[num] = i * 2;
             } else if (json[plays[i]].n.includes(num)) {
-              allSkips[num] = i * 2 + 1;
+              skips[num] = i * 2 + 1;
             }
           }
         });
-        const skipVals = xVals.map((x) => allSkips[Number(x)]);
-        const diffVals = xVals.map((_, i) => yVals[i] - skipVals[i]);
+
+        const validSkips = {};
+        combs.forEach((comb) => {
+          comb.forEach((num) => {
+            validSkips[num] = skips[num];
+          });
+        });
+
+        const skipVals = xCounts.map((x) => skips[Number(x)]);
+        const diffVals = xCounts.map((_, i) => countVals[i] - skipVals[i]);
 
         const layout = {
           xaxis: {
             title: "Numbers",
             type: "category",
             tickmode: "array",
-            tickvals: xVals,
+            tickvals: xCounts,
           },
           yaxis: {
             title: "Counts / Skips / Differences",
@@ -222,24 +208,24 @@
         };
 
         Plotly.newPlot(
-          document.getElementById("plo-cou"),
+          document.getElementById("plo-cou-ski"),
           [
             {
-              x: xVals,
-              y: yVals,
+              x: xCounts,
+              y: countVals,
               name: "Count",
               mode: "markers",
               type: "scatter",
             },
             {
-              x: xVals,
+              x: xCounts,
               y: skipVals,
               name: "Skip",
               mode: "markers",
               type: "scatter",
             },
             {
-              x: xVals,
+              x: xCounts,
               y: diffVals,
               name: "Difference",
               mode: "markers",
@@ -249,12 +235,12 @@
           layout
         );
 
-        const valids = Object.keys(skips)
-          .filter((num) => skips[num] > 9)
+        const valids = Object.keys(validSkips)
+          .filter((num) => validSkips[num] > 9)
           .map(Number);
-        combs = combs.filter((comb) => {
-          return comb.every((num) => valids.includes(num));
-        });
+        combs = combs.filter((comb) =>
+          comb.every((num) => valids.includes(num))
+        );
 
         lotto.combs = combs;
         const combsSums = {};
@@ -270,7 +256,7 @@
           const numbers = key.split(",").map(Number);
           const arrCounts = numbers.map((n) => lotto.nums[n]);
           const countsSum = arrCounts.reduce((a, b) => a + b, 0);
-          const arrSkips = numbers.map((n) => skips[n]);
+          const arrSkips = numbers.map((n) => validSkips[n]);
           const skipsSum = arrSkips.reduce((a, b) => a + b, 0);
           window.applyTo(
             "#nums",
