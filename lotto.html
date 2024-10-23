@@ -223,8 +223,19 @@
 
         orderPairs.forEach(([key, _]) => {
           const [fir, sec] = key.split(",").map(Number);
-          lotto.pairs[key].skips = [lotto.skips[fir], lotto.skips[sec]];
-          lotto.pairs[key].skip = lotto.skips[fir] + lotto.skips[sec];
+          for (
+            let i = 0;
+            i < plays.length && lotto.pairs[key].skip === undefined;
+            i++
+          ) {
+            const { n, r } = json[plays[i]];
+            if (n.includes(fir) && n.includes(sec)) {
+              lotto.pairs[key].skip = i * 2;
+            }
+            if (r.includes(fir) && r.includes(sec)) {
+              lotto.pairs[key].skip = i * 2 + 1;
+            }
+          }
         });
 
         const pairsSkips = xPairs.map((key) => lotto.pairs[key].skip);
