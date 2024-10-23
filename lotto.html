@@ -45,6 +45,26 @@
       </article>
 
       <article>
+        <h4>Pairs</h4>
+        <details>
+          <summary role="button">Pairs</summary>
+          <div id="plo-pai"></div>
+        </details>
+        <table class="striped">
+          <thead>
+            <tr>
+              <th scope="col">Pair</th>
+              <th scope="col">Counts</th>
+              <th scope="col">Counts Sum</th>
+              <th scope="col">Skips</th>
+              <th scope="col">Skips Sum</th>
+            </tr>
+          </thead>
+          <tbody id="skips"></tbody>
+        </table>
+      </article>
+
+      <article>
         <h4>Numbers</h4>
         <details>
           <summary role="button">Counts & Skips</summary>
@@ -89,18 +109,33 @@
         const response = await fetch("./lotto.json");
         const json = await response.json();
         const lotto = {
-          nums: {},
+          counts: {},
           sums: {},
           groups: {},
+          pairs: {},
         };
+        for (let num = 1; num <= 40; ++num) {
+          const fir = formatNumber(num - 1);
+          const sec = formatNumber(num);
+          const key = `${fir},${sec}`;
+          lotto.pairs[key] = 0;
+        }
         for (const key in json) {
           let { n, r } = json[key];
           n = n.sort((a, b) => a - b);
           r = r.sort((a, b) => a - b);
+
+          Object.keys(lotto.pairs).forEach((pair) => {
+            const [fir, sec] = pair.split(",");
+            if (n.includes(Number(fir)) && r.includes(Number(sec))) {
+              lotto.pairs[pair]++;
+            }
+          });
+
           const nums = n.concat(r);
           nums.forEach((num) => {
-            lotto.nums[num] = lotto.nums[num] ?? 0;
-            lotto.nums[num]++;
+            lotto.counts[num] = lotto.counts[num] ?? 0;
+            lotto.counts[num]++;
           });
           const keyN = n.map(formatNumber).join(",");
           const keyR = r.map(formatNumber).join(",");
@@ -140,14 +175,45 @@
         );
         window.applyTo(".sum-box", "fill", `${q1} <= sum <= ${q3}`);
 
-        const orderNums = Object.entries(lotto.nums).sort(
+        const orderPairs = Object.entries(lotto.pairs).sort(
+          (a, b) => b[1] - a[1]
+        );
+
+        const xPairs = orderPairs.map((num) => num[0]);
+        const yPairs = orderPairs.map((num) => num[1]);
+
+        Plotly.newPlot(
+          document.getElementById("plo-pai"),
+          [
+            {
+              name: "Pairs",
+              x: xPairs,
+              y: yPairs,
+              mode: "markers",
+              type: "scatter",
+            },
+          ],
+          {
+            xaxis: {
+              title: "Pairs",
+              type: "category",
+              tickmode: "array",
+              tickvals: xPairs,
+            },
+            yaxis: {
+              title: "Counts / Skips / Differences",
+            },
+          }
+        );
+
+        const orderNums = Object.entries(lotto.counts).sort(
           (a, b) => b[1] - a[1]
         );
         const xCounts = orderNums.map((num) => formatNumber(Number(num[0])));
         const countVals = orderNums.map((num) => num[1]);
 
-        const numsKeys = Object.keys(lotto.nums);
-        const numsValues = Object.values(lotto.nums);
+        const numsKeys = Object.keys(lotto.counts);
+        const numsValues = Object.values(lotto.counts);
         const [, medianNums, numQ3] = jStat.quartiles(numsValues);
         const numsMedian = jStat.median(numsKeys.map(Number));
         let combs = kCombinations(numsKeys, 5).map((arr) =>
@@ -156,7 +222,7 @@
         combs = combs.filter((comb) => {
           const sum = comb.reduce((a, b) => a + b, 0);
           const key = comb.map(formatNumber);
-          const all = comb.every((num) => lotto.nums[num] > medianNums);
+          const all = comb.every((num) => lotto.counts[num] > medianNums);
           const med = comb.filter((num) => num < numsMedian).length;
           const div = comb.filter((num) => num % 2 === 0).length;
           return (
@@ -211,23 +277,23 @@
           document.getElementById("plo-cou-ski"),
           [
             {
+              name: "Count",
               x: xCounts,
               y: countVals,
-              name: "Count",
               mode: "markers",
               type: "scatter",
             },
             {
+              name: "Skip",
               x: xCounts,
               y: skipVals,
-              name: "Skip",
               mode: "markers",
               type: "scatter",
             },
             {
+              name: "Difference",
               x: xCounts,
               y: diffVals,
-              name: "Difference",
               mode: "markers",
               type: "scatter",
             },
@@ -254,7 +320,7 @@
 
         combsOrder.forEach(([key, sum]) => {
           const numbers = key.split(",").map(Number);
-          const arrCounts = numbers.map((n) => lotto.nums[n]);
+          const arrCounts = numbers.map((n) => lotto.counts[n]);
           const countsSum = arrCounts.reduce((a, b) => a + b, 0);
           const arrSkips = numbers.map((n) => validSkips[n]);
           const skipsSum = arrSkips.reduce((a, b) => a + b, 0);
