@@ -101,6 +101,7 @@
           sums: {},
           groups: {},
           pairs: {},
+          skips: {},
         };
         for (let num = 1; num <= 40; ++num) {
           const fir = formatNumber(num - 1);
@@ -168,8 +169,6 @@
           (a, b) => b[1].count - a[1].count
         );
 
-        console.info(orderPairs);
-
         const xPairs = orderPairs.map((num) => num[0]);
         const pairsCount = orderPairs.map((num) => num[1].count);
 
@@ -207,21 +206,25 @@
           .map(Number)
           .sort((a, b) => b - a);
 
-        const skips = {};
         xCounts.map(Number).forEach((num) => {
-          for (let i = 0; i < plays.length && skips[num] === undefined; i++) {
+          for (
+            let i = 0;
+            i < plays.length && lotto.skips[num] === undefined;
+            i++
+          ) {
             if (json[plays[i]].n.includes(num)) {
-              skips[num] = i * 2;
-            } else if (json[plays[i]].r.includes(num)) {
-              skips[num] = i * 2 + 1;
+              lotto.skips[num] = i * 2;
+            }
+            if (json[plays[i]].r.includes(num)) {
+              lotto.skips[num] = i * 2 + 1;
             }
           }
         });
 
         orderPairs.forEach(([key, _]) => {
           const [fir, sec] = key.split(",").map(Number);
-          lotto.pairs[key].skips = [skips[fir], skips[sec]];
-          lotto.pairs[key].skip = skips[fir] + skips[sec];
+          lotto.pairs[key].skips = [lotto.skips[fir], lotto.skips[sec]];
+          lotto.pairs[key].skip = lotto.skips[fir] + lotto.skips[sec];
         });
 
         const pairsSkips = xPairs.map((key) => lotto.pairs[key].skip);
@@ -257,7 +260,7 @@
           }
         );
 
-        const skipVals = xCounts.map((x) => skips[Number(x)]);
+        const skipVals = xCounts.map((x) => lotto.skips[Number(x)]);
         const diffVals = xCounts.map((_, i) => countVals[i] - skipVals[i]);
 
         Plotly.newPlot(
@@ -301,7 +304,7 @@
         const validSkips = {};
         combs.forEach((comb) => {
           comb.forEach((num) => {
-            validSkips[num] = skips[num];
+            validSkips[num] = lotto.skips[num];
           });
         });
 
