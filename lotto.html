@@ -47,7 +47,7 @@
       <article>
         <h4>Pairs</h4>
         <details>
-          <summary role="button">Counts / Skips</summary>
+          <summary role="button">Counts & Skips</summary>
           <div id="plo-pai"></div>
         </details>
       </article>
@@ -270,6 +270,9 @@
             },
           }
         );
+
+        const [q1Pairs, medianPairs, q3Pairs] = jStat.quartiles(pairsCount);
+        console.info([q1Pairs, medianPairs, q3Pairs]);
 
         const skipVals = xCounts.map((x) => lotto.skips[Number(x)]);
         const diffVals = xCounts.map((_, i) => countVals[i] - skipVals[i]);
