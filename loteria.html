@@ -99,9 +99,14 @@
             nums: {},
             sers: {},
           };
+          const skips = {
+            cha: {},
+            lot: {},
+          };
           for (let num = 0; num < 100; ++num) {
             counts.nums[num] = 0;
-            nums;
+            skips.cha[num] = chances.findIndex((n) => n === num);
+            skips.lot[num] = loteria.findIndex((n) => n === num);
           }
           for (let ser = 0; ser < 1000; ++ser) {
             counts.sers[ser] = 0;
@@ -128,12 +133,16 @@
           };
           Plotly.newPlot(
             document.getElementById("cou-num"),
-            [{ x, y, mode: "markers", type: "scatter" }],
+            [
+              { x, y, name: "Counts", mode: "markers", type: "scatter" },
+              { x, y: x.map((n) => skips.cha[n]), name: "Skips (chances)", mode: "markers", type: "scatter" },
+              { x, y: x.map((n) => skips.lot[n]), name: "Skips (lotería)", mode: "markers", type: "scatter" },
+            ],
             layout
           );
 
           const count = Object.values(counts.nums).reduce((a, b) => a + b, 0);
-          window.applyTo("#count", "fill", EE('small', `(${count})`));
+          window.applyTo("#count", "fill", EE("small", `(${count})`));
 
           const sw = window.swTest(y, 0.05);
           window.applyTo(
@@ -151,8 +160,8 @@
 
           options.forEach(([n, count]) => {
             const num = Number(n);
-            const skipChs = chances.findIndex((a) => a === num);
-            const skipLtr = loteria.findIndex((a) => a === num);
+            const skipChs = skips.cha[n];
+            const skipLtr = skips.lot[n];
             const skipsSum = skipChs + skipLtr;
             if (skipChs > 100 && skipLtr > 100) {
               window.applyTo(
@@ -171,6 +180,7 @@
 
           // console.info([q1, median, q3]);
           console.info(counts);
+          console.info(skips);
           console.info(options);
         })();
       </script>
