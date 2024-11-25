@@ -130,13 +130,38 @@
             yaxis: {
               title: "Count Numbers",
             },
+            shapes: [
+              {
+                type: "line",
+                x0: -1,
+                x1: 101,
+                y0: 100,
+                y1: 100,
+                line: {
+                  color: "grey",
+                  width: 1.5,
+                },
+              },
+            ],
           };
           Plotly.newPlot(
             document.getElementById("cou-num"),
             [
               { x, y, name: "Counts", mode: "markers", type: "scatter" },
-              { x, y: x.map((n) => skips.cha[n]), name: "Skips (chances)", mode: "markers", type: "scatter" },
-              { x, y: x.map((n) => skips.lot[n]), name: "Skips (lotería)", mode: "markers", type: "scatter" },
+              {
+                x,
+                y: x.map((n) => skips.cha[n]),
+                name: "Skips (chances)",
+                mode: "markers",
+                type: "scatter",
+              },
+              {
+                x,
+                y: x.map((n) => skips.lot[n]),
+                name: "Skips (lotería)",
+                mode: "markers",
+                type: "scatter",
+              },
             ],
             layout
           );
