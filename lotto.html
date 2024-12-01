@@ -275,7 +275,6 @@
         console.info([q1Pairs, medianPairs, q3Pairs]);
 
         const skipVals = xCounts.map((x) => lotto.skips[Number(x)]);
-        const diffVals = xCounts.map((_, i) => countVals[i] - skipVals[i]);
 
         Plotly.newPlot(
           document.getElementById("plo-cou-ski"),
@@ -291,13 +290,6 @@
               name: "Skip",
               x: xCounts,
               y: skipVals,
-              mode: "markers",
-              type: "scatter",
-            },
-            {
-              name: "Difference",
-              x: xCounts,
-              y: diffVals,
               mode: "markers",
               type: "scatter",
             },
@@ -323,7 +315,7 @@
         });
 
         const valids = Object.keys(validSkips)
-          .filter((num) => validSkips[num] > 8)
+          .filter((num) => validSkips[num] > 7)
           .map(Number);
         combs = combs.filter((comb) =>
           comb.every((num) => valids.includes(num))
