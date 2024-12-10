@@ -315,7 +315,7 @@
         });
 
         const valids = Object.keys(validSkips)
-          .filter((num) => validSkips[num] > 7)
+          .filter((num) => validSkips[num] > 9)
           .map(Number);
         combs = combs.filter((comb) =>
           comb.every((num) => valids.includes(num))
