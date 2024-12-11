@@ -62,6 +62,12 @@
       </article>
 
       <script defer>
+        const LEGEND = {
+          orientation: "h",
+          x: 0,
+          y: 1.2,
+        };
+
         const formatNumber = (num) => (num < 10 ? `0${num}` : `${num}`);
 
         (async () => {
@@ -90,9 +96,11 @@
 
           Plotly.newPlot(document.getElementById("his-num"), [
             { x: nums, type: "histogram", histnorm: "probability" },
+            { legend: LEGEND },
           ]);
           Plotly.newPlot(document.getElementById("his-ser"), [
             { x: sers, type: "histogram", histnorm: "probability" },
+            { legend: LEGEND },
           ]);
 
           const counts = {
@@ -121,6 +129,7 @@
           const x = orderNums.map((num) => formatNumber(Number(num[0])));
           const y = orderNums.map((num) => num[1]);
           const layout = {
+            legend: LEGEND,
             xaxis: {
               title: "Numbers",
               type: "category",
@@ -134,11 +143,11 @@
               {
                 type: "line",
                 x0: -1,
-                x1: 101,
+                x1: 100,
                 y0: 100,
                 y1: 100,
                 line: {
-                  color: "grey",
+                  color: "green",
                   width: 1.5,
                 },
               },
