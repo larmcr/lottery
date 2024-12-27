@@ -188,7 +188,7 @@
         combs = combs.filter((comb) => {
           const sum = comb.reduce((a, b) => a + b, 0);
           const key = comb.map(formatNumber);
-          const all = comb.every((num) => lotto.counts[num] > numQ3);
+          const all = comb.every((num) => lotto.counts[num] > medianNums);
           const med = comb.filter((num) => num < numsMedian).length;
           const div = comb.filter((num) => num % 2 === 0).length;
           return (
@@ -315,7 +315,7 @@
         });
 
         const valids = Object.keys(validSkips)
-          .filter((num) => validSkips[num] > 1)
+          .filter((num) => validSkips[num] > 10)
           .map(Number);
         combs = combs.filter((comb) =>
           comb.every((num) => valids.includes(num))
