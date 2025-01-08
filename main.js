@@ -2,12 +2,14 @@ const fs = require('fs');
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const getData = async (product) => {
+  console.info(`\n> Product: '${product}'`);
+
   const API = `https://integration.jps.go.cr/api/app/${product}`;
 
   let flag = true;
 
   const getJson = async (id) => {
-    console.info(`> Fetching '${id}'`);
+    console.info(`\t> Fetching '${id}'`);
     try {
       const response = await fetch(`${API}/${id}`);
       const json = await response.json();
@@ -15,7 +17,7 @@ const getData = async (product) => {
     }
     catch (err) {
       flag = false;
-      console.info(`> ERROR -> ${err}`);
+      console.info(`\t> ERROR -> ${err}`);
     }
   }
 
@@ -24,10 +26,10 @@ const getData = async (product) => {
     const file = `./data/${product}/${num}.json`;
     if (!fs.existsSync(file)) {
       fs.writeFileSync(file, JSON.stringify(json));
-      console.info(`  > '${num}' saved`);
+      console.info(`\t\t> '${num}' saved`);
     } else {
       flag = false;
-      console.info(`  > '${num}' not saved (already exists)`);
+      console.info(`\t\t> '${num}' not saved (already exists)`);
     }
   }
 
@@ -40,7 +42,7 @@ const getData = async (product) => {
 }
 
 const processData = (product) => {
-  console.info(`> Processing data`);
+  console.info(`\t> Processing data`);
   const files = fs.readdirSync(`./data/${product}`);
   const data = {};
   files.forEach((file) => {
@@ -52,29 +54,14 @@ const processData = (product) => {
     }
   });
   fs.writeFileSync(`./${product}.json`, JSON.stringify(data));
-  console.info(`  > Done!`);
+  console.info(`\t\t> Done!`);
 }
 
 (async () => {
-  if (process.argv.length > 2) {
-    let product = process.argv[2];
-    switch (product) {
-      case 'lotto':
-      case 'chances':
-        break;
-      case 'loteria':
-        product = 'loterianacional';
-        break;
-      default:
-        product = null;
-    }
-    if (product) {
-      await getData(product);
-      processData(product);
-    } else {
-      console.info('WARNING: invalid arguments. Possible values: "lotto", "chances", "loteria"');
-    }
-  } else {
-    console.info('WARNING: not enough arguments. Possible values: "lotto", "chances", "loteria"');
-  }
+  await getData('lotto');
+  processData('lotto');
+  await getData('chances');
+  processData('chances');
+  await getData('loterianacional');
+  processData('loterianacional');
 })();
