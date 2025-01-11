@@ -38,16 +38,19 @@ const getData = async (product) => {
       console.info(`\t\t> '${name}' not saved (already exists)`);
     }
   };
-  const last = await getJson('last');
-  saveJson(last);
-  const { numeroSorteo, dia } = last;
+  // const last = await getJson('last');
+  // saveJson(last);
+  //const { numeroSorteo, dia } = last;
+  const dia = true;
+  const numeroSorteo = false;
   if (numeroSorteo) {
     for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
       const json = await getJson(sorteo);
       saveJson(json);
     }
   } else if (dia) {
-    let sorteo = last.manana.numeroSorteo - 1;
+    // let sorteo = last.manana.numeroSorteo - 1;
+    let sorteo = 124;
     while (flag) {
       const json = await getJson(sorteo);
       saveJson(json);
@@ -148,8 +151,6 @@ const saveDatabase = (db) => {
     db = await fetchAndProcessData(db);
     // await saveDatabase(db);
     // await compressDatabase();
-    await getData('nuevostiempos');
-    processData('nuevostiempos');
   } catch (error) {
     console.error(`Error: ${error.message}`);
   }
