@@ -9,6 +9,7 @@ const DATA = './data';
 const DB = 'database';
 const SCHEMA = './sql/schema.sql';
 const API = 'https://integration.jps.go.cr/api/app';
+const CHANCES = `${DATA}/chances`;
 
 const getData = async (product) => {
   console.info(`\n> Product: '${product}'`);
@@ -141,13 +142,34 @@ const saveDatabase = (db) => {
   fs.writeFileSync(`${DATA}/${DB}.db`, buffer, { encoding: 'utf8' });
 };
 
+const PROCESSES = {
+  loterias: (db, producto) => {
+    const directory = `${DATA}/${producto}`;
+    const files = fs.readdirSync(`${directory}`);
+    files.forEach((file) => {
+      const path = `${directory}/${file}`;
+      const json = JSON.parse(fs.readFileSync(path));
+      const { fecha, numeroSorteo, premios } = json;
+      premios.forEach((premio) => {
+        const { orden, numero, serie } = premio;
+        const sql = `INSERT INTO loterias (producto, sorteo, fecha, orden, numero, serie) VALUES ('${producto}', ${numeroSorteo}, '${fecha}', ${orden}, ${numero}, ${serie})`;
+        db.run(sql);
+      });
+    });
+    return db;
+  },
+};
+
 (async () => {
   try {
     const SQL = await initSqlJs();
     let db = await getDatabase(SQL);
-    db = await fetchAndProcessData(db);
+    // db = await fetchAndProcessData(db);
     // await saveDatabase(db);
     // await compressDatabase();
+    db = PROCESSES.loterias(db, 'chances');
+    db = PROCESSES.loterias(db, 'loterianacional');
+    await saveDatabase(db);
   } catch (error) {
     console.error(`Error: ${error.message}`);
   }
