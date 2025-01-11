@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content="JPS" />
+    <title>JPS</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.classless.min.css" />
+  </head>
+
+  <body>
+    <script src="sql-wasm/sql-wasm.js"></script>
+    <script defer>
+      const getDatabase = async (SQL) => {
+        const gzipFile = await fetch('data/database.db.gz');
+        const gzipBlob = await gzipFile.blob();
+        const gzipStream = new DecompressionStream('gzip');
+        const dbBlob = await new Response(gzipBlob.stream().pipeThrough(gzipStream)).blob();
+        const dbBuffer = await dbBlob.arrayBuffer();
+        const dbArray = new Uint8Array(dbBuffer);
+        const db = new SQL.Database(dbArray);
+        return db;
+      };
+      (async () => {
+        const SQL = await initSqlJs({
+          locateFile: (file) => `sql-wasm/${file}`,
+        });
+        const db = await getDatabase(SQL);
+      })();
+    </script>
+  </body>
+</html>
