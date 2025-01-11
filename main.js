@@ -38,19 +38,16 @@ const getData = async (product) => {
       console.info(`\t\t> '${name}' not saved (already exists)`);
     }
   };
-  // const last = await getJson('last');
-  // saveJson(last);
-  //const { numeroSorteo, dia } = last;
-  const dia = true;
-  const numeroSorteo = false;
+  const last = await getJson('last');
+  saveJson(last);
+  const { numeroSorteo, dia } = last;
   if (numeroSorteo) {
     for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
       const json = await getJson(sorteo);
       saveJson(json);
     }
   } else if (dia) {
-    // let sorteo = last.manana.numeroSorteo - 1;
-    let sorteo = 124;
+    let sorteo = last.manana.numeroSorteo - 1;
     while (flag) {
       const json = await getJson(sorteo);
       saveJson(json);
