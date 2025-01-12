@@ -150,11 +150,27 @@ const PROCESSES = {
       const path = `${directory}/${file}`;
       const json = JSON.parse(fs.readFileSync(path));
       const { fecha, numeroSorteo, premios } = json;
-      premios.forEach((premio) => {
-        const { orden, numero, serie } = premio;
-        const sql = `INSERT INTO loterias (producto, sorteo, fecha, orden, numero, serie) VALUES ('${producto}', ${numeroSorteo}, '${fecha}', ${orden}, ${numero}, ${serie})`;
-        db.run(sql);
-      });
+      const values = premios.map(
+        ({ orden, numero, serie }) => `('${producto}', ${numeroSorteo}, '${fecha}', ${orden}, ${numero}, ${serie})`,
+      );
+      const sql = `INSERT INTO loterias (producto, sorteo, fecha, orden, numero, serie) VALUES ${values.join(',')}`;
+      db.run(sql);
+    });
+    return db;
+  },
+  lottos: (db) => {
+    const directory = `${DATA}/lotto`;
+    const files = fs.readdirSync(`${directory}`);
+    files.forEach((file) => {
+      const path = `${directory}/${file}`;
+      const json = JSON.parse(fs.readFileSync(path));
+      const { fecha, numeroSorteo, numeros, numerosRevancha } = json;
+      const valuesNumeros = numeros.map((num, ind) => `(${numeroSorteo}, '${fecha}', ${ind + 1}, ${num}, ${false})`);
+      const valuesRevancha = numerosRevancha.map(
+        (num, ind) => `(${numeroSorteo}, '${fecha}', ${ind + 1}, ${num}, ${true})`,
+      );
+      const sql = `INSERT INTO lottos (sorteo, fecha, orden, numero, revancha) VALUES ${valuesNumeros.join(',')},${valuesRevancha.join(',')}`;
+      db.run(sql);
     });
     return db;
   },
@@ -169,8 +185,10 @@ const PROCESSES = {
     // await compressDatabase();
     db = PROCESSES.loterias(db, 'chances');
     db = PROCESSES.loterias(db, 'loterianacional');
+    db = PROCESSES.lottos(db);
     await saveDatabase(db);
   } catch (error) {
     console.error(`Error: ${error.message}`);
   }
 })();
+1;
