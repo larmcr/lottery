@@ -151,9 +151,9 @@ const PROCESSES = {
       const json = JSON.parse(fs.readFileSync(path));
       const { fecha, numeroSorteo, premios } = json;
       const values = premios.map(
-        ({ orden, numero, serie }) => `('${producto}', ${numeroSorteo}, '${fecha}', ${orden}, ${numero}, ${serie})`,
+        ({ orden, numero, serie }) => `('${producto}', '${fecha}', ${numeroSorteo}, ${orden}, ${numero}, ${serie})`,
       );
-      const sql = `INSERT INTO loterias (producto, sorteo, fecha, orden, numero, serie) VALUES ${values.join(',')}`;
+      const sql = `INSERT INTO loterias (producto, fecha, sorteo, orden, numero, serie) VALUES ${values.join(',')}`;
       db.run(sql);
     });
     return db;
@@ -165,13 +165,40 @@ const PROCESSES = {
       const path = `${directory}/${file}`;
       const json = JSON.parse(fs.readFileSync(path));
       const { fecha, numeroSorteo, numeros, numerosRevancha } = json;
-      const valuesNumeros = numeros.map((num, ind) => `(${numeroSorteo}, '${fecha}', ${ind + 1}, ${num}, ${false})`);
+      const valuesNumeros = numeros.map((num, ind) => `('${fecha}', ${numeroSorteo}, ${ind + 1}, ${num}, ${false})`);
       const valuesRevancha = numerosRevancha.map(
-        (num, ind) => `(${numeroSorteo}, '${fecha}', ${ind + 1}, ${num}, ${true})`,
+        (num, ind) => `('${fecha}', ${numeroSorteo}, ${ind + 1}, ${num}, ${true})`,
       );
-      const sql = `INSERT INTO lottos (sorteo, fecha, orden, numero, revancha) VALUES ${valuesNumeros.join(',')},${valuesRevancha.join(',')}`;
+      const sql = `INSERT INTO lottos (fecha, sorteo, orden, numero, revancha) VALUES ${valuesNumeros.join(',')},${valuesRevancha.join(',')}`;
       db.run(sql);
     });
+    return db;
+  },
+  tiempos: (db) => {
+    const directory = `${DATA}/nuevostiempos`;
+    const files = fs.readdirSync(`${directory}`);
+    files.forEach((file) => {
+      const path = `${directory}/${file}`;
+      const json = JSON.parse(fs.readFileSync(path));
+      const { manana, mediaTarde, tarde } = json;
+      let valuesManana = manana
+        ? `('manana', '${manana.fecha}', ${manana.numeroSorteo}, ${manana.numero}, ${manana.meganNumero}, ${manana.in_reventado}, '${manana.colorBolita}')`
+        : '';
+      let valuesMediaTarde = mediaTarde
+        ? `('mediaTarde', '${mediaTarde.fecha}', ${mediaTarde.numeroSorteo}, ${mediaTarde.numero}, ${mediaTarde.meganNumero}, ${mediaTarde.in_reventado}, '${mediaTarde.colorBolita}')`
+        : '';
+      let valuesTarde = tarde
+        ? `('tarde', '${tarde.fecha}', ${tarde.numeroSorteo}, ${tarde.numero}, ${tarde.meganNumero}, ${tarde.in_reventado}, '${tarde.colorBolita}')`
+        : '';
+      const values = [valuesManana, valuesMediaTarde, valuesTarde].filter(Boolean);
+      if (values.length > 0) {
+        const sql = `INSERT INTO tiempos (horario, fecha, sorteo, numero, reventado, mega, color) VALUES ${values.join(',')}`;
+        db.run(sql);
+      }
+    });
+    return db;
+  },
+  monazos: (db) => {
     return db;
   },
 };
@@ -186,6 +213,7 @@ const PROCESSES = {
     db = PROCESSES.loterias(db, 'chances');
     db = PROCESSES.loterias(db, 'loterianacional');
     db = PROCESSES.lottos(db);
+    db = PROCESSES.tiempos(db);
     await saveDatabase(db);
   } catch (error) {
     console.error(`Error: ${error.message}`);
