@@ -146,21 +146,26 @@ const PROCESSES = {
   loterias: (db, producto) => {
     const directory = `${DATA}/${producto}`;
     const files = fs.readdirSync(`${directory}`);
+    const values = [];
     files.forEach((file) => {
       const path = `${directory}/${file}`;
       const json = JSON.parse(fs.readFileSync(path));
       const { fecha, numeroSorteo, premios } = json;
-      const values = premios.map(
+      const vals = premios.map(
         ({ orden, numero, serie }) => `('${producto}', '${fecha}', ${numeroSorteo}, ${orden}, ${numero}, ${serie})`,
       );
+      values.push(...vals);
+    });
+    if (values.length > 0) {
       const sql = `INSERT INTO loterias (producto, fecha, sorteo, orden, numero, serie) VALUES ${values.join(',')}`;
       db.run(sql);
-    });
+    }
     return db;
   },
   lottos: (db) => {
     const directory = `${DATA}/lotto`;
     const files = fs.readdirSync(`${directory}`);
+    const values = [];
     files.forEach((file) => {
       const path = `${directory}/${file}`;
       const json = JSON.parse(fs.readFileSync(path));
@@ -169,14 +174,18 @@ const PROCESSES = {
       const valuesRevancha = numerosRevancha.map(
         (num, ind) => `('${fecha}', ${numeroSorteo}, ${ind + 1}, ${num}, ${true})`,
       );
-      const sql = `INSERT INTO lottos (fecha, sorteo, orden, numero, revancha) VALUES ${valuesNumeros.join(',')},${valuesRevancha.join(',')}`;
-      db.run(sql);
+      values.push(...valuesNumeros, ...valuesRevancha);
     });
+    if (values.length > 0) {
+      const sql = `INSERT INTO lottos (fecha, sorteo, orden, numero, revancha) VALUES ${values.join(',')}`;
+      db.run(sql);
+    }
     return db;
   },
   tiempos: (db) => {
     const directory = `${DATA}/nuevostiempos`;
     const files = fs.readdirSync(`${directory}`);
+    const values = [];
     files.forEach((file) => {
       const path = `${directory}/${file}`;
       const json = JSON.parse(fs.readFileSync(path));
@@ -190,15 +199,39 @@ const PROCESSES = {
       let valuesTarde = tarde
         ? `('tarde', '${tarde.fecha}', ${tarde.numeroSorteo}, ${tarde.numero}, ${tarde.meganNumero}, ${tarde.in_reventado}, '${tarde.colorBolita}')`
         : '';
-      const values = [valuesManana, valuesMediaTarde, valuesTarde].filter(Boolean);
-      if (values.length > 0) {
-        const sql = `INSERT INTO tiempos (horario, fecha, sorteo, numero, reventado, mega, color) VALUES ${values.join(',')}`;
-        db.run(sql);
-      }
+      values.push(...[valuesManana, valuesMediaTarde, valuesTarde].filter(Boolean).flat());
     });
+    if (values.length > 0) {
+      const sql = `INSERT INTO tiempos (horario, fecha, sorteo, numero, reventado, mega, color) VALUES ${values.join(',')}`;
+      db.run(sql);
+    }
     return db;
   },
   monazos: (db) => {
+    const directory = `${DATA}/tresmonazos`;
+    const files = fs.readdirSync(`${directory}`);
+    const values = [];
+    files.forEach((file) => {
+      const path = `${directory}/${file}`;
+      const json = JSON.parse(fs.readFileSync(path));
+      const { manana, mediaTarde, tarde } = json;
+      let valuesManana = manana
+        ? manana.numeros.map((num, ind) => `('manana', '${manana.fecha}', ${manana.numeroSorteo}, ${ind + 1}, ${num})`)
+        : [];
+      let valuesMediaTarde = mediaTarde
+        ? mediaTarde.numeros.map(
+            (num, ind) => `('mediaTarde', '${mediaTarde.fecha}', ${mediaTarde.numeroSorteo}, ${ind + 1}, ${num})`,
+          )
+        : [];
+      let valuesTarde = tarde
+        ? tarde.numeros.map((num, ind) => `('manana', '${tarde.fecha}', ${tarde.numeroSorteo}, ${ind + 1}, ${num})`)
+        : [];
+      values.push(...[valuesManana, valuesMediaTarde, valuesTarde].filter(Boolean).flat());
+    });
+    if (values.length > 0) {
+      const sql = `INSERT INTO monazos (horario, fecha, sorteo, orden, numero) VALUES ${values.join(',')}`;
+      db.run(sql);
+    }
     return db;
   },
 };
@@ -214,6 +247,7 @@ const PROCESSES = {
     db = PROCESSES.loterias(db, 'loterianacional');
     db = PROCESSES.lottos(db);
     db = PROCESSES.tiempos(db);
+    db = PROCESSES.monazos(db);
     await saveDatabase(db);
   } catch (error) {
     console.error(`Error: ${error.message}`);

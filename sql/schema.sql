@@ -27,3 +27,12 @@ CREATE TABLE tiempos (
   mega INTEGER NOT NULL,
   color TEXT NOT NULL
 );
+
+CREATE TABLE monazos (
+  id INTEGER PRIMARY KEY, -- Autoincrement
+  horario TEXT NOT NULL,
+  fecha TEXT NOT NULL,
+  sorteo INTEGER NOT NULL,
+  orden INTEGER NOT NULL,
+  numero INTEGER NOT NULL
+);
