@@ -36,3 +36,10 @@ CREATE TABLE monazos (
   orden INTEGER NOT NULL,
   numero INTEGER NOT NULL
 );
+
+CREATE TABLE archivos (
+  id INTEGER PRIMARY KEY, -- Autoincrement
+  producto TEXT NOT NULL,
+  nombre INTEGER NOT NULL,
+  contenido TEXT NOT NULL
+);

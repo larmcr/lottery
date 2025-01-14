@@ -6,7 +6,7 @@ import { pipeline } from 'stream/promises';
 const fetch = (...args) => import('node-fetch').then(({ default: fetch }) => fetch(...args));
 
 const DATA = './data';
-const DB = 'database';
+const DB = 'database.db';
 const SCHEMA = './sql/schema.sql';
 const API = 'https://integration.jps.go.cr/api/app';
 const CHANCES = `${DATA}/chances`;
@@ -107,7 +107,7 @@ const getDataFromDb = (db, sql) => {
 
 const getDatabase = async (SQL) => {
   let db;
-  const dbPath = `${DATA}/${DB}.db`;
+  const dbPath = `${DATA}/${DB}`;
   const dbGzPath = `${dbPath}.gz`;
   if (fs.existsSync(dbPath)) {
     const buffer = fs.readFileSync(dbPath);
@@ -128,7 +128,7 @@ const getDatabase = async (SQL) => {
 };
 
 const compressDatabase = async () => {
-  const path = `${DATA}/${DB}.db`;
+  const path = `${DATA}/${DB}`;
   const gzip = zlib.createGzip();
   const source = fs.createReadStream(path);
   const destination = fs.createWriteStream(`${path}.gz`);
@@ -139,7 +139,7 @@ const compressDatabase = async () => {
 const saveDatabase = (db) => {
   const data = db.export();
   const buffer = Buffer.from(data);
-  fs.writeFileSync(`${DATA}/${DB}.db`, buffer, { encoding: 'utf8' });
+  fs.writeFileSync(`${DATA}/${DB}`, buffer, { encoding: 'utf8' });
 };
 
 const PROCESSES = {
@@ -147,9 +147,12 @@ const PROCESSES = {
     const directory = `${DATA}/${producto}`;
     const files = fs.readdirSync(`${directory}`);
     const values = [];
+    const contents = [];
     files.forEach((file) => {
       const path = `${directory}/${file}`;
-      const json = JSON.parse(fs.readFileSync(path));
+      const content = fs.readFileSync(path);
+      contents.push(`('${producto}', '${file}', '${content}')`);
+      const json = JSON.parse(content);
       const { fecha, numeroSorteo, premios } = json;
       const vals = premios.map(
         ({ orden, numero, serie }) => `('${producto}', '${fecha}', ${numeroSorteo}, ${orden}, ${numero}, ${serie})`,
@@ -160,15 +163,22 @@ const PROCESSES = {
       const sql = `INSERT INTO loterias (producto, fecha, sorteo, orden, numero, serie) VALUES ${values.join(',')}`;
       db.run(sql);
     }
+    if (contents.length > 0) {
+      const sql = `INSERT INTO archivos (producto, nombre, contenido) VALUES ${contents.join(',')}`;
+      db.run(sql);
+    }
     return db;
   },
   lottos: (db) => {
     const directory = `${DATA}/lotto`;
     const files = fs.readdirSync(`${directory}`);
     const values = [];
+    const contents = [];
     files.forEach((file) => {
       const path = `${directory}/${file}`;
-      const json = JSON.parse(fs.readFileSync(path));
+      const content = fs.readFileSync(path);
+      contents.push(`('lotto', '${file}', '${content}')`);
+      const json = JSON.parse(content);
       const { fecha, numeroSorteo, numeros, numerosRevancha } = json;
       const valuesNumeros = numeros.map((num, ind) => `('${fecha}', ${numeroSorteo}, ${ind + 1}, ${num}, ${false})`);
       const valuesRevancha = numerosRevancha.map(
@@ -180,15 +190,22 @@ const PROCESSES = {
       const sql = `INSERT INTO lottos (fecha, sorteo, orden, numero, revancha) VALUES ${values.join(',')}`;
       db.run(sql);
     }
+    if (contents.length > 0) {
+      const sql = `INSERT INTO archivos (producto, nombre, contenido) VALUES ${contents.join(',')}`;
+      db.run(sql);
+    }
     return db;
   },
   tiempos: (db) => {
     const directory = `${DATA}/nuevostiempos`;
     const files = fs.readdirSync(`${directory}`);
     const values = [];
+    const contents = [];
     files.forEach((file) => {
       const path = `${directory}/${file}`;
-      const json = JSON.parse(fs.readFileSync(path));
+      const content = fs.readFileSync(path);
+      contents.push(`('nuevostiempos', '${file}', '${content}')`);
+      const json = JSON.parse(content);
       const { manana, mediaTarde, tarde } = json;
       let valuesManana = manana
         ? `('manana', '${manana.fecha}', ${manana.numeroSorteo}, ${manana.numero}, ${manana.meganNumero}, ${manana.in_reventado}, '${manana.colorBolita}')`
@@ -205,15 +222,22 @@ const PROCESSES = {
       const sql = `INSERT INTO tiempos (horario, fecha, sorteo, numero, reventado, mega, color) VALUES ${values.join(',')}`;
       db.run(sql);
     }
+    if (contents.length > 0) {
+      const sql = `INSERT INTO archivos (producto, nombre, contenido) VALUES ${contents.join(',')}`;
+      db.run(sql);
+    }
     return db;
   },
   monazos: (db) => {
     const directory = `${DATA}/tresmonazos`;
     const files = fs.readdirSync(`${directory}`);
     const values = [];
+    const contents = [];
     files.forEach((file) => {
       const path = `${directory}/${file}`;
-      const json = JSON.parse(fs.readFileSync(path));
+      const content = fs.readFileSync(path);
+      contents.push(`('tresmonazos', '${file}', '${content}')`);
+      const json = JSON.parse(content);
       const { manana, mediaTarde, tarde } = json;
       let valuesManana = manana
         ? manana.numeros.map((num, ind) => `('manana', '${manana.fecha}', ${manana.numeroSorteo}, ${ind + 1}, ${num})`)
@@ -230,6 +254,10 @@ const PROCESSES = {
     });
     if (values.length > 0) {
       const sql = `INSERT INTO monazos (horario, fecha, sorteo, orden, numero) VALUES ${values.join(',')}`;
+      db.run(sql);
+    }
+    if (contents.length > 0) {
+      const sql = `INSERT INTO archivos (producto, nombre, contenido) VALUES ${contents.join(',')}`;
       db.run(sql);
     }
     return db;
@@ -249,6 +277,7 @@ const PROCESSES = {
     db = PROCESSES.tiempos(db);
     db = PROCESSES.monazos(db);
     await saveDatabase(db);
+    // await compressDatabase();
   } catch (error) {
     console.error(`Error: ${error.message}`);
   }
