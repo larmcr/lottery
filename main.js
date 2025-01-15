@@ -18,15 +18,11 @@ const TABLES = {
   tresmonazos: 'monazos',
 };
 
-const getData = async (db, producto) => {
-  console.info(`\n> Product: '${producto}'`);
-  fs.ensureDirSync(`${DATA}/${producto}`);
-  const api = `${API}/${producto}`;
-  const table = `${TABLES[producto]}`;
-  const where = ['chances', 'loterianacional'].includes(producto) ? `WHERE producto = '${producto}'` : '';
-  const sql = `SELECT MAX(sorteo) AS ultimo FROM ${table} ${where}`;
-  const ult = getDataFromDb(db, sql)[0].ultimo;
-  console.info(`\t> Last in DB: ${ult}`);
+const getData = async (product, latter) => {
+  console.info(`\n> Product: '${product}'`);
+  console.info(`\t> Last in DB: ${latter}`);
+  fs.ensureDirSync(`${DATA}/${product}`);
+  const api = `${API}/${product}`;
   let flag = true;
   const getJson = async (id) => {
     console.info(`\t> Fetching '${id}'`);
@@ -45,16 +41,16 @@ const getData = async (db, producto) => {
     const mediaTarde = json.mediaTarde?.numeroSorteo;
     const tarde = json.tarde?.numeroSorteo;
     const file = sorteo ?? `${manana ?? '_'}-${mediaTarde ?? '_'}-${tarde ?? '_'}`;
-    const path = `${DATA}/${producto}/${file}.json`;
+    const path = `${DATA}/${product}/${file}.json`;
     flag = !fs.existsSync(path);
     if (flag) {
       if (sorteo) {
-        flag = sorteo > ult;
+        flag = sorteo > latter;
       } else if (manana || mediaTarde || tarde) {
         const arr = [manana, mediaTarde, tarde].filter(Boolean);
         if (arr.length > 0) {
           sorteo = Math.max(...arr);
-          flag = sorteo > ult;
+          flag = sorteo > latter;
         }
       }
     }
@@ -85,13 +81,12 @@ const getData = async (db, producto) => {
   }
 };
 
-const fetchAndProcessData = async (db) => {
-  await getData(db, 'chances');
-  await getData(db, 'loterianacional');
-  await getData(db, 'lotto');
-  await getData(db, 'nuevostiempos');
-  await getData(db, 'tresmonazos');
-  return db;
+const fetchData = async (latters) => {
+  await getData('chances', latters.chances);
+  await getData('loterianacional', latters.loterianacional);
+  await getData('lotto', latters.lotto);
+  await getData('nuevostiempos', latters.nuevostiempos);
+  await getData('tresmonazos', latters.tresmonazos);
 };
 
 const getDataFromDb = (db, sql) => {
@@ -134,16 +129,18 @@ const getDatabase = async () => {
 };
 
 const compressDatabase = async () => {
+  console.info(`\n> Compressing database...`);
   const path = `${DATA}/${DB}`;
   const gzip = zlib.createGzip();
   const source = fs.createReadStream(path);
   const destination = fs.createWriteStream(`${path}.gz`);
   await pipeline(source, gzip, destination);
   fs.unlinkSync(path);
+  console.info(`\t> Database compressed`);
 };
 
 const deleteDirectory = (directory) => {
-  // fs.rmSync(directory, { force: true, recursive: true });
+  fs.rmSync(directory, { force: true, recursive: true });
 };
 
 const saveDatabase = (db) => {
@@ -153,7 +150,7 @@ const saveDatabase = (db) => {
 };
 
 const PROCESSES = {
-  loterias: (db, producto) => {
+  loterias: (db, producto, latter) => {
     const directory = `${DATA}/${producto}`;
     const files = fs.readdirSync(`${directory}`);
     const values = [];
@@ -164,10 +161,12 @@ const PROCESSES = {
       contents.push(`('${producto}', '${file}', '${content}')`);
       const json = JSON.parse(content);
       const { fecha, numeroSorteo, premios } = json;
-      const vals = premios.map(
-        ({ orden, numero, serie }) => `('${producto}', '${fecha}', ${numeroSorteo}, ${orden}, ${numero}, ${serie})`,
-      );
-      values.push(...vals);
+      if (numeroSorteo > latter) {
+        const vals = premios.map(
+          ({ orden, numero, serie }) => `('${producto}', '${fecha}', ${numeroSorteo}, ${orden}, ${numero}, ${serie})`,
+        );
+        values.push(...vals);
+      }
     });
     if (values.length > 0) {
       const sql = `INSERT INTO loterias (producto, fecha, sorteo, orden, numero, serie) VALUES ${values.join(',')}`;
@@ -180,7 +179,7 @@ const PROCESSES = {
     deleteDirectory(directory);
     return db;
   },
-  lottos: (db) => {
+  lottos: (db, latter) => {
     const directory = `${DATA}/lotto`;
     const files = fs.readdirSync(`${directory}`);
     const values = [];
@@ -191,11 +190,13 @@ const PROCESSES = {
       contents.push(`('lotto', '${file}', '${content}')`);
       const json = JSON.parse(content);
       const { fecha, numeroSorteo, numeros, numerosRevancha } = json;
-      const valuesNumeros = numeros.map((num, ind) => `('${fecha}', ${numeroSorteo}, ${ind + 1}, ${num}, ${false})`);
-      const valuesRevancha = numerosRevancha.map(
-        (num, ind) => `('${fecha}', ${numeroSorteo}, ${ind + 1}, ${num}, ${true})`,
-      );
-      values.push(...valuesNumeros, ...valuesRevancha);
+      if (numeroSorteo > latter) {
+        const valuesNumeros = numeros.map((num, ind) => `('${fecha}', ${numeroSorteo}, ${ind + 1}, ${num}, ${false})`);
+        const valuesRevancha = numerosRevancha.map(
+          (num, ind) => `('${fecha}', ${numeroSorteo}, ${ind + 1}, ${num}, ${true})`,
+        );
+        values.push(...valuesNumeros, ...valuesRevancha);
+      }
     });
     if (values.length > 0) {
       const sql = `INSERT INTO lottos (fecha, sorteo, orden, numero, revancha) VALUES ${values.join(',')}`;
@@ -208,7 +209,7 @@ const PROCESSES = {
     deleteDirectory(directory);
     return db;
   },
-  tiempos: (db) => {
+  tiempos: (db, latter) => {
     const directory = `${DATA}/nuevostiempos`;
     const files = fs.readdirSync(`${directory}`);
     const values = [];
@@ -219,15 +220,18 @@ const PROCESSES = {
       contents.push(`('nuevostiempos', '${file}', '${content}')`);
       const json = JSON.parse(content);
       const { manana, mediaTarde, tarde } = json;
-      let valuesManana = manana
-        ? `('manana', '${manana.fecha}', ${manana.numeroSorteo}, ${manana.numero}, ${manana.meganNumero}, ${manana.in_reventado}, '${manana.colorBolita}')`
-        : '';
-      let valuesMediaTarde = mediaTarde
-        ? `('mediaTarde', '${mediaTarde.fecha}', ${mediaTarde.numeroSorteo}, ${mediaTarde.numero}, ${mediaTarde.meganNumero}, ${mediaTarde.in_reventado}, '${mediaTarde.colorBolita}')`
-        : '';
-      let valuesTarde = tarde
-        ? `('tarde', '${tarde.fecha}', ${tarde.numeroSorteo}, ${tarde.numero}, ${tarde.meganNumero}, ${tarde.in_reventado}, '${tarde.colorBolita}')`
-        : '';
+      let valuesManana =
+        manana?.numeroSorteo > latter
+          ? `('manana', '${manana.fecha}', ${manana.numeroSorteo}, ${manana.numero}, ${manana.meganNumero}, ${manana.in_reventado}, '${manana.colorBolita}')`
+          : '';
+      let valuesMediaTarde =
+        mediaTarde?.numeroSorteo > latter
+          ? `('mediaTarde', '${mediaTarde.fecha}', ${mediaTarde.numeroSorteo}, ${mediaTarde.numero}, ${mediaTarde.meganNumero}, ${mediaTarde.in_reventado}, '${mediaTarde.colorBolita}')`
+          : '';
+      let valuesTarde =
+        tarde?.numeroSorteo > latter
+          ? `('tarde', '${tarde.fecha}', ${tarde.numeroSorteo}, ${tarde.numero}, ${tarde.meganNumero}, ${tarde.in_reventado}, '${tarde.colorBolita}')`
+          : '';
       values.push(...[valuesManana, valuesMediaTarde, valuesTarde].filter(Boolean).flat());
     });
     if (values.length > 0) {
@@ -241,7 +245,7 @@ const PROCESSES = {
     deleteDirectory(directory);
     return db;
   },
-  monazos: (db) => {
+  monazos: (db, latter) => {
     const directory = `${DATA}/tresmonazos`;
     const files = fs.readdirSync(`${directory}`);
     const values = [];
@@ -252,17 +256,22 @@ const PROCESSES = {
       contents.push(`('tresmonazos', '${file}', '${content}')`);
       const json = JSON.parse(content);
       const { manana, mediaTarde, tarde } = json;
-      let valuesManana = manana
-        ? manana.numeros.map((num, ind) => `('manana', '${manana.fecha}', ${manana.numeroSorteo}, ${ind + 1}, ${num})`)
-        : [];
-      let valuesMediaTarde = mediaTarde
-        ? mediaTarde.numeros.map(
-            (num, ind) => `('mediaTarde', '${mediaTarde.fecha}', ${mediaTarde.numeroSorteo}, ${ind + 1}, ${num})`,
-          )
-        : [];
-      let valuesTarde = tarde
-        ? tarde.numeros.map((num, ind) => `('manana', '${tarde.fecha}', ${tarde.numeroSorteo}, ${ind + 1}, ${num})`)
-        : [];
+      let valuesManana =
+        manana?.numeroSorteo > latter
+          ? manana.numeros.map(
+              (num, ind) => `('manana', '${manana.fecha}', ${manana.numeroSorteo}, ${ind + 1}, ${num})`,
+            )
+          : [];
+      let valuesMediaTarde =
+        mediaTarde?.numeroSorteo > latter
+          ? mediaTarde.numeros.map(
+              (num, ind) => `('mediaTarde', '${mediaTarde.fecha}', ${mediaTarde.numeroSorteo}, ${ind + 1}, ${num})`,
+            )
+          : [];
+      let valuesTarde =
+        tarde?.numeroSorteo > latter
+          ? tarde.numeros.map((num, ind) => `('manana', '${tarde.fecha}', ${tarde.numeroSorteo}, ${ind + 1}, ${num})`)
+          : [];
       values.push(...[valuesManana, valuesMediaTarde, valuesTarde].filter(Boolean).flat());
     });
     if (values.length > 0) {
@@ -278,20 +287,39 @@ const PROCESSES = {
   },
 };
 
-const processFiles = (db) => {
-  db = PROCESSES.loterias(db, 'chances');
-  db = PROCESSES.loterias(db, 'loterianacional');
-  db = PROCESSES.lottos(db);
-  db = PROCESSES.tiempos(db);
-  db = PROCESSES.monazos(db);
+const processFiles = (db, latters) => {
+  console.info(`\n> Updating database...`);
+  db = PROCESSES.loterias(db, 'chances', latters.chances);
+  db = PROCESSES.loterias(db, 'loterianacional', latters.loterianacional);
+  db = PROCESSES.lottos(db, latters.lotto);
+  db = PROCESSES.tiempos(db, latters.nuevostiempos);
+  db = PROCESSES.monazos(db, latters.tresmonazos);
+  console.info(`\t> Database updated`);
   return db;
 };
 
+const getLatter = (db, product) => {
+  const table = `${TABLES[product]}`;
+  const where = ['chances', 'loterianacional'].includes(product) ? `WHERE producto = '${product}'` : '';
+  const sql = `SELECT MAX(sorteo) AS latter FROM ${table} ${where}`;
+  const latter = getDataFromDb(db, sql)[0].latter;
+  return latter;
+};
+
+const getLatters = (db) => ({
+  chances: getLatter(db, 'chances'),
+  loterianacional: getLatter(db, 'loterianacional'),
+  lotto: getLatter(db, 'lotto'),
+  nuevostiempos: getLatter(db, 'nuevostiempos'),
+  tresmonazos: getLatter(db, 'tresmonazos'),
+});
+
 (async () => {
   let db = await getDatabase();
-  db = await fetchAndProcessData(db);
-  // db = processFiles(db);
-  // await saveDatabase(db);
+  const latters = getLatters(db);
+  await fetchData(latters);
+  db = processFiles(db, latters);
+  await saveDatabase(db);
   // await compressDatabase();
 })();
 1;
