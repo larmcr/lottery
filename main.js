@@ -89,8 +89,8 @@ const fetchAndProcessData = async (db) => {
   await getData(db, 'chances');
   await getData(db, 'loterianacional');
   await getData(db, 'lotto');
-  // await getData('nuevostiempos');
-  // await getData('tresmonazos');
+  await getData(db, 'nuevostiempos');
+  await getData(db, 'tresmonazos');
   return db;
 };
 
