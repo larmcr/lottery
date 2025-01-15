@@ -319,7 +319,7 @@ const getLatters = (db) => ({
   const latters = getLatters(db);
   await fetchData(latters);
   db = processFiles(db, latters);
-  await saveDatabase(db);
-  // await compressDatabase();
+  saveDatabase(db);
+  await compressDatabase();
 })();
 1;
