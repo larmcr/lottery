@@ -9,11 +9,24 @@ const DATA = './data';
 const DB = 'database.db';
 const SCHEMA = './sql/schema.sql';
 const API = 'https://integration.jps.go.cr/api/app';
-const CHANCES = `${DATA}/chances`;
 
-const getData = async (product) => {
-  console.info(`\n> Product: '${product}'`);
-  const api = `${API}/${product}`;
+const TABLES = {
+  chances: 'loterias',
+  loterianacional: 'loterias',
+  lotto: 'lottos',
+  nuevostiempos: 'tiempos',
+  tresmonazos: 'monazos',
+};
+
+const getData = async (db, producto) => {
+  console.info(`\n> Product: '${producto}'`);
+  fs.ensureDirSync(`${DATA}/${producto}`);
+  const api = `${API}/${producto}`;
+  const table = `${TABLES[producto]}`;
+  const where = ['chances', 'loterianacional'].includes(producto) ? `WHERE producto = '${producto}'` : '';
+  const sql = `SELECT MAX(sorteo) AS ultimo FROM ${table} ${where}`;
+  const ult = getDataFromDb(db, sql)[0].ultimo;
+  console.info(`\t> Last in DB: ${ult}`);
   let flag = true;
   const getJson = async (id) => {
     console.info(`\t> Fetching '${id}'`);
@@ -27,74 +40,65 @@ const getData = async (product) => {
     }
   };
   const saveJson = (json) => {
-    const name =
-      json.numeroSorteo ??
-      `${json.manana?.numeroSorteo ?? '_'}-${json.mediaTarde?.numeroSorteo ?? '_'}-${json.tarde?.numeroSorteo ?? '_'}`;
-    const file = `${DATA}/${product}/${name}.json`;
-    if (!fs.existsSync(file)) {
-      fs.writeFileSync(file, JSON.stringify(json));
-      console.info(`\t\t> '${name}' saved`);
-    } else {
-      flag = false;
-      console.info(`\t\t> '${name}' not saved (already exists)`);
+    let sorteo = json.numeroSorteo;
+    const manana = json.manana?.numeroSorteo;
+    const mediaTarde = json.mediaTarde?.numeroSorteo;
+    const tarde = json.tarde?.numeroSorteo;
+    const file = sorteo ?? `${manana ?? '_'}-${mediaTarde ?? '_'}-${tarde ?? '_'}`;
+    const path = `${DATA}/${producto}/${file}.json`;
+    flag = !fs.existsSync(path);
+    if (flag) {
+      if (sorteo) {
+        flag = sorteo > ult;
+      } else if (manana || mediaTarde || tarde) {
+        const arr = [manana, mediaTarde, tarde].filter(Boolean);
+        if (arr.length > 0) {
+          sorteo = Math.max(...arr);
+          flag = sorteo > ult;
+        }
+      }
     }
+    if (flag) {
+      fs.writeFileSync(path, JSON.stringify(json));
+    }
+    console.info(`\t\t> '${file}' ${flag ? 'saved' : 'not saved (already exists)'}`);
   };
   const last = await getJson('last');
   saveJson(last);
-  const { numeroSorteo, dia } = last;
-  if (numeroSorteo) {
-    for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
-      const json = await getJson(sorteo);
-      saveJson(json);
-    }
-  } else if (dia) {
-    let sorteo = last.manana.numeroSorteo - 1;
-    while (flag) {
-      const json = await getJson(sorteo);
-      saveJson(json);
-      sorteo = json.manana.numeroSorteo - 1;
+  if (flag) {
+    const { numeroSorteo, dia } = last;
+    if (numeroSorteo) {
+      for (let sorteo = last.numeroSorteo - 1; flag; --sorteo) {
+        const json = await getJson(sorteo);
+        saveJson(json);
+      }
+    } else if (dia) {
+      let sorteo = last.manana.numeroSorteo - 1;
+      while (flag) {
+        const json = await getJson(sorteo);
+        saveJson(json);
+        sorteo = json.manana.numeroSorteo - 1;
+      }
     }
   } else {
-    console.info(`\t> No data available`);
+    console.info(`\t> No new data available`);
   }
 };
 
-const processData = (product) => {
-  console.info(`\t> Processing data`);
-  const files = fs.readdirSync(`${DATA}/${product}`);
-  const data = {};
-  files.forEach((file) => {
-    const { numeroSorteo, numeros, numerosRevancha, premios, tipoSorteoName } = JSON.parse(
-      fs.readFileSync(`${DATA}/${product}/${file}`),
-    );
-    if (numerosRevancha) {
-      // lotto
-      data[numeroSorteo] = { n: numeros, r: numerosRevancha };
-    } else if (premios && (tipoSorteoName === 'Chances' || tipoSorteoName === 'Lotería Nacional')) {
-      data[numeroSorteo] = { n: premios.map((premio) => premio.numero), s: premios.map((premio) => premio.serie) };
-    }
-  });
-  fs.writeFileSync(`./${product}.json`, JSON.stringify(data));
-  console.info(`\t\t> Done!`);
-};
-
 const fetchAndProcessData = async (db) => {
-  // await getData('lotto');
-  // db = processData(db, 'lotto');
-  // await getData('chances');
-  // db = processData(db, 'chances');
-  // await getData('loterianacional');
-  // db = processData(db, 'loterianacional');
+  await getData(db, 'chances');
+  await getData(db, 'loterianacional');
+  await getData(db, 'lotto');
   // await getData('nuevostiempos');
-  await getData('tresmonazos');
+  // await getData('tresmonazos');
   return db;
 };
 
 const getDataFromDb = (db, sql) => {
   const data = [];
   const select = db.exec(sql);
-  if (select.length > 1) {
-    const { columns, values } = select;
+  if (select.length > 0) {
+    const { columns, values } = select[0];
     values.forEach((row) => {
       const obj = {};
       row.forEach((value, index) => {
@@ -103,12 +107,14 @@ const getDataFromDb = (db, sql) => {
       data.push(obj);
     });
   }
+  return data;
 };
 
-const getDatabase = async (SQL) => {
+const getDatabase = async () => {
   let db;
   const dbPath = `${DATA}/${DB}`;
   const dbGzPath = `${dbPath}.gz`;
+  const SQL = await initSqlJs();
   if (fs.existsSync(dbPath)) {
     const buffer = fs.readFileSync(dbPath);
     db = new SQL.Database(buffer);
@@ -120,7 +126,7 @@ const getDatabase = async (SQL) => {
     const buffer = fs.readFileSync(dbPath);
     db = new SQL.Database(buffer);
   } else {
-    const schema = fs.readFileSync(SCHEMA, { encoding: 'utf8' }).toString();
+    const schema = fs.readFileSync(SCHEMA).toString();
     db = new SQL.Database();
     db.run(schema);
   }
@@ -136,10 +142,14 @@ const compressDatabase = async () => {
   fs.unlinkSync(path);
 };
 
+const deleteDirectory = (directory) => {
+  // fs.rmSync(directory, { force: true, recursive: true });
+};
+
 const saveDatabase = (db) => {
   const data = db.export();
   const buffer = Buffer.from(data);
-  fs.writeFileSync(`${DATA}/${DB}`, buffer, { encoding: 'utf8' });
+  fs.writeFileSync(`${DATA}/${DB}`, buffer);
 };
 
 const PROCESSES = {
@@ -167,6 +177,7 @@ const PROCESSES = {
       const sql = `INSERT INTO archivos (producto, nombre, contenido) VALUES ${contents.join(',')}`;
       db.run(sql);
     }
+    deleteDirectory(directory);
     return db;
   },
   lottos: (db) => {
@@ -194,6 +205,7 @@ const PROCESSES = {
       const sql = `INSERT INTO archivos (producto, nombre, contenido) VALUES ${contents.join(',')}`;
       db.run(sql);
     }
+    deleteDirectory(directory);
     return db;
   },
   tiempos: (db) => {
@@ -226,6 +238,7 @@ const PROCESSES = {
       const sql = `INSERT INTO archivos (producto, nombre, contenido) VALUES ${contents.join(',')}`;
       db.run(sql);
     }
+    deleteDirectory(directory);
     return db;
   },
   monazos: (db) => {
@@ -260,26 +273,25 @@ const PROCESSES = {
       const sql = `INSERT INTO archivos (producto, nombre, contenido) VALUES ${contents.join(',')}`;
       db.run(sql);
     }
+    deleteDirectory(directory);
     return db;
   },
 };
 
+const processFiles = (db) => {
+  db = PROCESSES.loterias(db, 'chances');
+  db = PROCESSES.loterias(db, 'loterianacional');
+  db = PROCESSES.lottos(db);
+  db = PROCESSES.tiempos(db);
+  db = PROCESSES.monazos(db);
+  return db;
+};
+
 (async () => {
-  try {
-    const SQL = await initSqlJs();
-    let db = await getDatabase(SQL);
-    // db = await fetchAndProcessData(db);
-    // await saveDatabase(db);
-    // await compressDatabase();
-    db = PROCESSES.loterias(db, 'chances');
-    db = PROCESSES.loterias(db, 'loterianacional');
-    db = PROCESSES.lottos(db);
-    db = PROCESSES.tiempos(db);
-    db = PROCESSES.monazos(db);
-    await saveDatabase(db);
-    // await compressDatabase();
-  } catch (error) {
-    console.error(`Error: ${error.message}`);
-  }
+  let db = await getDatabase();
+  db = await fetchAndProcessData(db);
+  // db = processFiles(db);
+  // await saveDatabase(db);
+  // await compressDatabase();
 })();
 1;
