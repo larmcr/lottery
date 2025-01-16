@@ -10,8 +10,12 @@
 
   <body>
     <script src="sql-wasm/sql-wasm.js"></script>
+
     <script defer>
-      const getDatabase = async (SQL) => {
+      const getDatabase = async () => {
+        const SQL = await initSqlJs({
+          locateFile: (file) => `sql-wasm/${file}`,
+        });
         const gzipFile = await fetch('data/database.db.gz');
         const gzipBlob = await gzipFile.blob();
         const gzipStream = new DecompressionStream('gzip');
@@ -21,11 +25,30 @@
         const db = new SQL.Database(dbArray);
         return db;
       };
+
+      const getDataFromDb = (db, sql) => {
+        const data = [];
+        const select = db.exec(sql);
+        if (select.length > 0) {
+          const { columns, values } = select[0];
+          values.forEach((row) => {
+            const obj = {};
+            row.forEach((value, index) => {
+              obj[columns[index]] = value;
+            });
+            data.push(obj);
+          });
+        }
+        return data;
+      };
+
       (async () => {
-        const SQL = await initSqlJs({
-          locateFile: (file) => `sql-wasm/${file}`,
-        });
-        const db = await getDatabase(SQL);
+        const db = await getDatabase();
+        const data = getDataFromDb(
+          db,
+          `SELECT orden, numero, COUNT(numero) as cantidad FROM monazos GROUP BY orden, numero`,
+        );
+        console.info(data);
       })();
     </script>
   </body>
