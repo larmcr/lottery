@@ -149,6 +149,13 @@ const saveDatabase = (db) => {
   fs.writeFileSync(`${DATA}/${DB}`, buffer);
 };
 
+const storeContents = (db, contents) => {
+  if (contents.length > 0) {
+    const sql = `INSERT INTO archivos (producto, nombre, contenido) VALUES ${contents.join(',')}`;
+    db.run(sql);
+  }
+};
+
 const PROCESSES = {
   loterias: (db, producto, latter) => {
     const directory = `${DATA}/${producto}`;
@@ -172,10 +179,7 @@ const PROCESSES = {
       const sql = `INSERT INTO loterias (producto, fecha, sorteo, orden, numero, serie) VALUES ${values.join(',')}`;
       db.run(sql);
     }
-    if (contents.length > 0) {
-      const sql = `INSERT INTO archivos (producto, nombre, contenido) VALUES ${contents.join(',')}`;
-      db.run(sql);
-    }
+    storeContents(db, contents);
     deleteDirectory(directory);
     return db;
   },
@@ -202,10 +206,7 @@ const PROCESSES = {
       const sql = `INSERT INTO lottos (fecha, sorteo, orden, numero, revancha) VALUES ${values.join(',')}`;
       db.run(sql);
     }
-    if (contents.length > 0) {
-      const sql = `INSERT INTO archivos (producto, nombre, contenido) VALUES ${contents.join(',')}`;
-      db.run(sql);
-    }
+    storeContents(db, contents);
     deleteDirectory(directory);
     return db;
   },
@@ -220,15 +221,15 @@ const PROCESSES = {
       contents.push(`('nuevostiempos', '${file}', '${content}')`);
       const json = JSON.parse(content);
       const { manana, mediaTarde, tarde } = json;
-      let valuesManana =
+      const valuesManana =
         manana?.numeroSorteo > latter
           ? `('manana', '${manana.fecha}', ${manana.numeroSorteo}, ${manana.numero}, ${manana.meganNumero}, ${manana.in_reventado}, '${manana.colorBolita}')`
           : '';
-      let valuesMediaTarde =
+      const valuesMediaTarde =
         mediaTarde?.numeroSorteo > latter
           ? `('mediaTarde', '${mediaTarde.fecha}', ${mediaTarde.numeroSorteo}, ${mediaTarde.numero}, ${mediaTarde.meganNumero}, ${mediaTarde.in_reventado}, '${mediaTarde.colorBolita}')`
           : '';
-      let valuesTarde =
+      const valuesTarde =
         tarde?.numeroSorteo > latter
           ? `('tarde', '${tarde.fecha}', ${tarde.numeroSorteo}, ${tarde.numero}, ${tarde.meganNumero}, ${tarde.in_reventado}, '${tarde.colorBolita}')`
           : '';
@@ -238,10 +239,7 @@ const PROCESSES = {
       const sql = `INSERT INTO tiempos (horario, fecha, sorteo, numero, reventado, mega, color) VALUES ${values.join(',')}`;
       db.run(sql);
     }
-    if (contents.length > 0) {
-      const sql = `INSERT INTO archivos (producto, nombre, contenido) VALUES ${contents.join(',')}`;
-      db.run(sql);
-    }
+    storeContents(db, contents);
     deleteDirectory(directory);
     return db;
   },
@@ -256,19 +254,19 @@ const PROCESSES = {
       contents.push(`('tresmonazos', '${file}', '${content}')`);
       const json = JSON.parse(content);
       const { manana, mediaTarde, tarde } = json;
-      let valuesManana =
+      const valuesManana =
         manana?.numeroSorteo > latter
           ? manana.numeros.map(
               (num, ind) => `('manana', '${manana.fecha}', ${manana.numeroSorteo}, ${ind + 1}, ${num})`,
             )
           : [];
-      let valuesMediaTarde =
+      const valuesMediaTarde =
         mediaTarde?.numeroSorteo > latter
           ? mediaTarde.numeros.map(
               (num, ind) => `('mediaTarde', '${mediaTarde.fecha}', ${mediaTarde.numeroSorteo}, ${ind + 1}, ${num})`,
             )
           : [];
-      let valuesTarde =
+      const valuesTarde =
         tarde?.numeroSorteo > latter
           ? tarde.numeros.map((num, ind) => `('manana', '${tarde.fecha}', ${tarde.numeroSorteo}, ${ind + 1}, ${num})`)
           : [];
@@ -278,10 +276,7 @@ const PROCESSES = {
       const sql = `INSERT INTO monazos (horario, fecha, sorteo, orden, numero) VALUES ${values.join(',')}`;
       db.run(sql);
     }
-    if (contents.length > 0) {
-      const sql = `INSERT INTO archivos (producto, nombre, contenido) VALUES ${contents.join(',')}`;
-      db.run(sql);
-    }
+    storeContents(db, contents);
     deleteDirectory(directory);
     return db;
   },
