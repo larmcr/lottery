@@ -1,16 +1,16 @@
 {
-  "version": "2.0.0",
+  "version": "2.0.1",
   "main": "main.js",
   "engines": {
     "node": "22"
   },
   "type": "module",
   "dependencies": {
-    "fs-extra": "^11.2.0",
+    "fs-extra": "^11.3.0",
     "node-fetch": "^3.3.2",
-    "sql.js": "^1.12.0"
+    "sql.js": "^1.13.0"
   },
   "devDependencies": {
-    "prettier": "^3.4.2"
+    "prettier": "^3.5.3"
   }
 }
