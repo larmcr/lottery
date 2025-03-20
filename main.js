@@ -170,13 +170,13 @@ const PROCESSES = {
       const { fecha, numeroSorteo, premios } = json;
       if (numeroSorteo > latter) {
         const vals = premios.map(
-          ({ orden, numero, serie }) => `('${producto}', '${fecha}', ${numeroSorteo}, ${orden}, ${numero}, ${serie})`,
+          ({ orden, numero, serie, letra }) => `('${producto}', '${fecha}', ${numeroSorteo}, ${orden}, ${numero}, ${serie}, '${letra ?? ''}')`,
         );
         values.push(...vals);
       }
     });
     if (values.length > 0) {
-      const sql = `INSERT INTO loterias (producto, fecha, sorteo, orden, numero, serie) VALUES ${values.join(',')}`;
+      const sql = `INSERT INTO loterias (producto, fecha, sorteo, orden, numero, serie, letra) VALUES ${values.join(',')}`;
       db.run(sql);
     }
     storeContents(db, contents);

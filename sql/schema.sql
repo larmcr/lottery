@@ -5,7 +5,8 @@ CREATE TABLE loterias (
   sorteo INTEGER NOT NULL,
   orden INTEGER NOT NULL,
   numero INTEGER NOT NULL,
-  serie INTEGER NOT NULL
+  serie INTEGER NOT NULL,
+  letra TEXT NOT NULL
 );
 
 CREATE TABLE lottos (
