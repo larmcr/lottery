@@ -170,7 +170,8 @@ const PROCESSES = {
       const { fecha, numeroSorteo, premios } = json;
       if (numeroSorteo > latter) {
         const vals = premios.map(
-          ({ orden, numero, serie, letra }) => `('${producto}', '${fecha}', ${numeroSorteo}, ${orden}, ${numero}, ${serie}, '${letra ?? ''}')`,
+          ({ orden, numero, serie, letra }) =>
+            `('${producto}', '${fecha}', ${numeroSorteo}, ${orden}, ${numero}, ${serie}, '${letra ?? ''}')`,
         );
         values.push(...vals);
       }
@@ -268,7 +269,7 @@ const PROCESSES = {
           : [];
       const valuesTarde =
         tarde?.numeroSorteo > latter
-          ? tarde.numeros.map((num, ind) => `('manana', '${tarde.fecha}', ${tarde.numeroSorteo}, ${ind + 1}, ${num})`)
+          ? tarde.numeros.map((num, ind) => `('tarde', '${tarde.fecha}', ${tarde.numeroSorteo}, ${ind + 1}, ${num})`)
           : [];
       values.push(...[valuesManana, valuesMediaTarde, valuesTarde].filter(Boolean).flat());
     });
@@ -317,4 +318,3 @@ const getLatters = (db) => ({
   saveDatabase(db);
   await compressDatabase();
 })();
-1;
