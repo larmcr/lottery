@@ -82,11 +82,9 @@ const getData = async (product, latter) => {
 };
 
 const fetchData = async (latters) => {
-  await getData('chances', latters.chances);
-  await getData('loterianacional', latters.loterianacional);
-  await getData('lotto', latters.lotto);
-  await getData('nuevostiempos', latters.nuevostiempos);
-  await getData('tresmonazos', latters.tresmonazos);
+  for (const product of ['chances', 'loterianacional', 'lotto', 'nuevostiempos', 'tresmonazos']) {
+    await getData(product, latters[product]);
+  }
 };
 
 const getDataFromDb = (db, sql) => {
@@ -157,21 +155,21 @@ const storeContents = (db, contents) => {
 };
 
 const PROCESSES = {
-  loterias: (db, producto, latter) => {
-    const directory = `${DATA}/${producto}`;
+  loterias: (db, latter, product) => {
+    const directory = `${DATA}/${product}`;
     const files = fs.readdirSync(`${directory}`);
     const values = [];
     const contents = [];
     files.forEach((file) => {
       const path = `${directory}/${file}`;
       const content = fs.readFileSync(path);
-      contents.push(`('${producto}', '${file}', '${content}')`);
+      contents.push(`('${product}', '${file}', '${content}')`);
       const json = JSON.parse(content);
       const { fecha, numeroSorteo, premios } = json;
       if (numeroSorteo > latter) {
         const vals = premios.map(
           ({ orden, numero, serie, letra }) =>
-            `('${producto}', '${fecha}', ${numeroSorteo}, ${orden}, ${numero}, ${serie}, '${letra ?? ''}')`,
+            `('${product}', '${fecha}', ${numeroSorteo}, ${orden}, ${numero}, ${serie}, '${letra ?? ''}')`,
         );
         values.push(...vals);
       }
@@ -285,8 +283,8 @@ const PROCESSES = {
 
 const processFiles = (db, latters) => {
   console.info(`\n> Updating database...`);
-  db = PROCESSES.loterias(db, 'chances', latters.chances);
-  db = PROCESSES.loterias(db, 'loterianacional', latters.loterianacional);
+  db = PROCESSES.loterias(db, latters.chances, 'chances');
+  db = PROCESSES.loterias(db, latters.loterianacional, 'loterianacional');
   db = PROCESSES.lottos(db, latters.lotto);
   db = PROCESSES.tiempos(db, latters.nuevostiempos);
   db = PROCESSES.monazos(db, latters.tresmonazos);
